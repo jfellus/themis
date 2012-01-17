@@ -1,0 +1,41 @@
+#!/bin/bash
+
+# parsing examples see in: /usr/share/doc/util-linux/examples
+
+ARGS=(`getopt --options h --long help,enable-enet -- "$@"`)
+
+if [ $? -ne 0 ];
+then
+	echo "To get some help use: installall -h"
+	exit 2
+fi
+
+
+for i in ${ARGS}
+do
+	case $i in
+		(-h|--help) cat `dirname $0`/INSTALL; exit 0;; 
+	esac
+done
+
+source ../scripts/COMPILE_FLAG
+
+echo 
+echo "Install themis (ancien dist_prom)"
+echo "================================="
+echo "See logs in $LOGDIR"
+mkdir -p $LOGDIR
+
+./create_all_makefile.sh ${ARGS[@]}  > $LOGDIR/themis_create_makefiles.log
+make reset > $LOGDIR/themis_make_reset.log
+if make > $LOGDIR/themis_make.log
+then	
+	echo -e "\nSuccess compiling themis\n"
+	exit 0
+else 
+	echo -e "\nFail to compile themis\n"
+	exit 1
+fi
+
+
+

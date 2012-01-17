@@ -1,0 +1,35 @@
+Themis
+======
+
+Themis allows to launch many scripts on different computers. 
+By default themis is launched on the bus **-b127.255.255.255** which is the local computer with the bus_id **-i[computername]:[pid]**.
+
+Details
+-------
+You have three pages:
+
+- **Settings** : You can define all the parameters of the script. The bus cannot be changed as it is the same as the one of themis.  
+- **Executing** : You have access of the three telnet consoles (console, kernel, debug). Be careful if you use printf, it will not appear.  
+- **Debug** : You can see the real command line, you have also access to the bus. All the outputs of promethe will be store in promete.log .  
+
+
+Distant computers
+-----------------
+To launch scripts on distant computers, you need to specify a subnetwork including all the addresses. The adresses of each script will be extracted from the prt. e.g:
+   
+    themis -b10.10.4.255 -i[my_experiment]
+   
+ In most of the cases you do not need to specify the bus_id (-i), but if you have closed themis you need to reopen it with the previous bus_id. In settings, you should specify the ***login*** used to connect to the computer. You also need to use a public key in order to avoid to give your password each time. 
+ 
+
+Launching
+---------
+When you click on launch, a makefile is created in **/tmp/[user]/themis/Makefile.[name of the script]** and executed (make run). This execution transferts the files with **rsync**, and launches the distant promethe with **rsh**.
+
+All the logs messages are put in the file **nohup.out**.
+
+At anytime you can launch the demonstration with **promdem**.
+
+
+
+

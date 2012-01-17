@@ -1,0 +1,4 @@
+Usage: installall [options]
+     --enable-enet       Compile themis with enet
+ -h, --help       This help
+
