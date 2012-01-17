@@ -7,7 +7,7 @@ PACKAGES="gtk+-2.0 gmodule-2.0 vte gthread-2.0"
 PROMLIB_DIR="$SIMULATOR_PATH/lib/$SYSTEM"
 IVYLIB_DIR="$PROMLIB_DIR/ivy"
 SCRIPTLIB_DIR="$PROMLIB_DIR/script"
-GLADE_LETO_PROM_DIR="${DIR_BIN_LETO_PROM}glades"
+GLADE_LETO_PROM_DIR="$DIR_BIN_LETO_PROM/glades"
 
 CFLAGS="$CFLAGS -I.. -I../shared/include -I/src -I${SIMULATOR_PATH}/prom_kernel/prom_kernel/include `pkg-config --cflags $PACKAGES`" 
 LIBS="-L$SCRIPTLIB_DIR -lscript -L$IVYLIB_DIR -lglibivy -lmxml `pkg-config --libs $PACKAGES` -L$SIMULATOR_PATH/lib/$SYSTEM/comm"
@@ -40,7 +40,7 @@ $GLADE_LETO_PROM_DIR:
 $GLADE_LETO_PROM_DIR/%:glades/% $GLADE_LETO_PROM_DIR
 	cp glades/\$* \$@
 
-all:${DIR_BIN_LETO_PROM}themis ${DIR_BIN_LETO_PROM}themis_debug  ${ALL_GLADE_FILES[@]/#/$GLADE_LETO_PROM_DIR/} 
+all:$DIR_BIN_LETO_PROM/themis $DIR_BIN_LETO_PROM/themis_debug  ${ALL_GLADE_FILES[@]/#/$GLADE_LETO_PROM_DIR/} 
 	
 clean:${ALL_CONFIGURATIONS[@]/#/clean_}
 
@@ -91,7 +91,7 @@ $OBJECTS_DIR/%.o:$SOURCE_DIR/%.c | $OBJECTS_DIR
 	@#rules to make automaticaly recalculate the dependencies 
 	@sed 's,\(\$*\)\.o[ :]*,\$(@D)/\1.o \$*.d : ,g' < \$(@D)/\$*.d.tmp > \$(@D)/\$*.d
 		
-$DIR_BIN_LETO_PROM$TARGET: ${OBJECTS} | $OBJECT_DIR $DIR_BIN_LETO_PROM
+$DIR_BIN_LETO_PROM/$TARGET: ${OBJECTS} | $OBJECT_DIR $DIR_BIN_LETO_PROM
 	@echo Link \$@  	
 	@$CC $FINAL_CFLAGS \$^ -o $OBJECTS_DIR/themis $FINAL_LIBS
 	@cp -f $OBJECTS_DIR/themis \$@
@@ -102,7 +102,7 @@ clean_${CONFIGURATION}:
 	rm $OBJECTS_DIR/*.d
 
 reset_$CONFIGURATION:clean_$CONFIGURATION 
-	rm -f $DIR_BIN_LETO_PROM$TARGET ${ALL_GLADE_FILES[@]/#/$GLADE_LETO_PROM_DIR/}
+	rm -f $DIR_BIN_LETO_PROM/$TARGET ${ALL_GLADE_FILES[@]/#/$GLADE_LETO_PROM_DIR/}
 		
 " >> $MAKEFILE
 done

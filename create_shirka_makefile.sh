@@ -23,7 +23,7 @@ default:all
 
 OBJS:=\"\"
 
-all:$DIR_BIN_LETO_PROM$shirka $DIR_BIN_LETO_PROM$shirka_debug
+all:$DIR_BIN_LETO_PROM/$shirka $DIR_BIN_LETO_PROM/$shirka_debug
 	
 clean:${ALL_CONFIGURATIONS[@]/#/clean_}
 
@@ -70,7 +70,7 @@ $OBJECTS_DIR/%.o: $SOURCE_DIR/%.c | $OBJECTS_DIR
 	@#rules to make automaticaly recalculate the dependencies. (@D) correspond au repertoire de la cible que l on ajoute au nom de base \$* 
 	@sed 's,\(\$*\)\.o[ :]*,\$(@D)/\1.o \$*.d : ,g' < \$(@D)/\$*.d.tmp > \$(@D)/\$*.d
 		
-$DIR_BIN_LETO_PROM$TARGET: ${OBJECTS} | $OBJECT_DIR $DIR_BIN_LETO_PROM
+$DIR_BIN_LETO_PROM/$TARGET: ${OBJECTS} | $OBJECT_DIR $DIR_BIN_LETO_PROM
 	@echo Link \$@
 	@$CC $FINAL_CFLAGS \$^ -o $OBJECT_DIR/shirka $LIBS
 	@cp -f $OBJECT_DIR/shirka \$@
@@ -81,7 +81,7 @@ clean_${CONFIGURATION}:
 	rm $OBJECTS_DIR/*.d
 
 reset_${CONFIGURATION}: clean_$CONFIGURATION
-	rm -f $DIR_BIN_LETO_PROM$TARGET
+	rm -f $DIR_BIN_LETO_PROM/$TARGET
 	
 " >> $MAKEFILE
 done
