@@ -8,7 +8,7 @@
 #include <enet/enet.h>
 
 #include "net_message_debug_dist.h"
-#include "prom_enet_debug.h"
+#include "prom_kernel/include/prom_enet_debug.h"
 #include "oscillo_kernel.h"
 #include "themis_ivy.h"
 #include "themis.h"
@@ -17,6 +17,12 @@
 #define ENET_UNLIMITED_BANDWITH 0
 
 type_oscillo_kernel oscillo_kernel;
+
+void on_oscillo_kernel_start_button_clicked(GtkWidget *widget, void *data)
+{
+
+}
+
 
 ENetHost *new_enet_server(int port)
 {
@@ -73,7 +79,7 @@ void stop_oscillo_kernel()
 
 void init_oscillo_kernel(int port)
 {
-  char host_name[SIZE_OF_HOST_NAME];
+  char host_name[HOST_NAME_MAX];
   char builder_file_name[NAME_MAX];
   GtkBuilder *builder;
   GError *g_error = NULL;
@@ -91,7 +97,7 @@ void init_oscillo_kernel(int port)
 
   if (oscillo_kernel.server != NULL)
   {
-    gethostname(host_name, SIZE_OF_HOST_NAME);
+    gethostname(host_name, HOST_NAME_MAX);
     prom_bus_send_message("connect_profiler(%s:%d)", host_name, port);
     error = pthread_create(&enet_thread, NULL, (void*(*)(void*)) enet_manager, oscillo_kernel.server);
   }
@@ -101,6 +107,10 @@ void init_oscillo_kernel(int port)
   snprintf(builder_file_name, NAME_MAX, "%s/glades/oscillo_kernel.glade", bin_leto_prom_path);
   gtk_builder_add_from_file(builder, builder_file_name, &g_error);
   if (g_error != NULL) EXIT_ON_ERROR("%s", g_error->message);
+
   oscillo_kernel.window = GTK_WINDOW(gtk_builder_get_object(builder, "oscillo_kernel_window"));
+
+  gtk_builder_connect_signals(builder, NULL);
+
   gtk_widget_show_all(GTK_WIDGET(oscillo_kernel.window));
 }

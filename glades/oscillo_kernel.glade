@@ -3,7 +3,9 @@
   <requires lib="gtk+" version="2.16"/>
   <!-- interface-naming-policy project-wide -->
   <object class="GtkWindow" id="oscillo_kernel_window">
-    <property name="title" translatable="yes">oscillo_kernel</property>
+    <property name="title" translatable="yes">Oscillo kernel</property>
+    <property name="default_width">200</property>
+    <property name="default_height">200</property>
     <child>
       <object class="GtkVBox" id="vbox1">
         <property name="visible">True</property>
@@ -11,12 +13,12 @@
           <object class="GtkToolbar" id="toolbar1">
             <property name="visible">True</property>
             <child>
-              <object class="GtkToolButton" id="oscillo_kernel_start_toolbutton">
+              <object class="GtkToolButton" id="oscillo_kernel_start_button">
                 <property name="visible">True</property>
                 <property name="label" translatable="yes">toolbutton1</property>
                 <property name="use_underline">True</property>
                 <property name="stock_id">gtk-media-play</property>
-                <signal name="clicked" handler="on_oscillo_kernel_start_toolbutton_clicked"/>
+                <signal name="clicked" handler="on_oscillo_kernel_start_button_clicked"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -26,6 +28,7 @@
           </object>
           <packing>
             <property name="expand">False</property>
+            <property name="fill">False</property>
             <property name="position">0</property>
           </packing>
         </child>

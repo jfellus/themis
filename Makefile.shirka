@@ -1,0 +1,84 @@
+
+default:all
+
+OBJS:=""
+
+all:/home/arnablan/bin_leto_prom/ /home/arnablan/bin_leto_prom/
+	
+clean:clean_debug clean_release
+
+reset:reset_debug reset_release
+
+
+
+#*** Debug ****
+
+OBJS+= /tmp/arnablan/obj/Linux/shirka/debug/shirka.o
+
+/tmp/arnablan/obj/Linux/shirka/debug:
+	mkdir -p $@
+	
+/tmp/arnablan/obj/Linux/shirka/debug/%.d:src/%.c | /tmp/arnablan/obj/Linux/shirka/debug
+	@echo Create dependence $*.d
+	@prom_colorgcc -g -DDEBUG_COMPILATION  -Wextra -Wall -Wno-variadic-macros -fkeep-inline-functions -Wwrite-strings -pedantic -Wfloat-equal -Wunknown-pragmas -D_REENTRANT -D_GNU_SOURCE -DDAEMON_COM -DLinux -I../shared/include -I/src -MM $< -MF $@.tmp;
+	@#rules to make automaticaly recalculate the dependencies 
+	@sed 's,\($*\)\.o[ :]*,$(@D)/\1.o $@ : ,g' < $@.tmp > $@
+	
+/tmp/arnablan/obj/Linux/shirka/debug/%.o: src/%.c | /tmp/arnablan/obj/Linux/shirka/debug
+	@echo Compile $*.o 
+	@prom_colorgcc -g -DDEBUG_COMPILATION  -Wextra -Wall -Wno-variadic-macros -fkeep-inline-functions -Wwrite-strings -pedantic -Wfloat-equal -Wunknown-pragmas -D_REENTRANT -D_GNU_SOURCE -DDAEMON_COM -DLinux -I../shared/include -I/src -MMD -MF $(@D)/$*.d.tmp -c $< -o $@;
+	@#rules to make automaticaly recalculate the dependencies. (@D) correspond au repertoire de la cible que l on ajoute au nom de base $* 
+	@sed 's,\($*\)\.o[ :]*,$(@D)/\1.o $*.d : ,g' < $(@D)/$*.d.tmp > $(@D)/$*.d
+		
+/home/arnablan/bin_leto_prom/shirka_debug: /tmp/arnablan/obj/Linux/shirka/debug/shirka.o |  /home/arnablan/bin_leto_prom
+	@echo Link $@
+	@prom_colorgcc -g -DDEBUG_COMPILATION  -Wextra -Wall -Wno-variadic-macros -fkeep-inline-functions -Wwrite-strings -pedantic -Wfloat-equal -Wunknown-pragmas -D_REENTRANT -D_GNU_SOURCE -DDAEMON_COM -DLinux -I../shared/include -I/src $^ -o /shirka -L/home/arnablan/perso_simulator/lib/Linux/script -lscript -L/home/arnablan/perso_simulator/lib/Linux/ivy -livy -lpcre
+	@cp -f /shirka $@
+	
+clean_debug:
+	rm -f /tmp/arnablan/obj/Linux/shirka/debug/shirka.o
+	rm /tmp/arnablan/obj/Linux/shirka/debug/*.d.tmp
+	rm /tmp/arnablan/obj/Linux/shirka/debug/*.d
+
+reset_debug: clean_debug
+	rm -f /home/arnablan/bin_leto_prom/shirka_debug
+	
+
+
+#*** Release ***
+
+OBJS+= /tmp/arnablan/obj/Linux/shirka/release/shirka.o
+
+/tmp/arnablan/obj/Linux/shirka/release:
+	mkdir -p $@
+	
+/tmp/arnablan/obj/Linux/shirka/release/%.d:src/%.c | /tmp/arnablan/obj/Linux/shirka/release
+	@echo Create dependence $*.d
+	@prom_colorgcc -O2 -mmmx -msse -msse2 -m3dnow -fcse-follow-jumps -fthread-jumps -fstrength-reduce -frerun-cse-after-loop -frerun-loop-opt -fgcse -floop-optimize -fexpensive-optimizations -fregmove -freorder-blocks -freorder-functions  -fsingle-precision-constant  -Wextra -Wall -Wno-variadic-macros -fkeep-inline-functions -Wwrite-strings -pedantic -Wfloat-equal -Wunknown-pragmas -D_REENTRANT -D_GNU_SOURCE -DDAEMON_COM -DLinux -I../shared/include -I/src -MM $< -MF $@.tmp;
+	@#rules to make automaticaly recalculate the dependencies 
+	@sed 's,\($*\)\.o[ :]*,$(@D)/\1.o $@ : ,g' < $@.tmp > $@
+	
+/tmp/arnablan/obj/Linux/shirka/release/%.o: src/%.c | /tmp/arnablan/obj/Linux/shirka/release
+	@echo Compile $*.o 
+	@prom_colorgcc -O2 -mmmx -msse -msse2 -m3dnow -fcse-follow-jumps -fthread-jumps -fstrength-reduce -frerun-cse-after-loop -frerun-loop-opt -fgcse -floop-optimize -fexpensive-optimizations -fregmove -freorder-blocks -freorder-functions  -fsingle-precision-constant  -Wextra -Wall -Wno-variadic-macros -fkeep-inline-functions -Wwrite-strings -pedantic -Wfloat-equal -Wunknown-pragmas -D_REENTRANT -D_GNU_SOURCE -DDAEMON_COM -DLinux -I../shared/include -I/src -MMD -MF $(@D)/$*.d.tmp -c $< -o $@;
+	@#rules to make automaticaly recalculate the dependencies. (@D) correspond au repertoire de la cible que l on ajoute au nom de base $* 
+	@sed 's,\($*\)\.o[ :]*,$(@D)/\1.o $*.d : ,g' < $(@D)/$*.d.tmp > $(@D)/$*.d
+		
+/home/arnablan/bin_leto_prom/shirka: /tmp/arnablan/obj/Linux/shirka/release/shirka.o |  /home/arnablan/bin_leto_prom
+	@echo Link $@
+	@prom_colorgcc -O2 -mmmx -msse -msse2 -m3dnow -fcse-follow-jumps -fthread-jumps -fstrength-reduce -frerun-cse-after-loop -frerun-loop-opt -fgcse -floop-optimize -fexpensive-optimizations -fregmove -freorder-blocks -freorder-functions  -fsingle-precision-constant  -Wextra -Wall -Wno-variadic-macros -fkeep-inline-functions -Wwrite-strings -pedantic -Wfloat-equal -Wunknown-pragmas -D_REENTRANT -D_GNU_SOURCE -DDAEMON_COM -DLinux -I../shared/include -I/src $^ -o /shirka -L/home/arnablan/perso_simulator/lib/Linux/script -lscript -L/home/arnablan/perso_simulator/lib/Linux/ivy -livy -lpcre
+	@cp -f /shirka $@
+	
+clean_release:
+	rm -f /tmp/arnablan/obj/Linux/shirka/release/shirka.o
+	rm /tmp/arnablan/obj/Linux/shirka/release/*.d.tmp
+	rm /tmp/arnablan/obj/Linux/shirka/release/*.d
+
+reset_release: clean_release
+	rm -f /home/arnablan/bin_leto_prom/shirka
+	
+
+
+#Adding all dependencies 
+-include $(OBJS:.o=.d)
+

@@ -1,0 +1,33 @@
+fopen: No such file or directory
+** Message: check debug 2 selected
+
+** Message: debug =1, debug_output_number=2, p_trace=0 
+
+
+(promethe:30348): Gtk-CRITICAL **: gtk_main_quit: assertion `main_loops != NULL' failed
+script		: test_k.script
+res		: test_k.res
+config		: test_k.config
+dev		: null
+gcd		: null
+prt		: null
+Network name	: Demo_kohonen
+CPU mask 	: null
+telnet 		: null
+ivy_bus 	: null
+AutresFlags 	: null
+Ivy bus: (null) 
+Broadcasting on network 127.255.255.255, port 2010
+Pas de prt
+signal 8157952 capture par le gestionnaire mais non traite... revoir le gestinnaire ou le remplissage de sigaction
+signal 8152640 capture par le gestionnaire mais non traite... revoir le gestinnaire ou le remplissage de sigaction
+signal 8155808 capture par le gestionnaire mais non traite... revoir le gestinnaire ou le remplissage de sigaction
+
+ Erreur lors de l'ouverture du fichier contenant le script 
+Terminating promethe ...
+Ending Simulation ...max_ech_temps=0
+Canceling the simulation
+Closing Network ...
+Closing Libcomm ...
+Closing Hardware ...
+libhardware closed 
