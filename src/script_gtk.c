@@ -383,7 +383,7 @@ void script_ui_launch(type_script_ui *script_ui, int is_debug)
 	else
 	{
 		strcpy(script->computer, script->prt->hosts[script->prt->my_host].name);
-		if ((strcmp(script->computer, "localhost") == 0) || (strcmp(script->computer, "127.0.0.1") ==0 ))  script->is_local = 1;
+		if ((strcmp(script->computer, "localhost") == 0) || (strcmp(script->computer, "127.0.0.1") == 0 ) || (script->login[0] == 0))  script->is_local = 1;
 		else script->is_local = 0;
 	}
 
