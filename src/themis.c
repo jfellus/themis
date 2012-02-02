@@ -85,10 +85,7 @@ void remove_scripts()
 	t_prom_script *script;
 	ui_remove_scripts();
 
-	for (script = themis.promnet->prom_script; script != NULL; script = promnet_prom_script_get_next(themis.promnet, script))
-	{
-		promnet_del_prom_script(themis.promnet, script);
-	}
+		promnet_del_all_prom_script(themis.promnet);
 }
 
 void quit()
