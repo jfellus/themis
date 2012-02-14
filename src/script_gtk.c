@@ -99,17 +99,19 @@ void script_ui_connect_consoles(type_script_ui *ui)
 	snprintf(argv[3], PORTNAME_MAX, "%d", script->kernel_port);
 	pid = vte_terminal_fork_command(ui->kernel_terminal, "rlwrap", argv, NULL, NULL, FALSE, FALSE, FALSE);
 	if (pid == -1) EXIT_ON_ERROR("Impossible to connect to kernel port. Check that you have rlwrap and telnet.");
-	else vte_terminal_reset(ui->kernel_terminal, FALSE, FALSE);
+	else vte_terminal_reset(ui->kernel_terminal, TRUE, TRUE);
 
 	snprintf(argv[3], PORTNAME_MAX, "%d", script->debug_port);
 	pid = vte_terminal_fork_command(ui->debug_terminal, "rlwrap", argv, NULL, NULL, FALSE, FALSE, FALSE);
 	if (pid == -1) EXIT_ON_ERROR("Impossible to connect to debug port. Check that you have rlwrap and telnet.");
-	else vte_terminal_reset(ui->debug_terminal, FALSE, FALSE);
+	else vte_terminal_reset(ui->debug_terminal, TRUE, TRUE);
 
 	snprintf(argv[3], PORTNAME_MAX, "%d", script->console_port);
 	pid = vte_terminal_fork_command(ui->console_terminal, "rlwrap", argv, NULL, NULL, FALSE, FALSE, FALSE);
 	if (pid == -1) EXIT_ON_ERROR("Impossible to connect to console port. Check that you have rlwrap and telnet.");
-	else vte_terminal_reset(ui->console_terminal, FALSE, FALSE);
+	else vte_terminal_reset(ui->console_terminal, TRUE, TRUE);
+
+	on_show_log_button_clicked(NULL, ui);
 }
 
 void script_ui_display_status(type_script_ui *script_ui, const char *message, ...)
@@ -391,11 +393,11 @@ void script_ui_launch(type_script_ui *script_ui, int is_debug)
 	{
 		if (is_debug)
 		{
-			snprintf(command_line, SIZE_OF_COMMAND_LINE, "nohup nemiver %s_debug %s %s %s %s %s %s -n%s -b%s -i%s %s > /tmp/%s/logs/%s.log&\n", script->path_prom_binary, script->path_file_script, script->path_file_config, script->path_file_res, script->path_file_dev, script->path_file_gcd, script->path_file_prt, script->logical_name, themis.ip, themis.id, script->prom_args_line, getenv("USER"), script->logical_name);
+			snprintf(command_line, SIZE_OF_COMMAND_LINE, "nohup nemiver %s_debug %s %s %s %s %s %s -n%s -b%s -i%s %s --distant-terminal> /tmp/%s/logs/%s.log&\n", script->path_prom_binary, script->path_file_script, script->path_file_config, script->path_file_res, script->path_file_dev, script->path_file_gcd, script->path_file_prt, script->logical_name, themis.ip, themis.id, script->prom_args_line, getenv("USER"), script->logical_name);
 		}
 		else
 		{
-			snprintf(command_line, SIZE_OF_COMMAND_LINE, "nohup %s %s %s %s %s %s %s -n%s -b%s -i%s %s > /tmp/%s/logs/%s.log&\n", script->path_prom_binary, script->path_file_script, script->path_file_config, script->path_file_res, script->path_file_dev, script->path_file_gcd, script->path_file_prt, script->logical_name, themis.ip, themis.id, script->prom_args_line, getenv("USER"), script->logical_name);
+			snprintf(command_line, SIZE_OF_COMMAND_LINE, "nohup %s %s %s %s %s %s %s -n%s -b%s -i%s %s --distant-terminal> /tmp/%s/logs/%s.log&\n", script->path_prom_binary, script->path_file_script, script->path_file_config, script->path_file_res, script->path_file_dev, script->path_file_gcd, script->path_file_prt, script->logical_name, themis.ip, themis.id, script->prom_args_line, getenv("USER"), script->logical_name);
 		}
 
 		pid = vte_terminal_fork_command(script_ui->terminal, NULL, NULL, NULL, working_directory, 0, 0, 0);
@@ -440,7 +442,7 @@ void script_ui_launch(type_script_ui *script_ui, int is_debug)
 
 			if (is_debug)
 			{
-				fprintf(makefile, "\trsh -X %s@%s cd promnet/%s;nohup nemiver ~/bin_leto_prom/%s_debug -n%s -b%s -i%s %s > /tmp/%s/logs/%s.log", script->login, script->computer, script->logical_name, script->path_prom_binary, script->logical_name, themis.ip, themis.id, script->prom_args_line, getenv("USER"), script->logical_name);
+				fprintf(makefile, "\trsh -X %s@%s cd promnet/%s;nohup nemiver ~/bin_leto_prom/%s_debug -n%s -b%s -i%s %s --distant-terminal> /tmp/%s/logs/%s.log", script->login, script->computer, script->logical_name, script->path_prom_binary, script->logical_name, themis.ip, themis.id, script->prom_args_line, getenv("USER"), script->logical_name);
 			}
 			else
 			{
@@ -464,7 +466,7 @@ void script_ui_launch(type_script_ui *script_ui, int is_debug)
 		}
 	}
 
-	gtk_notebook_set_current_page(script_ui->notebook, 2);
+	gtk_notebook_set_current_page(script_ui->notebook, 1);
 
 	gdk_color_parse("grey", &color);
 	gtk_widget_modify_bg(script_ui->state_displays[No_Quit], GTK_STATE_INSENSITIVE, &color);

@@ -20,7 +20,7 @@ do
 	for ACTION in ${ALL_ACTIONS[@]}
 	do
 		echo "${ACTION}_${PROJECT}: | ${LOGDIR}" >> Makefile 
-		echo -e "\tmake -j$NUMBER_OF_PROCESSORS -f Makefile.$PROJECT $ACTION > ${LOGDIR}/${PROJECT}_${ACTION}_make.log" >> Makefile
+		echo -e "\tmake --jobs=$NUMBER_OF_CORES -f Makefile.$PROJECT $ACTION > ${LOGDIR}/${PROJECT}_${ACTION}_make.log" >> Makefile
 	done	
 done 
 

@@ -128,5 +128,7 @@ void on_file_chooser_set(GObject *object, type_script_ui  *script_ui);
 void on_launch_button_clicked(GtkWidget *widget, type_script_ui *script_ui);
 void on_path_chooser_selection_changed(GtkFileChooser *path_chooser, type_script_ui *script_ui);
 void on_path_entry_activate(GtkEntry *path_entry, type_script_ui *script_ui);
+void on_show_log_button_clicked(GtkWidget *widget, type_script_ui *script_ui);
+
 
 #endif /* THEMIS_GTK_H */

@@ -9,17 +9,17 @@ IVYLIB_DIR="$PROMLIB_DIR/ivy"
 SCRIPTLIB_DIR="$PROMLIB_DIR/script"
 GLADE_LETO_PROM_DIR="$DIR_BIN_LETO_PROM/glades"
 
-CFLAGS="$CFLAGS -I.. -I../shared/include -I/src -I${SIMULATOR_PATH}/prom_kernel/prom_kernel/include `pkg-config --cflags $PACKAGES`" 
+CFLAGS="$CFLAGS -I.. -I../shared/include -I/src `pkg-config --cflags $PACKAGES` -I$SIMULATOR_PATH/enet/include" 
 LIBS="-L$SCRIPTLIB_DIR -lscript -L$IVYLIB_DIR -lglibivy -lmxml `pkg-config --libs $PACKAGES` -L$SIMULATOR_PATH/lib/$SYSTEM/comm"
 SOURCE_DIR="src"
 SOURCES=(themis.c themis_gtk.c script_gtk.c script_gtk_cb.c themis_ivy.c themis_ivy_cb.c)
-ALL_GLADE_FILES=(distant_promethe.glade themis.glade themis_icon.png)
+ALL_GLADE_FILES=(distant_promethe.glade themis.glade themis_icon.png oscillo_kernel_icon.png)
 
 
 for i in $@
 do
 	case $i in
-		(--enable-enet) CFLAGS="$CFLAGS -DUSE_ENET"; SOURCES=(${SOURCES[@]} oscillo_kernel.c); ALL_GLADE_FILES=(${ALL_GLADE_FILES[@]} oscillo_kernel.glade)  LIBS="$LIBS -lenet";echo "enet:enabled";;
+		(--enable-enet) CFLAGS="$CFLAGS -DUSE_ENET"; SOURCES=(${SOURCES[@]} oscillo_kernel.c); ALL_GLADE_FILES=(${ALL_GLADE_FILES[@]} oscillo_kernel.glade)  LIBS="$LIBS -L$SIMULATOR_PATH/lib/$SYSTEM/enet/lib -lenet";echo "enet:enabled";;
 	esac
 done
 

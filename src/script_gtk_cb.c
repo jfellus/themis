@@ -204,7 +204,6 @@ void on_launch_button_clicked(GtkWidget *widget, type_script_ui *script_ui)
 /** Activated to launch the script in debug mode
  * @todo Mutualiser avec le lancement normale.
  * */
-
 void on_launch_debug_button_clicked(GtkWidget *widget, type_script_ui *script_ui)
 {
 	(void) widget;
@@ -231,6 +230,9 @@ void on_quit_button_clicked(GtkWidget *widget, type_script_ui *script_ui)
 void on_show_log_button_clicked(GtkWidget *widget, type_script_ui *script_ui)
 {
 	char command_line[SIZE_OF_COMMAND_LINE];
+	(void) widget;
+
+	vte_terminal_reset(script_ui->terminal, TRUE, TRUE);
 
 	snprintf(command_line, SIZE_OF_COMMAND_LINE, "cat /tmp/%s/logs/%s.log\n", getenv("USER"), script_ui->data->logical_name);
 	vte_terminal_feed_child(script_ui->terminal, command_line, -1);

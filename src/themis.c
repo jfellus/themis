@@ -18,6 +18,49 @@
 
 type_themis themis;
 
+/**
+* Envoie un message de warning avec name_of_file, name_of_function, number_of_line et affiche le message formate avec les parametres variables.
+*/
+void print_warning(const char *name_of_file, const char* name_of_function, int numero_of_line, const char *message, ...)
+{
+	va_list arguments;
+	va_start(arguments, message);
+	printf( "\033[1;33m %s \t %s \t %i :\n \t Warning: ", name_of_file, name_of_function, numero_of_line);
+	vprintf(message, arguments);
+	printf("\033[0m\n");
+	va_end(arguments);
+}
+/**
+* Envoie un message d'erreur avec name_of_file, name_of_function, number_of_line et affiche le message formate avec les parametres variables.
+*/
+void fatal_error(const char *name_of_file, const char* name_of_function, int numero_of_line, const char *message, ...)
+{
+	va_list arguments;
+	va_start(arguments, message);
+	printf("\n\033[1;31m %s \t %s \t %i :\n \t Error: ", name_of_file, name_of_function, numero_of_line);
+	vprintf(message, arguments);
+	printf("\033[0m\n\n");
+	va_end(arguments);
+}
+/**
+* Envoie un message d'erreur avec name_of_file, name_of_function, number_of_line et affiche le message formate avec les parametres variables.
+* Ajoute l'affichage de l'erreur system errno
+* @TODO: faire apparaître une fenetre modale
+*/
+void fatal_system_error(const char *name_of_file, const char* name_of_function, int numero_of_line, const char *message, ...)
+{
+	va_list arguments;
+	va_start(arguments, message);
+	printf( "\n\033[1;31m %s \t %s \t %i :\n \t Error: ", name_of_file, name_of_function, numero_of_line);
+	vprintf(message, arguments);
+	printf("\033[0m\n");
+
+	printf("System error: %s\n\n", strerror(errno));
+	va_end(arguments);
+}
+
+/*********************************/
+
 int set_relative_path_from_gfile(char *path_name, char *reference_path, GFile *file)
 {
 	char prefix[PATH_MAX];
@@ -82,16 +125,15 @@ void add_new_script(const char *prom_id)
 
 void remove_scripts()
 {
-	t_prom_script *script;
 	ui_remove_scripts();
-
-		promnet_del_all_prom_script(themis.promnet);
+	promnet_del_all_prom_script(themis.promnet);
 }
 
 void quit()
 {
 	gtk_main_quit();
 	IvyStop();
+	printf("\nThemis quitting.\nbus_id was: -d%s\n", themis.id);
 	exit(0);
 }
 
@@ -141,6 +183,7 @@ int main(int argc, char *argv[])
 	int option;
 	struct sigaction action;
 	struct stat file_stat;
+	char command_line[SIZE_OF_COMMAND_LINE];
 
 	printf("\nSVN revision: %s \n", STRINGIFY_CONTENT(SVN_REVISION));
 	if (USE_ENET) printf("enet: enabled\n");
@@ -207,10 +250,11 @@ int main(int argc, char *argv[])
 
 	snprintf(themis.tmp_dir, PATH_MAX, "/tmp/%s/themis", getenv("USER"));
 
-	/* Droits 777 */
-	mkdir(themis.tmp_dir, S_IRWXO | S_IRWXG | S_IRWXU);
+	snprintf(command_line, SIZE_OF_COMMAND_LINE, "mkdir -p %s\n", themis.tmp_dir);
+	if (system(command_line) != 0) PRINT_WARNING("Error creating the directory. Using the command:\n%s", command_line);
 
 	themis.promnet = promnet_init();
+
 	ui_init();
 	if (themis.filename[0] != 0)
 	{
