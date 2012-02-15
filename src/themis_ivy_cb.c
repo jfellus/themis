@@ -105,8 +105,6 @@ void ivy_here_callback(IvyClientPtr app, void *user_data, int argc, char **argv)
 		gtk_widget_show(GTK_WIDGET(script_ui->quit_button));
 		gtk_widget_show_all(script_ui->launched_widget);
 
-		/* Envoi d'eventuelles commande clavier une fois que promethe vient de demmarer*/
-		vte_terminal_feed_child(script_ui->console_terminal, script_ui->data->keyboard_input, -1);
 	}
 
 	script_ui->data->debug_port = debug_port;
@@ -115,5 +113,8 @@ void ivy_here_callback(IvyClientPtr app, void *user_data, int argc, char **argv)
 
 	script_ui_set_state(script_ui, state);
 	script_ui_connect_consoles(script_ui);
+	/* Envoi d'eventuelles commande clavier une fois que promethe vient de demmarer*/
+	vte_terminal_feed_child(script_ui->console_terminal, script_ui->data->keyboard_input, -1);
+
 
 }
