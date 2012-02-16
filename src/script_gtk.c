@@ -393,11 +393,11 @@ void script_ui_launch(type_script_ui *script_ui, int is_debug)
 	{
 		if (is_debug)
 		{
-			snprintf(command_line, SIZE_OF_COMMAND_LINE, "nohup nemiver %s_debug %s %s %s %s %s %s -n%s -b%s -i%s %s --distant-terminal> /tmp/%s/logs/%s.log&\n", script->path_prom_binary, script->path_file_script, script->path_file_config, script->path_file_res, script->path_file_dev, script->path_file_gcd, script->path_file_prt, script->logical_name, themis.ip, themis.id, script->prom_args_line, getenv("USER"), script->logical_name);
+			snprintf(command_line, SIZE_OF_COMMAND_LINE, "mkdir -p /tmp/%s/logs; nohup nemiver %s_debug %s %s %s %s %s %s -n%s -b%s -i%s %s --distant-terminal> /tmp/%s/logs/%s.log&\n", getenv("USER"), script->path_prom_binary, script->path_file_script, script->path_file_config, script->path_file_res, script->path_file_dev, script->path_file_gcd, script->path_file_prt, script->logical_name, themis.ip, themis.id, script->prom_args_line, getenv("USER"), script->logical_name);
 		}
 		else
 		{
-			snprintf(command_line, SIZE_OF_COMMAND_LINE, "nohup %s %s %s %s %s %s %s -n%s -b%s -i%s %s --distant-terminal> /tmp/%s/logs/%s.log&\n", script->path_prom_binary, script->path_file_script, script->path_file_config, script->path_file_res, script->path_file_dev, script->path_file_gcd, script->path_file_prt, script->logical_name, themis.ip, themis.id, script->prom_args_line, getenv("USER"), script->logical_name);
+			snprintf(command_line, SIZE_OF_COMMAND_LINE, "mkdir -p /tmp/%s/logs; nohup %s %s %s %s %s %s %s -n%s -b%s -i%s %s --distant-terminal> /tmp/%s/logs/%s.log&\n", getenv("USER"), script->path_prom_binary, script->path_file_script, script->path_file_config, script->path_file_res, script->path_file_dev, script->path_file_gcd, script->path_file_prt, script->logical_name, themis.ip, themis.id, script->prom_args_line, getenv("USER"), script->logical_name);
 		}
 
 		pid = vte_terminal_fork_command(script_ui->terminal, NULL, NULL, NULL, working_directory, 0, 0, 0);
@@ -464,6 +464,7 @@ void script_ui_launch(type_script_ui *script_ui, int is_debug)
 
 			snprintf(command_line, SIZE_OF_COMMAND_LINE, "rlogin %s %s@%s:promnet/%s\n", rsh_graphic_option, script->login, script->computer, script->logical_name);
 		}
+
 	}
 
 	gtk_notebook_set_current_page(script_ui->notebook, 1);
