@@ -427,9 +427,9 @@ void script_ui_launch(type_script_ui *script_ui, int is_debug)
 
 			fprintf(makefile, "%%_upload_promnet:%% mkdir_promnet\n");
 			fprintf(makefile, "\trsync  $< %s@%s:promnet/%s/$(<F)\n\n", script->login, script->computer, script->logical_name);
-			fprintf(makefile, "%%_upload_binary:~/bin_leto_prom/%% mkdir_bin_leto_prom\n");
-			fprintf(makefile, "\trsync  $< %s@%s:bin_leto_prom/$*\n\n", script->login, script->computer);
-			fprintf(makefile, "all_upload: %s_upload_binary", script->path_prom_binary);
+			fprintf(makefile, "all_upload_bin_leto_prom:~/bin_leto_prom/ mkdir_bin_leto_prom\n");
+			fprintf(makefile, "\trsync -a  $< %s@%s:bin_leto_prom/\n\n", script->login, script->computer);
+			fprintf(makefile, "all_upload: all_upload_bin_leto_prom");
 
 			makefile_add_upload(makefile, script->path_file_script);
 			makefile_add_upload(makefile, script->path_file_config);
@@ -442,11 +442,11 @@ void script_ui_launch(type_script_ui *script_ui, int is_debug)
 
 			if (is_debug)
 			{
-				fprintf(makefile, "\trsh -X %s@%s cd promnet/%s;nohup nemiver ~/bin_leto_prom/%s_debug -n%s -b%s -i%s %s --distant-terminal> /tmp/%s/logs/%s.log", script->login, script->computer, script->logical_name, script->path_prom_binary, script->logical_name, themis.ip, themis.id, script->prom_args_line, getenv("USER"), script->logical_name);
+				fprintf(makefile, "\trsh -X %s@%s 'cd promnet/%s;nohup nemiver ~/bin_leto_prom/%s_debug -n%s -b%s -i%s %s --distant-terminal", script->login, script->computer, script->logical_name, script->path_prom_binary, script->logical_name, themis.ip, themis.id, script->prom_args_line );
 			}
 			else
 			{
-				fprintf(makefile, "\trsh %s %s@%s cd promnet/%s;nohup ~/bin_leto_prom/%s -n%s -b%s -i%s %s > /tmp/%s/logs/%s.log", rsh_graphic_option, script->login, script->computer, script->logical_name, script->path_prom_binary, script->logical_name, themis.ip, themis.id, script->prom_args_line, getenv("USER"), script->logical_name);
+				fprintf(makefile, "\trsh %s %s@%s 'cd promnet/%s;nohup ~/bin_leto_prom/%s -n%s -b%s -i%s %s --distant-terminal ", rsh_graphic_option, script->login, script->computer, script->logical_name, script->path_prom_binary, script->logical_name, themis.ip, themis.id, script->prom_args_line);
 			}
 
 			makefile_add_argument(makefile, script->path_file_script);
@@ -455,7 +455,10 @@ void script_ui_launch(type_script_ui *script_ui, int is_debug)
 			makefile_add_argument(makefile, script->path_file_dev);
 			makefile_add_argument(makefile, script->path_file_gcd);
 			makefile_add_argument(makefile, script->path_file_prt);
-			fprintf(makefile, "&\n");
+			
+			fprintf(makefile, " >  /tmp/%s/logs/%s.log ", getenv("USER"), script->logical_name);
+			
+			fprintf(makefile, "&'\n");
 			fclose(makefile);
 
 			snprintf(command_line, SIZE_OF_COMMAND_LINE, "make --jobs --file=%s run\n", makefile_name);
