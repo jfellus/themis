@@ -10,10 +10,47 @@
 #include "themis_gtk.h"
 #include "themis_ivy.h"
 
+#define MESSAGE_MAX 256
+
 typedef struct prom_bus_command {
   char command[MAXIMUM_SIZE_OF_PROM_BUS_COMMAND];
 } type_prom_bus_command;
 type_themis_ui themis_ui;
+
+
+void fatal_error(const char *name_of_file, const char* name_of_function,  int numero_of_line, const char *message, ...)
+{
+	char total_message[MESSAGE_MAX];
+	GtkWidget *dialog;
+
+	va_list arguments;
+	va_start(arguments, message);
+	vsnprintf(total_message, MESSAGE_MAX, message, arguments);
+	va_end(arguments);
+
+	dialog = gtk_message_dialog_new (NULL, GTK_DIALOG_MODAL, GTK_MESSAGE_ERROR, GTK_BUTTONS_CLOSE, "%s \t %s \t %i :\n \t Error: %s \n", name_of_file, name_of_function, numero_of_line, total_message);
+	gtk_dialog_run (GTK_DIALOG (dialog));
+	gtk_widget_destroy (dialog);
+}
+
+/**
+* Envoie un message d'erreur avec name_of_file, name_of_function, number_of_line et affiche le message formate avec les parametres variables.
+* Ajoute l'affichage de l'erreur system errno
+*/
+void fatal_system_error(const char *name_of_file, const char* name_of_function, int numero_of_line, const char *message, ...)
+{
+	char total_message[MESSAGE_MAX];
+	GtkWidget *dialog;
+
+	va_list arguments;
+	va_start(arguments, message);
+	vsnprintf(total_message, MESSAGE_MAX, message, arguments);
+	va_end(arguments);
+
+	dialog = gtk_message_dialog_new (NULL, GTK_DIALOG_MODAL, GTK_MESSAGE_ERROR, GTK_BUTTONS_CLOSE, "%s \t %s \t %i :\n \t Error: %s\nSystem error: %s\n", name_of_file, name_of_function, numero_of_line, total_message, strerror(errno));
+	gtk_dialog_run (GTK_DIALOG (dialog));
+	gtk_widget_destroy (dialog);
+}
 
 
 void display_status_message(const char *message, ...)

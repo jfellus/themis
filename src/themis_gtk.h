@@ -73,8 +73,11 @@ typedef struct script_ui
 
   GtkCheckButton *overwrite_res_check_button;
 
-
   GtkNotebook *notebook;
+
+  GtkTextBuffer *synchronize_paths_text_buffer;
+  GtkVBox *synchronize_files_vbox;
+
   GtkStatusbar *statusbar;
 /*  type_plot *plot; */
 
