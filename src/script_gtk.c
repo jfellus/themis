@@ -469,7 +469,7 @@ void script_ui_launch(type_script_ui *script_ui, int is_debug)
 				if (rsh_graphic_option == NULL)
 				{
 					nohup=1;
-					fprintf(makefile, "\trsh %s@%s 'mkdir -p /tmp/%s/logs; cd promnet/%s;nohup ~/bin_leto_prom/%s -n%s -b%s -i%s %s --distant-terminal ", script->login, script->login, script->computer, script->logical_name, script->path_prom_binary, script->logical_name, themis.ip, themis.id, script->prom_args_line);
+					fprintf(makefile, "\trsh %s@%s 'mkdir -p /tmp/%s/logs; cd promnet/%s;nohup ~/bin_leto_prom/%s -n%s -b%s -i%s %s --distant-terminal ", script->login, script->computer,script->login , script->logical_name, script->path_prom_binary, script->logical_name, themis.ip, themis.id, script->prom_args_line);
 				}
 				else /* En mode graphic on ne peut pas faire nohup */
 				{
