@@ -426,7 +426,7 @@ void script_ui_launch(type_script_ui *script_ui, int is_debug)
 		if (script->login[0] == 0) PRINT_WARNING("You need to specify a login to connect to a distant computer.");
 		else
 		{
-			if (strncpy(script->path_prom_binary, "promethe", PATH_MAX)) rsh_graphic_option = "-X";
+			if (strncmp(script->path_prom_binary, "promethe", PATH_MAX) == 0) rsh_graphic_option = "-X";
 			else rsh_graphic_option = NULL;
 
 			fprintf(makefile, ".PHONY:mkdir_promnet\n\n");
