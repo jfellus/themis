@@ -202,12 +202,12 @@ void script_ui_update_data(type_script_ui *script_ui, gchar *reference_dirname)
 	strncpy(script->path_file_gcd, gtk_entry_get_text(script_ui->gcd_entry), PATH_MAX);
 	strncpy(script->path_file_prt, gtk_entry_get_text(script_ui->prt_entry), PATH_MAX);
 	strncpy(script->prom_args_line, gtk_entry_get_text(script_ui->arguments_entry), MAX_PROM_ARGS_LINE);
-	/*strncpy(script->synchronize_paths, text_buffer_get_all_text(script_ui->synchronize_paths_text_buffer), SYNCHRONIZE_PATHS_MAX); 
+	strncpy(script->synchronize_paths, text_buffer_get_all_text(script_ui->synchronize_paths_text_buffer), SYNCHRONIZE_PATHS_MAX); 
 
 	for (i=0; script->synchronize_paths[i] !=0 ; i++)
 	{
 		if (script->synchronize_paths[i]=='\n') script->synchronize_paths[i]=' ';
-	}*/
+	}
 
 	script->overwrite_res = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(script_ui->overwrite_res_check_button));
 
@@ -295,8 +295,7 @@ void ui_script_init(type_script_ui *script_ui, t_prom_script *script)
 	script_ui->prom_bus_entry = GTK_ENTRY(gtk_builder_get_object(builder, "script_prom_bus_entry"));
 	script_ui->readme_text_buffer = GTK_TEXT_BUFFER(gtk_builder_get_object(builder, "readme_text_buffer"));
 
-/*	script_ui->synchronize_paths_text_buffer =  GTK_TEXT_BUFFER(gtk_builder_get_object(builder, "synchronize_paths_text_buffer")); */
-
+	script_ui->synchronize_paths_text_buffer =  GTK_TEXT_BUFFER(gtk_builder_get_object(builder, "synchronize_paths_text_buffer")); 
 
 	/* Debug */
 	script_ui->command_text_buffer = GTK_TEXT_BUFFER(gtk_builder_get_object(builder, "command_text_buffer"));
@@ -321,7 +320,7 @@ void ui_script_init(type_script_ui *script_ui, t_prom_script *script)
 	set_filename_field(script_ui, script_ui->prt_entry, script_ui->prt_chooser, script->path_file_prt, "*.prt");
 	gtk_entry_set_text(script_ui->arguments_entry, script->prom_args_line);
 
-/*	gtk_text_buffer_insert_at_cursor(script_ui->synchronize_paths_text_buffer, script->synchronize_paths, -1);*/
+	gtk_text_buffer_insert_at_cursor(script_ui->synchronize_paths_text_buffer, script->synchronize_paths, -1);
 
 
 	snprintf(path_name, PATH_MAX, "%s/%s", themis.dirname, script->path_prom_deploy);
@@ -431,7 +430,7 @@ void script_ui_launch(type_script_ui *script_ui, int is_debug)
 			else rsh_graphic_option = NULL;
 
 			fprintf(makefile, ".PHONY:mkdir_promnet\n\n");
-		/*	fprintf(makefile, "synchronize_paths:=%s\n\n", script->synchronize_paths);*/
+			fprintf(makefile, "synchronize_paths:=%s\n\n", script->synchronize_paths);
 			fprintf(makefile, "mkdir_promnet:\n");
 			fprintf(makefile, "\trsh %s@%s mkdir -p promnet/%s\n\n", script->login, script->computer, script->logical_name);
 			fprintf(makefile, "mkdir_bin_leto_prom:\n");
@@ -446,9 +445,11 @@ void script_ui_launch(type_script_ui *script_ui, int is_debug)
 
 			fprintf(makefile, "%%_upload_promnet:%% mkdir_promnet\n");
 			fprintf(makefile, "\trsync -a $< %s@%s:promnet/%s/$(<F)\n\n", script->login, script->computer, script->logical_name);
+			fprintf(makefile, "%%_upload_synchronize_path:%% mkdir_promnet\n");
+			fprintf(makefile, "\trsync -a $< %s@%s:promnet/%s/$(<D)\n\n", script->login, script->computer, script->logical_name);
 			fprintf(makefile, "all_upload_bin_leto_prom:~/bin_leto_prom/ mkdir_bin_leto_prom\n");
 			fprintf(makefile, "\trsync -a  $< %s@%s:bin_leto_prom/\n\n", script->login, script->computer);
-			fprintf(makefile, "all_upload: all_upload_bin_leto_prom $(foreach synchronize_path, $(synchronize_paths), $(synchronize_path)_upload_promnet)");
+			fprintf(makefile, "all_upload: all_upload_bin_leto_prom $(foreach synchronize_path, $(synchronize_paths), $(synchronize_path)_upload_synchronize_path)");
 
 			makefile_add_upload(makefile, script->path_file_script);
 			makefile_add_upload(makefile, script->path_file_config);
@@ -457,7 +458,7 @@ void script_ui_launch(type_script_ui *script_ui, int is_debug)
 			makefile_add_upload(makefile, script->path_file_gcd);
 			makefile_add_upload(makefile, script->path_file_prt);
 
-			fprintf(makefile, "\n run:all_upload\n");
+			fprintf(makefile, "\nrun:all_upload\n");
 
 			if (is_debug)
 			{
