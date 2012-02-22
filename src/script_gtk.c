@@ -457,7 +457,7 @@ void script_ui_launch(type_script_ui *script_ui, int is_debug)
 			makefile_add_upload(makefile, script->path_file_gcd);
 			makefile_add_upload(makefile, script->path_file_prt);
 
-			fprintf(makefile, "run:all_upload\n");
+			fprintf(makefile, "\n run:all_upload\n");
 
 			if (is_debug)
 			{
