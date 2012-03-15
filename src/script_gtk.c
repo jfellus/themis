@@ -5,7 +5,7 @@
  *      Author: Arnaud Blanchard
  */
 #include "themis_gtk.h"
-#include <read_prt.h>
+#include "libcomm/include/tools/read_prt.h"
 
 #define PORTNAME_MAX 256
 
@@ -33,7 +33,7 @@ void script_ui_set_state(type_script_ui *script_ui, int new_state)
 	}
 	else gtk_notebook_set_current_page(script_ui->notebook, 1);
 
-	if (new_state != No_Quit)
+	if ((new_state != No_Quit) || (new_state != No_Error))
 	{
 		gdk_color_parse("green", &color);
 		gtk_widget_modify_bg(GTK_WIDGET(script_ui->state_displays[No_Quit]), GTK_STATE_INSENSITIVE, &color);
@@ -51,6 +51,15 @@ void script_ui_set_state(type_script_ui *script_ui, int new_state)
 		gtk_widget_modify_bg(GTK_WIDGET(script_ui->state_displays[new_state]), GTK_STATE_INSENSITIVE, &color);
 		break;
 
+	case No_Error:
+			gtk_widget_hide(GTK_WIDGET(script_ui->quit_button));
+			gtk_widget_show(GTK_WIDGET(script_ui->launch_button));
+			gtk_widget_hide_all(script_ui->launched_widget);
+
+			gdk_color_parse("red", &color);
+			gtk_widget_modify_bg(GTK_WIDGET(script_ui->state_displays[No_Quit]), GTK_STATE_INSENSITIVE, &color);
+			break;
+
 	case No_Quit:
 		gtk_widget_hide(GTK_WIDGET(script_ui->quit_button));
 		gtk_widget_show(GTK_WIDGET(script_ui->launch_button));
@@ -59,6 +68,7 @@ void script_ui_set_state(type_script_ui *script_ui, int new_state)
 		gdk_color_parse("yellow", &color);
 		gtk_widget_modify_bg(GTK_WIDGET(script_ui->state_displays[No_Quit]), GTK_STATE_INSENSITIVE, &color);
 		break;
+
 	}
 
 	script_ui->data->state = new_state;
@@ -98,20 +108,23 @@ void script_ui_connect_consoles(type_script_ui *ui)
 
 	snprintf(argv[3], PORTNAME_MAX, "%d", script->kernel_port);
 	pid = vte_terminal_fork_command(ui->kernel_terminal, "rlwrap", argv, NULL, NULL, FALSE, FALSE, FALSE);
-	if (pid == -1) EXIT_ON_ERROR("Impossible to connect to kernel port. Check that you have rlwrap and telnet.");
+	if (pid == -1)
+	EXIT_ON_ERROR( "Impossible to connect to kernel port. Check that you have rlwrap and telnet.");
 	else vte_terminal_reset(ui->kernel_terminal, TRUE, TRUE);
 
 	snprintf(argv[3], PORTNAME_MAX, "%d", script->debug_port);
 	pid = vte_terminal_fork_command(ui->debug_terminal, "rlwrap", argv, NULL, NULL, FALSE, FALSE, FALSE);
-	if (pid == -1) EXIT_ON_ERROR("Impossible to connect to debug port. Check that you have rlwrap and telnet.");
+	if (pid == -1)
+	EXIT_ON_ERROR( "Impossible to connect to debug port. Check that you have rlwrap and telnet.");
 	else vte_terminal_reset(ui->debug_terminal, TRUE, TRUE);
 
 	snprintf(argv[3], PORTNAME_MAX, "%d", script->console_port);
 	pid = vte_terminal_fork_command(ui->console_terminal, "rlwrap", argv, NULL, NULL, FALSE, FALSE, FALSE);
-	if (pid == -1) EXIT_ON_ERROR("Impossible to connect to console port. Check that you have rlwrap and telnet.");
+	if (pid == -1)
+	EXIT_ON_ERROR( "Impossible to connect to console port. Check that you have rlwrap and telnet.");
 	else vte_terminal_reset(ui->console_terminal, TRUE, TRUE);
 
-	on_show_log_button_clicked(NULL, ui);
+/*	on_show_log_button_clicked(NULL, ui);*/
 }
 
 void script_ui_display_status(type_script_ui *script_ui, const char *message, ...)
@@ -179,6 +192,8 @@ void set_filename_field(type_script_ui *script_ui, GtkEntry *entry, GtkFileChoos
 	g_signal_connect(file_chooser, "selection-changed", G_CALLBACK(on_file_chooser_set), script_ui);
 }
 
+
+
 void script_ui_update_data(type_script_ui *script_ui, gchar *reference_dirname)
 {
 	char dirname[PATH_MAX];
@@ -202,11 +217,11 @@ void script_ui_update_data(type_script_ui *script_ui, gchar *reference_dirname)
 	strncpy(script->path_file_gcd, gtk_entry_get_text(script_ui->gcd_entry), PATH_MAX);
 	strncpy(script->path_file_prt, gtk_entry_get_text(script_ui->prt_entry), PATH_MAX);
 	strncpy(script->prom_args_line, gtk_entry_get_text(script_ui->arguments_entry), MAX_PROM_ARGS_LINE);
-	strncpy(script->synchronize_paths, text_buffer_get_all_text(script_ui->synchronize_paths_text_buffer), SYNCHRONIZE_PATHS_MAX); 
+	strncpy(script->synchronize_paths, text_buffer_get_all_text(script_ui->synchronize_paths_text_buffer), SYNCHRONIZE_PATHS_MAX);
 
-	for (i=0; script->synchronize_paths[i] !=0 ; i++)
+	for (i = 0; script->synchronize_paths[i] != 0; i++)
 	{
-		if (script->synchronize_paths[i]=='\n') script->synchronize_paths[i]=' ';
+		if (script->synchronize_paths[i] == '\n') script->synchronize_paths[i] = ' ';
 	}
 
 	script->overwrite_res = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(script_ui->overwrite_res_check_button));
@@ -221,7 +236,8 @@ void script_ui_update_data(type_script_ui *script_ui, gchar *reference_dirname)
 		if (themis.dirname != reference_dirname) strncpy(themis.dirname, reference_dirname, PATH_MAX); /* On ne fait une copie que si les pointeurs sont différents */
 		on_path_entry_activate(script_ui->path_entry, script_ui);
 	}
-	else PRINT_WARNING("Directory %s not found.", dirname);
+	else
+	PRINT_WARNING("Directory %s not found.", dirname);
 
 	gtk_frame_set_label(script_ui->frame, script->logical_name);
 
@@ -229,11 +245,14 @@ void script_ui_update_data(type_script_ui *script_ui, gchar *reference_dirname)
 	{
 		snprintf(prt_path, PATH_MAX, "%s/%s/%s", reference_dirname, script_ui->data->path_prom_deploy, script->path_file_prt);
 		script->prt = prt_init(prt_path, script->logical_name);
-		if (script->prt == NULL ) script_ui_display_status(script_ui, "File prt: %s not found.", prt_path);
+		if (script->prt == NULL) script_ui_display_status(script_ui, "File prt: %s not found.", prt_path);
 	}
 	else script->prt = NULL;
 
 	g_object_unref(dir);
+
+	script_create_makefile(script);
+
 }
 
 void ui_script_init(type_script_ui *script_ui, t_prom_script *script)
@@ -246,7 +265,8 @@ void ui_script_init(type_script_ui *script_ui, t_prom_script *script)
 	builder = gtk_builder_new();
 	snprintf(builder_filename, PATH_MAX, "%s/glades/distant_promethe.glade", bin_leto_prom_path);
 	gtk_builder_add_from_file(builder, builder_filename, &g_error);
-	if (g_error != NULL ) EXIT_ON_ERROR("%s", g_error->message);
+	if (g_error != NULL)
+	EXIT_ON_ERROR("%s", g_error->message);
 
 	script_ui->data = script;
 	script_ui->frame = GTK_FRAME(gtk_builder_get_object(builder, "promethe_frame"));
@@ -295,7 +315,7 @@ void ui_script_init(type_script_ui *script_ui, t_prom_script *script)
 	script_ui->prom_bus_entry = GTK_ENTRY(gtk_builder_get_object(builder, "script_prom_bus_entry"));
 	script_ui->readme_text_buffer = GTK_TEXT_BUFFER(gtk_builder_get_object(builder, "readme_text_buffer"));
 
-	script_ui->synchronize_paths_text_buffer =  GTK_TEXT_BUFFER(gtk_builder_get_object(builder, "synchronize_paths_text_buffer")); 
+	script_ui->synchronize_paths_text_buffer = GTK_TEXT_BUFFER(gtk_builder_get_object(builder, "synchronize_paths_text_buffer"));
 
 	/* Debug */
 	script_ui->command_text_buffer = GTK_TEXT_BUFFER(gtk_builder_get_object(builder, "command_text_buffer"));
@@ -322,7 +342,6 @@ void ui_script_init(type_script_ui *script_ui, t_prom_script *script)
 
 	gtk_text_buffer_insert_at_cursor(script_ui->synchronize_paths_text_buffer, script->synchronize_paths, -1);
 
-
 	snprintf(path_name, PATH_MAX, "%s/%s", themis.dirname, script->path_prom_deploy);
 	gtk_file_chooser_set_current_folder(script_ui->path_chooser, path_name);
 
@@ -337,45 +356,19 @@ void ui_script_init(type_script_ui *script_ui, t_prom_script *script)
 
 }
 
-void makefile_add_argument(FILE *makefile, char *file_path)
-{
-	gchar *basename;
-
-	if (file_path[0] != 0)
-	{
-		basename = g_path_get_basename(file_path);
-		fprintf(makefile, " %s", basename);
-		g_free(basename);
-	}
-}
-
-void makefile_add_upload(FILE *makefile, char *file_path)
-{
-
-	if (file_path[0] != 0)
-	{
-		fprintf(makefile, " %s_upload_promnet", file_path);
-	}
-}
-
 void script_ui_launch(type_script_ui *script_ui, int is_debug)
 {
-	char command_line[SIZE_OF_COMMAND_LINE];
-	char working_directory[PATH_MAX];
 	char fullname[PATH_MAX];
-	const char *rsh_graphic_option;
+	char command_line[SIZE_OF_COMMAND_LINE];
+	const char *target;
+
 	GdkColor color;
-	GtkTextIter iter;
 	GtkWidget *dialog;
-	t_prom_script *script;
-	pid_t pid;
-	FILE *makefile;
-	char makefile_name[PATH_MAX];
-	int nohup = 0;
-	int line_index;
+	t_prom_script * script;
 
 	script_ui_update_data(script_ui, themis.dirname);
 	script = script_ui->data;
+	script_create_makefile(script);
 
 	/* Test si le fichier.res exist et sinon propose de le compiler */
 	snprintf(fullname, PATH_MAX, "%s/%s/%s", themis.dirname, script->path_prom_deploy, script->path_file_res);
@@ -391,111 +384,12 @@ void script_ui_launch(type_script_ui *script_ui, int is_debug)
 		gtk_widget_destroy(dialog);
 	}
 
-	snprintf(makefile_name, PATH_MAX, "%s/Makefile.%s", themis.tmp_dir, script->logical_name);
+	if (is_debug) target = "run_debug";
+	else target = "run";
 
-	if ((makefile = fopen(makefile_name, "w")) == NULL ) EXIT_ON_ERROR("Impossible to create %s", makefile_name);
-	snprintf(working_directory, PATH_MAX, "%s/%s", themis.dirname, script->path_prom_deploy);
-
-	if (script->prt == NULL ) script->is_local = 1;
-	else
-	{
-		strcpy(script->computer, script->prt->hosts[script->prt->my_host].name);
-		if ((strcmp(script->computer, "localhost") == 0) || (strcmp(script->computer, "127.0.0.1") == 0 ) || (script->login[0] == 0))  script->is_local = 1;
-		else script->is_local = 0;
-	}
-
-	if (script->is_local)
-	{
-		nohup=1;
-		if (is_debug)
-		{
-			snprintf(command_line, SIZE_OF_COMMAND_LINE, "mkdir -p /tmp/%s/logs; nohup nemiver %s_debug %s %s %s %s %s %s -n%s -b%s -i%s %s --distant-terminal> /tmp/%s/logs/%s.log&\n", getenv("USER"), script->path_prom_binary, script->path_file_script, script->path_file_config, script->path_file_res, script->path_file_dev, script->path_file_gcd, script->path_file_prt, script->logical_name, themis.ip, themis.id, script->prom_args_line, getenv("USER"), script->logical_name);
-		}
-		else
-		{
-			snprintf(command_line, SIZE_OF_COMMAND_LINE, "mkdir -p /tmp/%s/logs; nohup %s %s %s %s %s %s %s -n%s -b%s -i%s %s --distant-terminal> /tmp/%s/logs/%s.log&\n", getenv("USER"), script->path_prom_binary, script->path_file_script, script->path_file_config, script->path_file_res, script->path_file_dev, script->path_file_gcd, script->path_file_prt, script->logical_name, themis.ip, themis.id, script->prom_args_line, getenv("USER"), script->logical_name);
-		}
-
-		pid = vte_terminal_fork_command(script_ui->terminal, NULL, NULL, NULL, working_directory, 0, 0, 0);
-		vte_terminal_feed_child(script_ui->terminal, command_line, -1);
-
-		gethostname(script->computer, MAX_COMPUTER);
-	}
-	else
-	{
-		if (script->login[0] == 0) PRINT_WARNING("You need to specify a login to connect to a distant computer.");
-		else
-		{
-			if (strncmp(script->path_prom_binary, "promethe", PATH_MAX) == 0) rsh_graphic_option = "-X";
-			else rsh_graphic_option = NULL;
-
-			fprintf(makefile, ".PHONY:mkdir_promnet\n\n");
-			fprintf(makefile, "synchronize_paths:=%s\n\n", script->synchronize_paths);
-			fprintf(makefile, "mkdir_promnet:\n");
-			fprintf(makefile, "\trsh %s@%s mkdir -p promnet/%s\n\n", script->login, script->computer, script->logical_name);
-			fprintf(makefile, "mkdir_bin_leto_prom:\n");
-			fprintf(makefile, "\trsh %s@%s mkdir -p bin_leto_prom\n\n", script->login, script->computer);
-
-			if (!script->overwrite_res)
-			{
-				fprintf(makefile, "%s_upload_promnet:%s mkdir_promnet\n", script->path_file_res, script->path_file_res);
-				fprintf(makefile, "\trsync --ignore-existing $< %s@%s:promnet/%s/$(<F)\n\n", script->login, script->computer, script->logical_name);
-			}
-
-
-			fprintf(makefile, "%%_upload_promnet:%% mkdir_promnet\n");
-			fprintf(makefile, "\trsync -a $< %s@%s:promnet/%s/$(<F)\n\n", script->login, script->computer, script->logical_name);
-			fprintf(makefile, "%%_upload_synchronize_path:%% mkdir_promnet\n");
-			fprintf(makefile, "\trsync -a $< %s@%s:promnet/%s/$(<D)\n\n", script->login, script->computer, script->logical_name);
-			fprintf(makefile, "all_upload_bin_leto_prom:~/bin_leto_prom/ mkdir_bin_leto_prom\n");
-			fprintf(makefile, "\trsync -a  $< %s@%s:bin_leto_prom/\n\n", script->login, script->computer);
-			fprintf(makefile, "all_upload: all_upload_bin_leto_prom $(foreach synchronize_path, $(synchronize_paths), $(synchronize_path)_upload_synchronize_path)");
-
-			makefile_add_upload(makefile, script->path_file_script);
-			makefile_add_upload(makefile, script->path_file_config);
-			makefile_add_upload(makefile, script->path_file_res);
-			makefile_add_upload(makefile, script->path_file_dev);
-			makefile_add_upload(makefile, script->path_file_gcd);
-			makefile_add_upload(makefile, script->path_file_prt);
-
-			fprintf(makefile, "\nrun:all_upload\n");
-
-			if (is_debug)
-			{
-				fprintf(makefile, "\trsh -X %s@%s 'cd promnet/%s;nemiver ~/bin_leto_prom/%s_debug -n%s -b%s -i%s %s", script->login, script->computer, script->logical_name, script->path_prom_binary, script->logical_name, themis.ip, themis.id, script->prom_args_line);
-			}
-			else
-			{
-				if (rsh_graphic_option == NULL)
-				{
-					nohup=1;
-					fprintf(makefile, "\trsh %s@%s 'mkdir -p /tmp/%s/logs; cd promnet/%s;nohup ~/bin_leto_prom/%s -n%s -b%s -i%s %s --distant-terminal ", script->login, script->computer,script->login , script->logical_name, script->path_prom_binary, script->logical_name, themis.ip, themis.id, script->prom_args_line);
-				}
-				else /* En mode graphic on ne peut pas faire nohup */
-				{
-					fprintf(makefile, "\trsh -X %s@%s 'cd promnet/%s;~/bin_leto_prom/%s -n%s -b%s -i%s %s", script->login, script->computer, script->logical_name, script->path_prom_binary, script->logical_name, themis.ip, themis.id, script->prom_args_line);
-				}
-			}
-
-			makefile_add_argument(makefile, script->path_file_script);
-			makefile_add_argument(makefile, script->path_file_config);
-			makefile_add_argument(makefile, script->path_file_res);
-			makefile_add_argument(makefile, script->path_file_dev);
-			makefile_add_argument(makefile, script->path_file_gcd);
-			makefile_add_argument(makefile, script->path_file_prt);
-
-			if (nohup) fprintf(makefile, " >  /tmp/%s/logs/%s.log& ", script->login, script->logical_name);
-			fprintf(makefile, "'\n");
-			fclose(makefile);
-
-			snprintf(command_line, SIZE_OF_COMMAND_LINE, "make --jobs --file=%s run\n", makefile_name);
-			pid = vte_terminal_fork_command(script_ui->terminal, NULL, NULL, NULL, working_directory, 0, 0, 0);
-			vte_terminal_feed_child(script_ui->terminal, command_line, -1);
-
-			snprintf(command_line, SIZE_OF_COMMAND_LINE, "rlogin %s@%s:promnet/%s\n", script->login, script->computer, script->logical_name);
-			vte_terminal_feed_child(script_ui->terminal, command_line, -1);
-		}
-	}
+	snprintf(command_line, SIZE_OF_COMMAND_LINE, "make --file=%s %s||echo -e \"\\a\"\n", script->path_makefile, target);
+	vte_terminal_feed_child(script_ui->terminal, command_line,  -1);
+	g_signal_connect((GObject*)script_ui->terminal, "beep", (GCallback)on_vte_terminal_beep, script_ui);
 
 	gtk_notebook_set_current_page(script_ui->notebook, 1);
 

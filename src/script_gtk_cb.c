@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include <glib.h>
 #include <gtk/gtk.h>
 #include <vte/vte.h>
 
@@ -207,8 +208,27 @@ void on_launch_button_clicked(GtkWidget *widget, type_script_ui *script_ui)
 void on_launch_debug_button_clicked(GtkWidget *widget, type_script_ui *script_ui)
 {
 	(void) widget;
-
 	script_ui_launch(script_ui, 1); /*debug*/
+}
+
+void on_upload_button_clicked(GtkWidget *widget, type_script_ui *script_ui)
+{
+	char command_line[SIZE_OF_COMMAND_LINE];
+	char working_directory[PATH_MAX];
+	t_prom_script *script;
+	(void) widget;
+
+
+	script_ui_update_data(script_ui, themis.dirname);
+	script = script_ui->data;
+	script_create_makefile(script);
+
+	snprintf(working_directory, PATH_MAX, "%s/%s", themis.dirname, script->path_prom_deploy);
+
+	snprintf(command_line, SIZE_OF_COMMAND_LINE, "cd %s && make --jobs --file=%s all_upload&\n", working_directory, script->path_makefile);
+	vte_terminal_feed_child(script_ui->terminal, command_line, -1);
+
+	gtk_notebook_set_current_page(script_ui->notebook, 1);
 }
 
 
@@ -234,7 +254,7 @@ void on_show_log_button_clicked(GtkWidget *widget, type_script_ui *script_ui)
 
 	vte_terminal_reset(script_ui->terminal, TRUE, TRUE);
 
-	snprintf(command_line, SIZE_OF_COMMAND_LINE, "cat /tmp/%s/logs/%s.log\n", getenv("USER"), script_ui->data->logical_name);
+	snprintf(command_line, SIZE_OF_COMMAND_LINE, "make --file=%s show_log\n", script_ui->data->path_makefile);
 	vte_terminal_feed_child(script_ui->terminal, command_line, -1);
 }
 
@@ -393,4 +413,12 @@ int on_detail_window_delete_event(GtkWidget *object, GdkEvent *event, type_scrip
 	gtk_toggle_button_set_active(script_ui->detail_button, FALSE);
 	return TRUE; /* Stop the event (do not destroy the window) */
 }
+
+void on_vte_terminal_beep(GObject *object, type_script_ui *script_ui)
+{
+	(void)object;
+
+	script_ui_set_state(script_ui, No_Error);
+}
+
 

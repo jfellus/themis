@@ -13,7 +13,6 @@
 #include <gtk/gtk.h>
 #include <vte/vte.h>
 
-
 #include "themis.h"
 
 #define NO_BORDER 0
@@ -78,6 +77,8 @@ typedef struct script_ui
   GtkTextBuffer *synchronize_paths_text_buffer;
   GtkVBox *synchronize_files_vbox;
 
+  GtkButton *upload_button;
+
   GtkStatusbar *statusbar;
 /*  type_plot *plot; */
 
@@ -125,6 +126,7 @@ void ui_display_prom_bus_message(char *prom_id, char *message);
 type_script_ui *ui_get_script_ui_with_id(char *prom_id);
 
 /* script_ui_callbacks */
+void on_vte_terminal_beep(GObject *object, type_script_ui *script_ui);
 void on_compile_button_clicked(GtkButton *button, type_script_ui  *script_ui);
 void on_file_entry_activate(GObject *object, type_script_ui  *script_ui);
 void on_file_chooser_set(GObject *object, type_script_ui  *script_ui);

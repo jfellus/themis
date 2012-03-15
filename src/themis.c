@@ -19,13 +19,13 @@
 type_themis themis;
 
 /**
-* Envoie un message de warning avec name_of_file, name_of_function, number_of_line et affiche le message formate avec les parametres variables.
-*/
+ * Envoie un message de warning avec name_of_file, name_of_function, number_of_line et affiche le message formate avec les parametres variables.
+ */
 void print_warning(const char *name_of_file, const char* name_of_function, int numero_of_line, const char *message, ...)
 {
 	va_list arguments;
 	va_start(arguments, message);
-	printf( "\033[1;33m %s \t %s \t %i :\n \t Warning: ", name_of_file, name_of_function, numero_of_line);
+	printf("\033[1;33m %s \t %s \t %i :\n \t Warning: ", name_of_file, name_of_function, numero_of_line);
 	vprintf(message, arguments);
 	printf("\033[0m\n");
 	va_end(arguments);
@@ -105,7 +105,7 @@ void quit()
 {
 	gtk_main_quit();
 	IvyStop();
-	printf("\nThemis quitting.\nbus_id was: -d%s\n", themis.id);
+	printf("\nThemis quitting.\nbus_id was: -i%s\n", themis.id);
 	exit(0);
 }
 
@@ -190,8 +190,8 @@ int main(int argc, char *argv[])
 			strncpy(themis.ip, optarg, INET_ADDRSTRLEN);
 			break;
 		case 'i':
-					strncpy(themis.id, optarg, BUS_ID_MAX);
-					break;
+			strncpy(themis.id, optarg, BUS_ID_MAX);
+			break;
 		default: /* '?' */
 			fprintf(stderr, "\tUsage: %s [file.net] [-b broadcast_ip] [-i bus_id] \n", argv[0]);
 			exit(EXIT_FAILURE);
@@ -201,13 +201,13 @@ int main(int argc, char *argv[])
 	if (optind < argc)
 	{
 		/* Pour être sur de ne pas ecraser de la memoire, en faire une macro */
-		if (sscanf(argv[optind],  "%" STRINGIFY_CONTENT(PATH_MAX) "s.net", themis.filename) == 1)
+		if (sscanf(argv[optind], "%" STRINGIFY_CONTENT(PATH_MAX) "s.net", themis.filename) == 1)
 		{
 			if (stat(themis.filename, &file_stat) != 0) EXIT_ON_ERROR("%s cannot be found.", themis.filename);
 		}
 	}
 
-	if (themis.id[0]==0)
+	if (themis.id[0] == 0)
 	{
 		gethostname(themis.host, HOST_NAME_MAX);
 		themis.pid = getpid();
@@ -253,5 +253,5 @@ int main(int argc, char *argv[])
 	gdk_threads_leave();
 
 	quit();
-	return(0);
+	return (0);
 }

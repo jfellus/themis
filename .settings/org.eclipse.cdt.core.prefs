@@ -1,5 +1,9 @@
-#Wed Jan 11 14:51:18 CET 2012
 eclipse.preferences.version=1
+environment/project/cdt.managedbuild.config.gnu.cross.exe.debug.1031446683/PATH/delimiter=\:
+environment/project/cdt.managedbuild.config.gnu.cross.exe.debug.1031446683/PATH/operation=replace
+environment/project/cdt.managedbuild.config.gnu.cross.exe.debug.1031446683/PATH/value=/bin\:/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/usr/games\:/home/arnablan/bin_leto_prom
+environment/project/cdt.managedbuild.config.gnu.cross.exe.debug.1031446683/append=true
+environment/project/cdt.managedbuild.config.gnu.cross.exe.debug.1031446683/appendContributed=true
 environment/project/cdt.managedbuild.config.gnu.cross.exe.debug.1590597420/append=true
 environment/project/cdt.managedbuild.config.gnu.cross.exe.debug.1590597420/appendContributed=true
 environment/project/cdt.managedbuild.config.gnu.cross.exe.release.1652453770/DBUS_SESSION_BUS_ADDRESS/delimiter=\:
@@ -100,3 +104,8 @@ environment/project/cdt.managedbuild.config.gnu.cross.exe.release.1652453770/XDG
 environment/project/cdt.managedbuild.config.gnu.cross.exe.release.1652453770/XDG_SESSION_COOKIE/value=81b7a59de998a5bf14f09a6c4c724afc-1326196278.212973-108708934
 environment/project/cdt.managedbuild.config.gnu.cross.exe.release.1652453770/append=true
 environment/project/cdt.managedbuild.config.gnu.cross.exe.release.1652453770/appendContributed=true
+environment/project/cdt.managedbuild.config.gnu.cross.exe.release.337117232/PATH/delimiter=\:
+environment/project/cdt.managedbuild.config.gnu.cross.exe.release.337117232/PATH/operation=append
+environment/project/cdt.managedbuild.config.gnu.cross.exe.release.337117232/PATH/value=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin\:/usr/games
+environment/project/cdt.managedbuild.config.gnu.cross.exe.release.337117232/append=true
+environment/project/cdt.managedbuild.config.gnu.cross.exe.release.337117232/appendContributed=true

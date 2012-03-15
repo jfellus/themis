@@ -1,6 +1,3 @@
-/* cc hello.c -o hello -I/usr/local/include/Ivy -L/usr/local/lib64 -lglibivy -lpcre*/
-/* mettre la librairie a la fin des arguments de user */
-
 #include <stdlib.h>
 #include <stdio.h>
 #include <getopt.h>
@@ -103,5 +100,4 @@ void prom_bus_init(char *brodcast_ip)
   sem_init(&ivy_semaphore, 0, 1);   /* semaphore necessaire pour faire des appels ivy thread safes... Prom_bus_send_message n'est pas sudffisant ??? */
   IvyInit(ivy_prom_name, "Themis started", ivyApplicationCallback, NULL, NULL, NULL);
   IvyStart(broadcast);
-
 }

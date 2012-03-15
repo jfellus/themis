@@ -9,10 +9,13 @@
 
 #include <bits/local_lim.h>
 #include <sys/time.h>
+
 #include <prom_tools/include/prom_bus.h>
 #include <prom_tools/include/basic_tools.h>
 #include <prom_tools/include/libpromnet.h>
 #include <prom_kernel/include/net_message_debug_dist.h>
+
+#include "script.h"
 
 #define SIZE_OF_PROM_BUS_BUFFER 1024
 #define SIZE_OF_IVY_PROM_NAME 128
