@@ -52,20 +52,20 @@ void script_ui_set_state(type_script_ui *script_ui, int new_state)
 		break;
 
 	case No_Error:
-			gtk_widget_hide(GTK_WIDGET(script_ui->quit_button));
-			gtk_widget_show(GTK_WIDGET(script_ui->launch_button));
-			gtk_widget_hide_all(script_ui->launched_widget);
+		gtk_widget_hide(GTK_WIDGET(script_ui->quit_button));
+		gtk_widget_show(GTK_WIDGET(script_ui->launch_button));
+		gtk_widget_hide_all(script_ui->launched_widget);
 
-			gdk_color_parse("red", &color);
-			gtk_widget_modify_bg(GTK_WIDGET(script_ui->state_displays[No_Quit]), GTK_STATE_INSENSITIVE, &color);
-			break;
+		gdk_color_parse("red", &color);
+		gtk_widget_modify_bg(GTK_WIDGET(script_ui->state_displays[No_Quit]), GTK_STATE_INSENSITIVE, &color);
+		break;
 
 	case No_Quit:
 		gtk_widget_hide(GTK_WIDGET(script_ui->quit_button));
 		gtk_widget_show(GTK_WIDGET(script_ui->launch_button));
 		gtk_widget_hide_all(script_ui->launched_widget);
 
-		gdk_color_parse("yellow", &color);
+		gdk_color_parse("grey", &color);
 		gtk_widget_modify_bg(GTK_WIDGET(script_ui->state_displays[No_Quit]), GTK_STATE_INSENSITIVE, &color);
 		break;
 
@@ -73,6 +73,8 @@ void script_ui_set_state(type_script_ui *script_ui, int new_state)
 
 	script_ui->data->state = new_state;
 }
+
+
 
 void script_ui_set_prom_id(type_script_ui *script_ui, char *prom_id, char *hostname)
 {
@@ -124,7 +126,7 @@ void script_ui_connect_consoles(type_script_ui *ui)
 	EXIT_ON_ERROR( "Impossible to connect to console port. Check that you have rlwrap and telnet.");
 	else vte_terminal_reset(ui->console_terminal, TRUE, TRUE);
 
-/*	on_show_log_button_clicked(NULL, ui);*/
+	/*	on_show_log_button_clicked(NULL, ui);*/
 }
 
 void script_ui_display_status(type_script_ui *script_ui, const char *message, ...)
@@ -191,8 +193,6 @@ void set_filename_field(type_script_ui *script_ui, GtkEntry *entry, GtkFileChoos
 	g_signal_connect(entry, "activate", G_CALLBACK(on_file_entry_activate), script_ui);
 	g_signal_connect(file_chooser, "selection-changed", G_CALLBACK(on_file_chooser_set), script_ui);
 }
-
-
 
 void script_ui_update_data(type_script_ui *script_ui, gchar *reference_dirname)
 {
@@ -284,6 +284,10 @@ void ui_script_init(type_script_ui *script_ui, t_prom_script *script)
 	script_ui->state_displays[No_Learn_and_Use] = GTK_WIDGET(gtk_builder_get_object(builder, "learn_state_button"));
 	script_ui->state_displays[No_Use_Only] = GTK_WIDGET(gtk_builder_get_object(builder, "use_only_state_button"));
 	script_ui->state_displays[No_Not_Running] = GTK_WIDGET(gtk_builder_get_object(builder, "stanby_state_button"));
+
+	script_ui->rt_state_button = GTK_WIDGET(gtk_builder_get_object(builder, "rt_state_button"));
+	script_ui->net_state_button = GTK_WIDGET(gtk_builder_get_object(builder, "net_state_button"));
+
 
 	/* Settings */
 	script_ui->login_entry = GTK_ENTRY(gtk_builder_get_object(builder, "login_entry"));
@@ -388,7 +392,7 @@ void script_ui_launch(type_script_ui *script_ui, int is_debug)
 	else target = "run";
 
 	snprintf(command_line, SIZE_OF_COMMAND_LINE, "make --file=%s %s||echo -e \"\\a\"\n", script->path_makefile, target);
-	vte_terminal_feed_child(script_ui->terminal, command_line,  -1);
+	vte_terminal_feed_child(script_ui->terminal, command_line, -1);
 	g_signal_connect((GObject*)script_ui->terminal, "beep", (GCallback)on_vte_terminal_beep, script_ui);
 
 	gtk_notebook_set_current_page(script_ui->notebook, 1);

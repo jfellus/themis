@@ -225,7 +225,7 @@ void on_upload_button_clicked(GtkWidget *widget, type_script_ui *script_ui)
 
 	snprintf(working_directory, PATH_MAX, "%s/%s", themis.dirname, script->path_prom_deploy);
 
-	snprintf(command_line, SIZE_OF_COMMAND_LINE, "cd %s && make --jobs --file=%s all_upload&\n", working_directory, script->path_makefile);
+	snprintf(command_line, SIZE_OF_COMMAND_LINE, "cd %s && make --jobs --file=%s all_upload||echo -e \"\\a\"\n", working_directory, script->path_makefile);
 	vte_terminal_feed_child(script_ui->terminal, command_line, -1);
 
 	gtk_notebook_set_current_page(script_ui->notebook, 1);
@@ -303,14 +303,14 @@ void on_edit_config_button_clicked(GtkButton *button, type_script_ui *script_ui)
 
 	script = script_ui->data;
 	editor = getenv("EDITOR");
-	if (editor == NULL) editor = "emacs";
+	if (editor == NULL) editor = "gedit";
 
 	snprintf(command_line, SIZE_OF_COMMAND_LINE, "%s %s/%s/%s &", editor, themis.dirname, script->path_prom_deploy, script->path_file_config);
 	error = system(command_line);
 	printf("%s\n", command_line);
 	if (error != 0)
 	{
-		PRINT_WARNING("Error launching emacs.\n\t Check that %s is correct.", command_line);
+		PRINT_WARNING("Error launching gedit.\n\t Check that %s is correct.", command_line);
 	}
 }
 
@@ -342,7 +342,7 @@ void on_edit_dev_button_clicked(GtkButton *button, type_script_ui *script_ui)
 
 	script = script_ui->data;
 	editor = getenv("EDITOR");
-	if (editor == NULL) editor = "emacs";
+	if (editor == NULL) editor = "gedit";
 	snprintf(command_line, SIZE_OF_COMMAND_LINE, "%s %s/%s/%s &", editor, themis.dirname, script->path_prom_deploy, script->path_file_dev);
 	printf("%s\n", command_line);
 	error = system(command_line);
@@ -362,7 +362,7 @@ void on_edit_prt_button_clicked(GtkButton *button, type_script_ui *script_ui)
 
 	script = script_ui->data;
 	editor = getenv("EDITOR");
-	if (editor == NULL) editor = "emacs";
+	if (editor == NULL) editor = "gedit";
 	snprintf(command_line, SIZE_OF_COMMAND_LINE, "%s %s/%s/%s &", editor, themis.dirname, script->path_prom_deploy, script->path_file_prt);
 	printf("%s\n", command_line);
 	error = system(command_line);
@@ -382,13 +382,13 @@ void on_edit_readme_button_clicked(GtkButton *button, type_script_ui *script_ui)
 
 	script = script_ui->data;
 	editor = getenv("EDITOR");
-	if (editor == NULL) editor = "emacs";
+	if (editor == NULL) editor = "gedit";
 	snprintf(command_line, SIZE_OF_COMMAND_LINE, "%s %s/%s/README &", editor, themis.dirname, script->path_prom_deploy);
 	printf("%s\n", command_line);
 	error = system(command_line);
 	if (error != 0)
 	{
-		PRINT_WARNING("Error launching emacs.\n\t Check that %s is correct.", command_line);
+		PRINT_WARNING("Error launching gedit.\n\t Check that %s is correct.", command_line);
 	}
 }
 

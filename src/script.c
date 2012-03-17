@@ -127,7 +127,6 @@ void script_create_makefile(t_prom_script *script)
 			}
 			else /* En mode graphic on ne peut pas faire nohup */
 			{
-				nohup = 0;
 				fprintf(makefile, "\trsh -X %s@%s 'mkdir -p /tmp/%s/logs; cd promnet/%s;nohup ~/bin_leto_prom/%s -n%s -b%s -i%s %s  ", script->login, script->computer, script->login, script->logical_name, script->path_prom_binary, script->logical_name, themis.ip, themis.id, script->prom_args_line);
 			}
 		}

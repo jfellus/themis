@@ -18,6 +18,22 @@ typedef struct prom_bus_command {
 type_themis_ui themis_ui;
 
 
+static gboolean widget_reset_state_timeout_callback(gpointer data)
+{
+	GtkWidget *widget = (GtkWidget*)data;
+	gtk_widget_modify_bg(widget, GTK_STATE_INSENSITIVE, NULL);
+	return FALSE;
+}
+
+void widget_set_warning(GtkWidget *state_button)
+{
+	GdkColor color;
+
+	gdk_color_parse("orange", &color);
+	gtk_widget_modify_bg(state_button, GTK_STATE_INSENSITIVE, &color);
+	g_timeout_add_seconds(1, widget_reset_state_timeout_callback, state_button);
+}
+
 void fatal_error(const char *name_of_file, const char* name_of_function,  int numero_of_line, const char *message, ...)
 {
 	char total_message[MESSAGE_MAX];

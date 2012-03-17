@@ -37,7 +37,7 @@ typedef struct script_ui
   GtkWidget *display_of_commands;
   GtkWidget *display_of_name;
   GtkWidget *display_of_status;
-  GtkWidget *display_of_status_of_rt_token;
+  GtkWidget *rt_state_button, *net_state_button;
   GtkWidget *color_status;
   GtkWidget *promethe_button, *network_text_view;
   GtkListStore *stat_store;
@@ -106,12 +106,16 @@ extern type_themis_ui themis_ui;
 char *text_view_get_all_text(GtkTextView *text_view);
 char *text_buffer_get_all_text(GtkTextBuffer *text_buffer);
 int set_relative_path_from_gfile(char *pathname, char *reference_path, GFile *file);
+void widget_set_warning(GtkWidget *widget);
+
 
 /*script_ui */
 void script_ui_display_prom_bus_message(type_script_ui *script_ui, char *message);
 void ui_script_init(type_script_ui *script_ui, t_prom_script *script);
 void script_ui_display_state(type_script_ui *ui, int new_state);
 void script_ui_set_state(type_script_ui *script_ui, int state);
+void set_warning(GtkWidget *state_button);
+
 void script_ui_set_prom_id(type_script_ui *script_ui, char *prom_id, char *hostname);
 void script_ui_update_data(type_script_ui *script_ui, char *reference_pathname);
 void script_ui_connect_consoles(type_script_ui *script_ui);

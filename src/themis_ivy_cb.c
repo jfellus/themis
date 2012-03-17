@@ -27,38 +27,34 @@ void ivy_msg_rt_callback(IvyClientPtr app, void *remote_control, int argc, char 
 {
 	char *prom_id;
 	int state;
+	type_script_ui *script_ui;
+
 	(void) remote_control;
 	(void) argc;
 	(void) argv;
 
 	prom_id = IvyGetApplicationName(app);
 	if (sscanf(argv[0], "%d", &state) != 1) PRINT_WARNING("Wrong message format: %s", argv[0]); /* %[^,] signifie que l'on prend tous les caracteres suaf la virgule. */
-	/* themis_set_rt_token_state_of_promethe(remote_control, prom_index, app, state); */
+	script_ui = ui_get_script_ui_with_id(prom_id);
+	widget_set_warning(script_ui->rt_state_button);
+
 }
 
 void ivy_net_callback(IvyClientPtr app, void *user_data, int argc, char **argv)
 {
 	char *prom_id;
+	char group_name[SIZE_OF_GROUP_NAME];
+	type_script_ui *script_ui;
+  unsigned long error_flag;
 	(void) user_data;
 	(void) argc;
 	(void) argv;
 
-	/*, group_name[SIZE_OF_GROUP_NAME]*/
-	/* type_themis *themis = (type_themis*) user_data;
-	 unsigned long error_flag;
-	 type_promethe *promethe;*/
-
 	prom_id = IvyGetApplicationName(app);
 
-	/*promethe = themis->promethes[prom_index];
-
-	 if (sscanf(argv[0], "%[^,],%lu", group_name, &error_flag) != 2) PRINT_WARNING("Wrong format of message: %s\n", argv[0]);
-	 else
-	 {
-	 if (error_flag != 0) gtk_button_set_color(promethe->detail_button, &red_color);
-	 else gtk_button_set_color(promethe_widget->promethe_button, &green_color);
-	 }*/
-
+  if (sscanf(argv[0], "%[^,],%lu", group_name, &error_flag) != 2) PRINT_WARNING("Wrong format of message: %s\n", argv[0]);
+	script_ui = ui_get_script_ui_with_id(prom_id);
+	widget_set_warning(script_ui->net_state_button);
 }
 
 void ivy_receive_any_message_callback(IvyClientPtr app, void *user_data, int argc, char **argv)

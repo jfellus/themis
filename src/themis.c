@@ -242,6 +242,9 @@ int main(int argc, char *argv[])
 	IvyBindMsg(ivy_receive_any_message_callback, NULL, "^%s:(.*)", themis.id);
 	IvyBindMsg(ivy_here_callback, NULL, "^%s:here\\((.*)\\)$", themis.id);
 	IvyBindMsg(ivy_status_callback, NULL, "^%s:status\\((.*)\\)$", themis.id);
+	IvyBindMsg(ivy_msg_rt_callback, NULL, "^%s:msg_rt\\((.*)\\)$", themis.id);
+	IvyBindMsg(ivy_net_callback, NULL, "^%s:net\\((.*)\\)$", themis.id);
+
 	display_status_message("broadcast on %s:2010", themis.ip);
 
 #if USE_ENET
