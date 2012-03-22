@@ -120,6 +120,20 @@
           <object class="GtkHBox" id="launched_widget">
             <property name="visible">True</property>
             <child>
+              <object class="GtkButton" id="learn_state_button">
+                <property name="visible">True</property>
+                <property name="sensitive">False</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <property name="focus_on_click">False</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
+                <property name="position">0</property>
+              </packing>
+            </child>
+            <child>
               <object class="GtkButton" id="learn_button">
                 <property name="label" translatable="yes">Learn</property>
                 <property name="visible">True</property>
@@ -218,32 +232,20 @@
               </packing>
             </child>
             <child>
-              <object class="GtkButton" id="learn_state_button">
+              <object class="GtkButton" id="net_state_button">
+                <property name="label" translatable="yes">net</property>
                 <property name="visible">True</property>
                 <property name="sensitive">False</property>
-                <property name="can_focus">True</property>
-                <property name="receives_default">True</property>
+                <property name="can_focus">False</property>
+                <property name="receives_default">False</property>
+                <property name="tooltip_text" translatable="yes">Become orange one second when there is a network problem.</property>
                 <property name="focus_on_click">False</property>
               </object>
               <packing>
                 <property name="expand">False</property>
                 <property name="fill">False</property>
-                <property name="position">10</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkButton" id="save_res_button">
-                <property name="label" translatable="yes">Save (.res)</property>
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="receives_default">True</property>
-                <signal name="clicked" handler="on_save_res_button_clicked"/>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">False</property>
                 <property name="pack_type">end</property>
-                <property name="position">9</property>
+                <property name="position">10</property>
               </packing>
             </child>
             <child>
@@ -260,24 +262,22 @@
                 <property name="expand">False</property>
                 <property name="fill">False</property>
                 <property name="pack_type">end</property>
-                <property name="position">8</property>
+                <property name="position">9</property>
               </packing>
             </child>
             <child>
-              <object class="GtkButton" id="net_state_button">
-                <property name="label" translatable="yes">net</property>
+              <object class="GtkButton" id="save_res_button">
+                <property name="label" translatable="yes">Save (.res)</property>
                 <property name="visible">True</property>
-                <property name="sensitive">False</property>
-                <property name="can_focus">False</property>
-                <property name="receives_default">False</property>
-                <property name="tooltip_text" translatable="yes">Become orange one second when there is a network problem.</property>
-                <property name="focus_on_click">False</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <signal name="clicked" handler="on_save_res_button_clicked"/>
               </object>
               <packing>
                 <property name="expand">False</property>
                 <property name="fill">False</property>
                 <property name="pack_type">end</property>
-                <property name="position">0</property>
+                <property name="position">8</property>
               </packing>
             </child>
           </object>

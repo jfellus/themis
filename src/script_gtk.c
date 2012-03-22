@@ -393,7 +393,7 @@ void script_ui_launch(type_script_ui *script_ui, int is_debug)
   if (is_debug) target = "run_debug";
   else target = "run";
 
-  snprintf(command_line, SIZE_OF_COMMAND_LINE, "make --file=%s %s||echo -e \"\\a\"\n", script->path_makefile, target);
+  snprintf(command_line, SIZE_OF_COMMAND_LINE, "make --file=%s %s\n", script->path_makefile, target);
   vte_terminal_feed_child(script_ui->terminal, command_line, -1);
   g_signal_connect((GObject*)script_ui->terminal, "beep", (GCallback)on_vte_terminal_beep, script_ui);
 

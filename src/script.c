@@ -42,13 +42,15 @@ void script_create_makefile(t_prom_script *script)
 	FILE *makefile;
 	char working_directory[PATH_MAX];
 	const char *rsh_graphic_option;
-	int nohup = 0;
 
-	snprintf(script->path_makefile, PATH_MAX, "%s/Makefile.%s", themis.tmp_dir, script->logical_name);
+	snprintf(script->path_makefile, PATH_MAX, "%s/%s/Makefile.%s", themis.dirname, script->path_prom_deploy,script->logical_name);
 	if ((makefile = fopen(script->path_makefile, "w")) == NULL) EXIT_ON_ERROR("Impossible to create %s", script->path_makefile);
+
+	fprintf(makefile, "-include perso.mk\n\n");
 
 	fprintf(makefile, "\n/tmp/%s/logs:\n", getenv("USER"));
 	fprintf(makefile, "\tmkdir -p $@\n");
+	
 
 	snprintf(working_directory, PATH_MAX, "%s/%s", themis.dirname, script->path_prom_deploy);
 
@@ -62,14 +64,15 @@ void script_create_makefile(t_prom_script *script)
 
 	if (script->is_local)
 	{
-		nohup = 1;
-
 		fprintf(makefile, "working_directory:=%s\n\n", working_directory);
-		fprintf(makefile, "\nrun_debug: | /tmp/%s/logs\n", getenv("USER"));
+		fprintf(makefile, "\ndaemon_run_debug: | /tmp/%s/logs\n", getenv("USER"));
 		fprintf(makefile, "\tcd $(working_directory) && nohup nemiver %s_debug %s %s %s %s %s %s -n%s -b%s -i%s %s --distant-terminal> /tmp/%s/logs/%s.log\n", script->path_prom_binary, script->path_file_script, script->path_file_config, script->path_file_res, script->path_file_dev, script->path_file_gcd, script->path_file_prt, script->logical_name, themis.ip, themis.id, script->prom_args_line, getenv("USER"), script->logical_name);
-		fprintf(makefile, "\nrun: | /tmp/%s/logs\n", getenv("USER"));
+		fprintf(makefile, "\ndaemon_run: | /tmp/%s/logs\n", getenv("USER"));
 		fprintf(makefile, "\tcd $(working_directory) && nohup %s %s %s %s %s %s %s -n%s -b%s -i%s %s --distant-terminal> /tmp/%s/logs/%s.log\n", script->path_prom_binary, script->path_file_script, script->path_file_config, script->path_file_res, script->path_file_dev, script->path_file_gcd, script->path_file_prt, script->logical_name, themis.ip, themis.id, script->prom_args_line, getenv("USER"), script->logical_name);
-
+		fprintf(makefile, "\nrun_debug:\n");
+		fprintf(makefile, "\tcd $(working_directory) && nemiver %s_debug %s %s %s %s %s %s -n%s -b%s -i%s %s || echo -e \"\\a\"\n", script->path_prom_binary, script->path_file_script, script->path_file_config, script->path_file_res, script->path_file_dev, script->path_file_gcd, script->path_file_prt, script->logical_name, themis.ip, themis.id, script->prom_args_line);
+		fprintf(makefile, "\nrun:\n");
+		fprintf(makefile, "\tcd $(working_directory) && %s %s %s %s %s %s %s -n%s -b%s -i%s %s || echo -e \"\\a\"\n", script->path_prom_binary, script->path_file_script, script->path_file_config, script->path_file_res, script->path_file_dev, script->path_file_gcd, script->path_file_prt, script->logical_name, themis.ip, themis.id, script->prom_args_line);
 	}
 	else
 	{
@@ -108,6 +111,26 @@ void script_create_makefile(t_prom_script *script)
 			makefile_add_upload(makefile, script->path_file_gcd);
 			makefile_add_upload(makefile, script->path_file_prt);
 
+
+			fprintf(makefile, "\ndaemon_run:\n");
+
+			if (rsh_graphic_option == NULL)
+			{
+				fprintf(makefile, "\trsh %s@%s 'mkdir -p /tmp/%s/logs; cd promnet/%s;nohup ~/bin_leto_prom/%s -n%s -b%s -i%s %s --distant-terminal ", script->login, script->computer, script->login, script->logical_name, script->path_prom_binary, script->logical_name, themis.ip, themis.id, script->prom_args_line);
+			}
+			else 
+			{
+				fprintf(makefile, "\trsh -X %s@%s 'mkdir -p /tmp/%s/logs; cd promnet/%s;nohup ~/bin_leto_prom/%s -n%s -b%s -i%s %s  ", script->login, script->computer, script->login, script->logical_name, script->path_prom_binary, script->logical_name, themis.ip, themis.id, script->prom_args_line);
+			}
+			
+			makefile_add_argument(makefile, script->path_file_script);
+			makefile_add_argument(makefile, script->path_file_config);
+			makefile_add_argument(makefile, script->path_file_res);
+			makefile_add_argument(makefile, script->path_file_dev);
+			makefile_add_argument(makefile, script->path_file_gcd);
+			makefile_add_argument(makefile, script->path_file_prt);
+			fprintf(makefile, " > /tmp/%s/logs/%s.log'&\n", script->login, script->logical_name);
+		
 			fprintf(makefile, "\nrun_debug:\n");
 			fprintf(makefile, "\trsh -X %s@%s 'cd promnet/%s;nemiver ~/bin_leto_prom/%s_debug -n%s -b%s -i%s %s", script->login, script->computer, script->logical_name, script->path_prom_binary, script->logical_name, themis.ip, themis.id, script->prom_args_line);
 			makefile_add_argument(makefile, script->path_file_script);
@@ -116,31 +139,30 @@ void script_create_makefile(t_prom_script *script)
 			makefile_add_argument(makefile, script->path_file_dev);
 			makefile_add_argument(makefile, script->path_file_gcd);
 			makefile_add_argument(makefile, script->path_file_prt);
-			fprintf(makefile, " > /tmp/%s/logs/%s.log'&\n", script->login, script->logical_name);
+			fprintf(makefile, " '|| echo -e \"\\a\" \n");
 
 			fprintf(makefile, "\nrun:\n");
 
 			if (rsh_graphic_option == NULL)
 			{
-				nohup = 1;
 				fprintf(makefile, "\trsh %s@%s 'mkdir -p /tmp/%s/logs; cd promnet/%s;nohup ~/bin_leto_prom/%s -n%s -b%s -i%s %s --distant-terminal ", script->login, script->computer, script->login, script->logical_name, script->path_prom_binary, script->logical_name, themis.ip, themis.id, script->prom_args_line);
 			}
-			else /* En mode graphic on ne peut pas faire nohup */
+			else 
 			{
 				fprintf(makefile, "\trsh -X %s@%s 'mkdir -p /tmp/%s/logs; cd promnet/%s;nohup ~/bin_leto_prom/%s -n%s -b%s -i%s %s  ", script->login, script->computer, script->login, script->logical_name, script->path_prom_binary, script->logical_name, themis.ip, themis.id, script->prom_args_line);
 			}
-		}
+			
+			makefile_add_argument(makefile, script->path_file_script);
+			makefile_add_argument(makefile, script->path_file_config);
+			makefile_add_argument(makefile, script->path_file_res);
+			makefile_add_argument(makefile, script->path_file_dev);
+			makefile_add_argument(makefile, script->path_file_gcd);
+			makefile_add_argument(makefile, script->path_file_prt);
+			fprintf(makefile, " '|| echo -e \"\\a\"\n");
 
-		makefile_add_argument(makefile, script->path_file_script);
-		makefile_add_argument(makefile, script->path_file_config);
-		makefile_add_argument(makefile, script->path_file_res);
-		makefile_add_argument(makefile, script->path_file_dev);
-		makefile_add_argument(makefile, script->path_file_gcd);
-		makefile_add_argument(makefile, script->path_file_prt);
-		fprintf(makefile, " > /tmp/%s/logs/%s.log'&\n", script->login, script->logical_name);
-
+			}	
 		fprintf(makefile, "\nshow_log:\n");
-		fprintf(makefile, "\trsh %s@%s 'cat /tmp/%s/logs/%s.log'&\n", script->login, script->computer, script->login, script->logical_name);
+		fprintf(makefile, "\trsh %s@%s 'cat /tmp/%s/logs/%s.log'\n", script->login, script->computer, script->login, script->logical_name);
 	}
 	fclose(makefile);
 }
