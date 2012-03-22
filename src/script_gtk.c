@@ -412,7 +412,7 @@ void script_ui_launch(type_script_ui *script_ui, int is_debug)
   gdk_color_parse("grey", &color);
   gtk_widget_modify_bg(GTK_WIDGET(script_ui->state_displays[No_Quit]), GTK_STATE_INSENSITIVE, &color);
 
-  snprintf(command_line, SIZE_OF_COMMAND_LINE, "cd %s/%s\nmake --file=%s %s || echo -e \"\\a\"\n", themis.dirname, script->path_prom_deploy, script->path_makefile, target);
+  snprintf(command_line, SIZE_OF_COMMAND_LINE, "cd %s/%s\nmake %s || echo -e \"\\a\"\n", themis.dirname, script->path_prom_deploy, target);
   vte_terminal_feed_child(script_ui->terminal, command_line, -1);
   g_signal_connect((GObject*)script_ui->terminal, "beep", (GCallback)on_vte_terminal_beep, script_ui);
 
