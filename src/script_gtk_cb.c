@@ -216,6 +216,7 @@ void on_upload_button_clicked(GtkWidget *widget, type_script_ui *script_ui)
   char command_line[SIZE_OF_COMMAND_LINE];
   char working_directory[PATH_MAX];
   t_prom_script *script;
+  GdkColor color;
   (void) widget;
 
 
@@ -224,6 +225,9 @@ void on_upload_button_clicked(GtkWidget *widget, type_script_ui *script_ui)
   script_create_makefile(script);
 
   snprintf(working_directory, PATH_MAX, "%s/%s", themis.dirname, script->path_prom_deploy);
+
+  gdk_color_parse("grey", &color);
+  gtk_widget_modify_bg(GTK_WIDGET(script_ui->state_displays[No_Quit]), GTK_STATE_INSENSITIVE, &color);
 
   snprintf(command_line, SIZE_OF_COMMAND_LINE, "cd %s && make --jobs --file=%s all_upload||echo -e \"\\a\"\n", working_directory, script->path_makefile);
   vte_terminal_feed_child(script_ui->terminal, command_line, -1);

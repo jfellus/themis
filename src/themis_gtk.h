@@ -74,7 +74,9 @@ typedef struct script_ui
 
   GtkNotebook *notebook;
 
-  GtkTextBuffer *synchronize_paths_text_buffer;
+  GtkTextBuffer *synchronize_files_text_buffer;
+  GtkTextBuffer *synchronize_directories_text_buffer;
+
   GtkVBox *synchronize_files_vbox;
 
   GtkButton *upload_button;

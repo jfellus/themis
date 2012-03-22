@@ -219,13 +219,21 @@ void script_ui_update_data(type_script_ui *script_ui, gchar *reference_dirname)
   strncpy(script->path_file_gcd, gtk_entry_get_text(script_ui->gcd_entry), PATH_MAX);
   strncpy(script->path_file_prt, gtk_entry_get_text(script_ui->prt_entry), PATH_MAX);
   strncpy(script->prom_args_line, gtk_entry_get_text(script_ui->arguments_entry), MAX_PROM_ARGS_LINE);
-  strncpy(script->synchronize_paths, text_buffer_get_all_text(script_ui->synchronize_paths_text_buffer), SYNCHRONIZE_PATHS_MAX);
+  strncpy(script->synchronize_files, text_buffer_get_all_text(script_ui->synchronize_files_text_buffer), SYNCHRONIZE_PATHS_MAX);
+  strncpy(script->synchronize_directories, text_buffer_get_all_text(script_ui->synchronize_directories_text_buffer), SYNCHRONIZE_PATHS_MAX);
+
   
-  for (i = 0; script->synchronize_paths[i] != 0; i++)
+  for (i = 0; script->synchronize_files[i] != 0; i++)
   {
-    if (script->synchronize_paths[i] == '\n') script->synchronize_paths[i] = ' ';
+    if (script->synchronize_files[i] == '\n') script->synchronize_files[i] = ' ';
   }
   
+  for (i = 0; script->synchronize_directories[i] != 0; i++)
+   {
+     if (script->synchronize_directories[i] == '\n') script->synchronize_directories[i] = ' ';
+   }
+
+
   script->overwrite_res = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(script_ui->overwrite_res_check_button));
   
   /* Cherche le chemin relatif en fonction de la psotion du fichier.net (reference_path)
@@ -249,7 +257,11 @@ void script_ui_update_data(type_script_ui *script_ui, gchar *reference_dirname)
     script->prt = prt_init(prt_path, script->logical_name);
     if (script->prt == NULL) script_ui_display_status(script_ui, "File prt: %s not found.", prt_path);
   }
-  else script->prt = NULL;
+  else
+  {
+  	script->prt = NULL;
+
+  }
   
   g_object_unref(dir);
   
@@ -321,7 +333,9 @@ void ui_script_init(type_script_ui *script_ui, t_prom_script *script)
   script_ui->prom_bus_entry = GTK_ENTRY(gtk_builder_get_object(builder, "script_prom_bus_entry"));
   script_ui->readme_text_buffer = GTK_TEXT_BUFFER(gtk_builder_get_object(builder, "readme_text_buffer"));
   
-  script_ui->synchronize_paths_text_buffer = GTK_TEXT_BUFFER(gtk_builder_get_object(builder, "synchronize_paths_text_buffer"));
+  script_ui->synchronize_files_text_buffer = GTK_TEXT_BUFFER(gtk_builder_get_object(builder, "synchronize_files_text_buffer"));
+  script_ui->synchronize_directories_text_buffer = GTK_TEXT_BUFFER(gtk_builder_get_object(builder, "synchronize_directories_text_buffer"));
+
   
   /* Debug */
   script_ui->command_text_buffer = GTK_TEXT_BUFFER(gtk_builder_get_object(builder, "command_text_buffer"));
@@ -346,7 +360,9 @@ void ui_script_init(type_script_ui *script_ui, t_prom_script *script)
   set_filename_field(script_ui, script_ui->prt_entry, script_ui->prt_chooser, script->path_file_prt, "*.prt");
   gtk_entry_set_text(script_ui->arguments_entry, script->prom_args_line);
 
-  gtk_text_buffer_insert_at_cursor(script_ui->synchronize_paths_text_buffer, script->synchronize_paths, -1);
+  gtk_text_buffer_insert_at_cursor(script_ui->synchronize_files_text_buffer, script->synchronize_files, -1);
+  gtk_text_buffer_insert_at_cursor(script_ui->synchronize_directories_text_buffer, script->synchronize_directories, -1);
+
 
   snprintf(path_name, PATH_MAX, "%s/%s", themis.dirname, script->path_prom_deploy);
   gtk_file_chooser_set_current_folder(script_ui->path_chooser, path_name);
@@ -393,14 +409,16 @@ void script_ui_launch(type_script_ui *script_ui, int is_debug)
   if (is_debug) target = "run_debug";
   else target = "run";
 
-  snprintf(command_line, SIZE_OF_COMMAND_LINE, "make --file=%s %s\n", script->path_makefile, target);
+  gdk_color_parse("grey", &color);
+  gtk_widget_modify_bg(GTK_WIDGET(script_ui->state_displays[No_Quit]), GTK_STATE_INSENSITIVE, &color);
+
+  snprintf(command_line, SIZE_OF_COMMAND_LINE, "cd %s/%s\nmake --file=%s %s || echo -e \"\\a\"\n", themis.dirname, script->path_prom_deploy, script->path_makefile, target);
   vte_terminal_feed_child(script_ui->terminal, command_line, -1);
   g_signal_connect((GObject*)script_ui->terminal, "beep", (GCallback)on_vte_terminal_beep, script_ui);
 
   gtk_notebook_set_current_page(script_ui->notebook, 1);
 
-  gdk_color_parse("grey", &color);
-  gtk_widget_modify_bg(script_ui->state_displays[No_Quit], GTK_STATE_INSENSITIVE, &color);
+
 
 }
 

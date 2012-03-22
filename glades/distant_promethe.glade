@@ -926,30 +926,46 @@ distant</property>
                         <property name="label_xalign">0</property>
                         <property name="shadow_type">none</property>
                         <child>
-                          <object class="GtkVBox" id="synchronize_files_vbox">
+                          <object class="GtkTextView" id="synchronize_files_textview">
                             <property name="visible">True</property>
-                            <child>
-                              <object class="GtkTextView" id="synchronize_paths_textview">
-                                <property name="visible">True</property>
-                                <property name="can_focus">True</property>
-                                <property name="buffer">synchronize_paths_text_buffer</property>
-                              </object>
-                              <packing>
-                                <property name="position">0</property>
-                              </packing>
-                            </child>
+                            <property name="can_focus">True</property>
+                            <property name="buffer">synchronize_files_text_buffer</property>
                           </object>
                         </child>
                         <child type="label">
                           <object class="GtkLabel" id="label22">
                             <property name="visible">True</property>
-                            <property name="label" translatable="yes">Files and directories to synchronize</property>
+                            <property name="label" translatable="yes">Files to synchronize</property>
                             <property name="use_markup">True</property>
                           </object>
                         </child>
                       </object>
                       <packing>
                         <property name="position">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkFrame" id="frame6">
+                        <property name="visible">True</property>
+                        <property name="label_xalign">0</property>
+                        <property name="shadow_type">none</property>
+                        <child>
+                          <object class="GtkTextView" id="synchronize_directories_textview">
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="buffer">synchronize_directories_text_buffer</property>
+                          </object>
+                        </child>
+                        <child type="label">
+                          <object class="GtkLabel" id="label23">
+                            <property name="visible">True</property>
+                            <property name="label" translatable="yes">Directories to synchronize</property>
+                            <property name="use_markup">True</property>
+                          </object>
+                        </child>
+                      </object>
+                      <packing>
+                        <property name="position">1</property>
                       </packing>
                     </child>
                   </object>
@@ -1144,19 +1160,6 @@ distant</property>
                                 <property name="position">0</property>
                               </packing>
                             </child>
-                            <child>
-                              <object class="GtkButton" id="show_log_button">
-                                <property name="label" translatable="yes">Show log</property>
-                                <property name="visible">True</property>
-                                <property name="can_focus">True</property>
-                                <property name="receives_default">True</property>
-                                <signal name="clicked" handler="on_show_log_button_clicked"/>
-                              </object>
-                              <packing>
-                                <property name="expand">False</property>
-                                <property name="position">1</property>
-                              </packing>
-                            </child>
                           </object>
                           <packing>
                             <property name="resize">True</property>
@@ -1298,5 +1301,6 @@ distant</property>
     </child>
   </object>
   <object class="GtkTextBuffer" id="command_text_buffer"/>
-  <object class="GtkTextBuffer" id="synchronize_paths_text_buffer"/>
+  <object class="GtkTextBuffer" id="synchronize_files_text_buffer"/>
+  <object class="GtkTextBuffer" id="synchronize_directories_text_buffer"/>
 </interface>
