@@ -123,7 +123,15 @@ void ivy_here_callback(IvyClientPtr app, void *user_data, int argc, char **argv)
       script_ui_set_state(script_ui, state);
     }
     if(script->debug_port != debug_port || script->kernel_port != kernel_port || script->console_port!= console_port) {
-      EXIT_ON_ERROR("(script %s) : One of the telnet ports seems to have changed while promethe was connected.\n",script->logical_name);
+      PRINT_WARNING("(script %s) : One of the telnet ports seems to have changed while promethe was connected.\n Assume failure of notification to themis and open new telnet ports now",script->logical_name);
+      script->debug_port = debug_port;
+      script->kernel_port = kernel_port;
+      script->console_port = console_port;
+      
+      script_ui_set_state(script_ui, state);
+      script_ui_connect_consoles(script_ui);
+      /** Envoi d'eventuelles commande clavier une fois que promethe vient de demmarer*/
+      vte_terminal_feed_child(script_ui->console_terminal, script->keyboard_input, -1);
     }
   }
 }
