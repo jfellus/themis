@@ -31,7 +31,9 @@ void makefile_add_argument(FILE *makefile, char *file_path)
 
 	if (file_path[0] != 0)
 	{
-		fprintf(makefile, " %s", file_path);
+		basename = g_path_get_basename(file_path);
+		fprintf(makefile, " %s", basename);
+		g_free(basename);
 	}
 }
 
