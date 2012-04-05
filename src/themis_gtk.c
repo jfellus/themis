@@ -276,18 +276,6 @@ void on_refresh_button_clicked(GtkWidget *widget, gpointer user_data)
   if (themis.filename[0]!=0) load(themis.filename);
 }
 
-
-/**
- * Used only with enet
- * @param widget
- * @param ip_adr
- */
-void on_start_profiler_activate(GtkWidget *widget, char *ip_adr)
-{
-  (void) widget;
-  prom_bus_send_message("connect_profiler(%s)\n", ip_adr); /* Ask the distant promethe to connect to the current */
-}
-
 /**************************************************** END CALL_BACKS  **************************************************************************/
 type_script_ui *ui_get_script_ui_with_id(char *prom_id)
 {

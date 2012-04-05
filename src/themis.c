@@ -9,8 +9,10 @@
 #include <sys/socket.h>
 
 #if USE_ENET
-#include "oscillo_kernel.h"
+#include "enet_server.h"
+#include "prom_tools/include/oscillo_kernel_display.h"
 #endif
+
 
 #include "themis_ivy_cb.h"
 #include "themis_ivy.h"
@@ -221,9 +223,8 @@ int main(int argc, char *argv[])
 	gettimeofday(&themis.starting_time, NULL);
 
 	snprintf(themis.tmp_dir, PATH_MAX, "/tmp/%s/themis", getenv("USER"));
-
 	snprintf(command_line, SIZE_OF_COMMAND_LINE, "mkdir -p %s\n", themis.tmp_dir);
-	if (system(command_line) != 0) PRINT_WARNING("Error creating the directory. Using the command:\n%s", command_line);
+	if (system(command_line) != 0) PRINT_WARNING("Error creating the directory. Using the command:%s\n", command_line);
 
 	themis.promnet = promnet_init();
 
@@ -247,9 +248,6 @@ int main(int argc, char *argv[])
 
 	display_status_message("broadcast on %s:2010", themis.ip);
 
-#if USE_ENET
-	init_oscillo_kernel(1234); /* Port 1234 */
-#endif
 
 	gdk_threads_enter(); /*  version threadee de l'IHM */
 	gtk_main(); /* Boucle principale de Gtk */

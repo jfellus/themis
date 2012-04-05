@@ -6,7 +6,7 @@
     <property name="has_focus">True</property>
     <property name="title" translatable="yes">Themis</property>
     <property name="default_height">543</property>
-    <property name="icon">themis_icon.png</property>
+    <property name="icon">glade/themis_icon.png</property>
     <signal name="delete_event" handler="on_quit_requested"/>
     <child>
       <object class="GtkVBox" id="vbox1">
@@ -48,7 +48,6 @@
                       <object class="GtkImageMenuItem" id="menu_item_save_as">
                         <property name="label">Save As ... (.net)</property>
                         <property name="visible">True</property>
-                        <property name="image">image2</property>
                         <property name="use_stock">False</property>
                         <property name="always_show_image">True</property>
                         <accelerator key="s" signal="activate" modifiers="GDK_SHIFT_MASK | GDK_CONTROL_MASK"/>
@@ -122,6 +121,19 @@
                 <property name="use_underline">True</property>
                 <property name="stock_id">gtk-add</property>
                 <signal name="clicked" handler="on_menu_item_add_script_activate"/>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="homogeneous">True</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkToolButton" id="oscillo_kernel_start_button">
+                <property name="visible">True</property>
+                <property name="label" translatable="yes">toolbutton1</property>
+                <property name="use_underline">True</property>
+                <property name="icon_widget">image_oscillo_kernel</property>
+                <signal name="clicked" handler="on_oscillo_kernel_start_button_clicked"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -323,10 +335,9 @@
     <property name="focus_on_click">False</property>
   </object>
   <object class="GtkTextBuffer" id="prom_bus_text_buffer"/>
-  <object class="GtkImage" id="image2">
+  <object class="GtkImage" id="image_oscillo_kernel">
     <property name="visible">True</property>
-    <property name="xpad">2</property>
-    <property name="stock">gtk-save-as</property>
+    <property name="pixbuf">oscillo_kernel_icon_small.png</property>
   </object>
   <object class="GtkImage" id="image1">
     <property name="visible">True</property>

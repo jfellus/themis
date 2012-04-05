@@ -10,16 +10,18 @@ SCRIPTLIB_DIR="$PROMLIB_DIR/script"
 GLADE_LETO_PROM_DIR="$DIR_BIN_LETO_PROM/glades"
 
 CFLAGS="$CFLAGS -I.. -I../shared/include -I/src `pkg-config --cflags $PACKAGES` -I$SIMULATOR_PATH/enet/include" 
-LIBS="-L$SCRIPTLIB_DIR -lscript -L$IVYLIB_DIR -lglibivy -lmxml `pkg-config --libs $PACKAGES` -L$SIMULATOR_PATH/lib/$SYSTEM/comm"
+LIBS="-L$SCRIPTLIB_DIR -lscript -L$IVYLIB_DIR -lglibivy -lmxml `pkg-config --libs $PACKAGES` -L$SIMULATOR_PATH/lib/$SYSTEM/comm "
 SOURCE_DIR="src"
 SOURCES=(themis.c themis_gtk.c script_gtk.c script_gtk_cb.c themis_ivy.c themis_ivy_cb.c script.c)
-ALL_GLADE_FILES=(distant_promethe.glade themis.glade themis_icon.png oscillo_kernel_icon.png)
+ALL_GLADE_FILES=(distant_promethe.glade themis.glade themis_icon.png oscillo_kernel_icon_small.png)
 
+ENET=0;
+OSCILLO_KERNEL_LIB="";
 
 for i in $@
 do
 	case $i in
-		(--enable-enet) CFLAGS="$CFLAGS -DUSE_ENET"; SOURCES=(${SOURCES[@]} oscillo_kernel.c); ALL_GLADE_FILES=(${ALL_GLADE_FILES[@]} oscillo_kernel.glade)  LIBS="$LIBS -L$SIMULATOR_PATH/lib/$SYSTEM/enet/lib -lenet";echo "enet:enabled";;
+(--enable-enet) ENET=1; CFLAGS="$CFLAGS -DUSE_ENET=1"; SOURCES=(${SOURCES[@]} enet_server.c); ALL_GLADE_FILES=(${ALL_GLADE_FILES[@]} oscillo_kernel.glade);OSCILLO_KERNEL_LIB="$OSCILLOKERNELLIBPATH/liboscillo_kernel_debug.a"; LIBS="-L$OSCILLOKERNELLIBPATH -loscillo_kernel_debug -L$SIMULATOR_PATH/lib/$SYSTEM/enet/lib -lenet  -L$GRAPHICLIBPATH -l${GRAPHICLIB} $LIBS"; echo "enet:enabled";;
 	esac
 done
 
@@ -41,10 +43,15 @@ $GLADE_LETO_PROM_DIR/%:glades/% $GLADE_LETO_PROM_DIR
 	cp glades/\$* \$@
 
 all:$DIR_BIN_LETO_PROM/themis $DIR_BIN_LETO_PROM/themis_debug  ${ALL_GLADE_FILES[@]/#/$GLADE_LETO_PROM_DIR/} 
+
+$OSCILLOKERNELLIBPATH/liboscillo_kernel_debug.a:
+	cd ../prom_tools&&make 
 	
 clean:${ALL_CONFIGURATIONS[@]/#/clean_}
 
 reset:${ALL_CONFIGURATIONS[@]/#/reset_}
+
+
 " > $MAKEFILE
 
 
@@ -58,13 +65,13 @@ do
 	then
 		echo -e "\n#*** Release ***" >> $MAKEFILE
 		OBJECTS_DIR="$OBJPATH/themis/release"
-		FINAL_CFLAGS="$FLAGS_OPTIM $CFLAGS"		
+		FINAL_CFLAGS="$FLAGS_OPTIM $CFLAGS -DOSCILLO_KERNEL"		
 		FINAL_LIBS="$LIBS -lcomm_release"
 		TARGET="themis"
 	else
 		echo -e "\n#*** Debug ****" >> $MAKEFILE		
 		OBJECTS_DIR="$OBJPATH/themis/debug"		
-		FINAL_CFLAGS="$FLAGS_DEBUG $CFLAGS"		
+		FINAL_CFLAGS="$FLAGS_DEBUG $CFLAGS -DOSCILLO_KERNEL"		
 		FINAL_LIBS="$LIBS -lcomm_debug"		
 		TARGET="themis_debug" 
 	fi
@@ -91,9 +98,9 @@ $OBJECTS_DIR/%.o:$SOURCE_DIR/%.c | $OBJECTS_DIR
 	@#rules to make automaticaly recalculate the dependencies 
 	@sed 's,\(\$*\)\.o[ :]*,\$(@D)/\1.o \$*.d : ,g' < \$(@D)/\$*.d.tmp > \$(@D)/\$*.d
 		
-$DIR_BIN_LETO_PROM/$TARGET: ${OBJECTS} | $OBJECT_DIR $DIR_BIN_LETO_PROM
+$DIR_BIN_LETO_PROM/$TARGET: ${OBJECTS} $OSCILLO_KERNEL_LIB| $OBJECT_DIR $DIR_BIN_LETO_PROM
 	@echo Link \$@  	
-	@$CC $FINAL_CFLAGS \$^ -o $OBJECTS_DIR/themis $FINAL_LIBS
+	@$CC $FINAL_CFLAGS ${OBJECTS} -o $OBJECTS_DIR/themis $FINAL_LIBS
 	@cp -f $OBJECTS_DIR/themis \$@
 	
 clean_${CONFIGURATION}:

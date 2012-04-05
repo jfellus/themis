@@ -6,13 +6,19 @@ source ../scripts/COMPILE_FLAG
 ALL_PROJECTS=(themis shirka)
 ALL_ACTIONS=(all clean reset)
 
-echo "include ../scripts/variables.mk" > Makefile
 
+echo ".PHONY:default all clean reset" > Makefile
+echo "default:all" >> Makefile
+echo "include ../scripts/variables.mk" >> Makefile
 echo -e "all:${ALL_PROJECTS[@]/#/all_}\n" >> Makefile
 
 echo -e "clean: ${ALL_PROJECTS[@]/#/clean_}\n" >> Makefile
 
 echo -e "reset: ${ALL_PROJECTS[@]/#/reset_}\n" >> Makefile
+
+echo "${LOGDIR}:" >> Makefile
+echo -e "\tmake -p \$@" >> Makefile
+
 
 for PROJECT in ${ALL_PROJECTS[@]}
 do

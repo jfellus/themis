@@ -14,19 +14,6 @@
         <child>
           <object class="GtkToolbar" id="toolbar1">
             <property name="visible">True</property>
-            <child>
-              <object class="GtkToolButton" id="oscillo_kernel_start_button">
-                <property name="visible">True</property>
-                <property name="label" translatable="yes">toolbutton1</property>
-                <property name="use_underline">True</property>
-                <property name="stock_id">gtk-media-play</property>
-                <signal name="clicked" handler="on_oscillo_kernel_start_button_clicked"/>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="homogeneous">True</property>
-              </packing>
-            </child>
           </object>
           <packing>
             <property name="expand">False</property>
