@@ -6,7 +6,7 @@
     <property name="has_focus">True</property>
     <property name="title" translatable="yes">Themis</property>
     <property name="default_height">543</property>
-    <property name="icon">glade/themis_icon.png</property>
+    <property name="icon">themis_icon.png</property>
     <signal name="delete_event" handler="on_quit_requested"/>
     <child>
       <object class="GtkVBox" id="vbox1">
