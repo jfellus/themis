@@ -106,7 +106,7 @@ int main(int argc, char *argv[])
         strncpy(prom_bus_address, argv[i], SIZE_OF_ADDRESS);
       }
       else
-      EXIT_ON_ERROR("An address like '127.255.255.255:2010' must follow the option '-b'.");
+      printf("An address like '127.255.255.255:2010' must follow the option '-b'.\n");
     }
   }
 
