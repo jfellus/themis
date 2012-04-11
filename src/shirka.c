@@ -36,6 +36,48 @@ typedef struct prom_bus_command {
 
 /* Ce pointeur doit etre toujours valable tant que ivy tourne */
 char ivy_prom_name[SIZE_OF_IVY_PROM_NAME];
+char bus_id[BUS_ID_MAX];
+
+void fatal_error(const char *name_of_file, const char* name_of_function, int numero_of_line, const char *message, ...)
+{
+	va_list arguments;
+	va_start(arguments, message);
+	printf("\033[1;31m %s \t %s \t %i :\n \t Fatal error: ", name_of_file, name_of_function, numero_of_line);
+	vprintf(message, arguments);
+	printf("\033[0m\n");
+	va_end(arguments);
+	exit(EXIT_FAILURE);
+}
+
+/**
+* Envoie un message d'erreur avec name_of_file, name_of_function, number_of_line et affiche le message formate avec les parametres variables.
+* Ajoute l'affichage de l'erreur system errno
+*/
+void fatal_system_error(const char *name_of_file, const char* name_of_function, int numero_of_line, const char *message, ...)
+{
+	va_list arguments;
+	va_start(arguments, message);
+	printf( "\n\033[1;31m %s \t %s \t %i :\n \t Error: ", name_of_file, name_of_function, numero_of_line);
+	vprintf(message, arguments);
+	printf("System error: %s\n\n", strerror(errno));
+	printf("\033[0m\n\n");
+
+	va_end(arguments);
+	exit(EXIT_FAILURE);
+}
+
+
+void print_warning(const char *name_of_file, const char* name_of_function, int numero_of_line, const char *message, ...)
+{
+	va_list arguments;
+	va_start(arguments, message);
+	printf("\033[1;33m %s \t %s \t %i :\n \t Warning: ", name_of_file, name_of_function, numero_of_line);
+	vprintf(message, arguments);
+	printf("\033[0m\n");
+	va_end(arguments);
+}
+
+
 
 void ivy_speak_callback(IvyClientPtr app, void *user_data, int argc, char **argv)
 {
@@ -94,28 +136,40 @@ int main(int argc, char *argv[])
   char computer_name[SIZE_OF_COMPUTER];
   char prom_bus_address[SIZE_OF_ADDRESS];
   int i;
+	int option;
+
+	bus_id[0]=0;
+
   setlocale(LC_ALL, "C");
   strncpy(prom_bus_address, "127.255.255.255:2010", SIZE_OF_ADDRESS);
   for (i = 1; i < argc; i++)
   {
-    if (strcmp(argv[i], "-b") == 0)
-    {
-      if (i < argc)
-      {
-        i++;
-        strncpy(prom_bus_address, argv[i], SIZE_OF_ADDRESS);
-      }
-      else
-      printf("An address like '127.255.255.255:2010' must follow the option '-b'.\n");
-    }
+  	while ((option = getopt(argc, argv, "b:i:")) != -1)
+  	{
+  		switch (option)
+  		{
+  		case 'b':
+  			strncpy(prom_bus_address, optarg, INET_ADDRSTRLEN);
+  			break;
+  		case 'i':
+  			strncpy(bus_id, optarg, BUS_ID_MAX);
+  			break;
+  		default: /* '?' */
+  			EXIT_ON_ERROR("\tUsage: %s [-b broadcast_ip] [-i bus_id] \n", argv[0]);
+  			break;
+  		}
+  	}
   }
+
+  if (bus_id[0]==0) EXIT_ON_ERROR("You need to specify a bus id: -i[name of the bus id]");
+
 
   gethostname(computer_name, SIZE_OF_COMPUTER);
   snprintf(ivy_prom_name, SIZE_OF_IVY_PROM_NAME, "shirka:%s", computer_name);
   IvyInit(ivy_prom_name, NULL, ivyApplicationCallback, NULL, NULL, NULL);
-  IvyBindMsg(ivy_speak_callback, NULL, "^speak\\((.*)\\)$");
+  IvyBindMsg(ivy_speak_callback, NULL, "^%s:speak\\((.*)\\)$", bus_id);
 
-  printf("Shirka is ready.\n");
+  printf("Shirka is ready with bus_id: -i%s.\n", bus_id);
   IvyStart(prom_bus_address);
   IvyMainLoop();
 
