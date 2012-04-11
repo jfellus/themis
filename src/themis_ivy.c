@@ -63,19 +63,17 @@ void ivy_stat_callback(IvyClientPtr app, void *user_data, int argc, char **argv)
 void ivyApplicationCallback (IvyClientPtr app, void *user_data, IvyApplicationEvent event)
 {
   char *appname;
-  char *host;
   (void)user_data;
 
   appname = IvyGetApplicationName (app);
-  host = IvyGetApplicationHost (app);
 
   switch  (event)  {
   case IvyApplicationConnected:
-    printf("Connexion de %s d'address %s\n", appname, host);
+    printf("Connexion de %s\n", appname);
     break;
 
   case IvyApplicationDisconnected:
-    printf("%s disconnected from %s\n", appname,  host);
+    printf("%s disconnected\n", appname);
     break;
 
   default:
