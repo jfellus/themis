@@ -105,7 +105,7 @@ void script_create_makefile(t_prom_script *script)
 			fprintf(makefile, "%%_upload_promnet:%% mkdir_promnet\n");
 			fprintf(makefile, "\trsync -a $< %s@%s:promnet/%s/$(<F)\n\n", script->login, script->computer, script->logical_name);
 			fprintf(makefile, "%%_upload_file:%% mkdir_promnet\n");
-			fprintf(makefile, "\trsync -a $< %s@%s:promnet/%s/$(<F)\n\n", script->login, script->computer, script->logical_name);
+			fprintf(makefile, "\trsync -a $< %s@%s:promnet/%s/$<\n\n", script->login, script->computer, script->logical_name);
 			fprintf(makefile, "%%_upload_directory:%% mkdir_promnet\n");
 			fprintf(makefile, "\trsync -a $< %s@%s:promnet/%s/$(<D)\n\n", script->login, script->computer, script->logical_name);
 			fprintf(makefile, "all_upload_bin_leto_prom:~/bin_leto_prom/ mkdir_bin_leto_prom\n");
