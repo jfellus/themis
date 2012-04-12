@@ -108,7 +108,7 @@ void ivyApplicationCallback (IvyClientPtr app, void *user_data, IvyApplicationEv
   (void)user_data;
 
   appname = IvyGetApplicationName (app);
-  host = IvyGetApplicationHost (app);
+  host = IvyGetApplicationIp (app);
 
   switch  (event)  {
   case IvyApplicationConnected:

@@ -82,7 +82,7 @@ void ivy_here_callback(IvyClientPtr app, void *user_data, int argc, char **argv)
   (void) user_data;
   
   prom_id = IvyGetApplicationName(app);
-  hostname = IvyGetApplicationHost(app);
+  hostname = IvyGetApplicationIp(app);
   
   
   if (sscanf(argv[0], "%d,%d,%d,%d",&state, &kernel_port, &console_port, &debug_port) != 4) PRINT_WARNING("Wrong message format: %s\n\tYour prom_kernel is probably to old (<244)", argv[0]);
