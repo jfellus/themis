@@ -102,6 +102,9 @@ void script_create_makefile(t_prom_script *script)
 				fprintf(makefile, "\trsync --ignore-existing $< %s@%s:promnet/%s/$(<F)\n\n", script->login, script->computer, script->logical_name);
 			}
 
+			fprintf(makefile, "%s_upload_promnet:%s mkdir_promnet\n", script->path_file_gcd, script->path_file_gcd);
+			fprintf(makefile, "\trsync --ignore-existing $< %s@%s:promnet/%s/$(<F)\n\n", script->login, script->computer, script->logical_name);
+
 			fprintf(makefile, "%%_upload_promnet:%% mkdir_promnet\n");
 			fprintf(makefile, "\trsync -a $< %s@%s:promnet/%s/$(<F)\n\n", script->login, script->computer, script->logical_name);
 			fprintf(makefile, "%%_upload_file:%% mkdir_promnet\n");
