@@ -27,13 +27,9 @@ void makefile_add_upload(FILE *makefile, char *file_path)
 
 void makefile_add_argument(FILE *makefile, char *file_path)
 {
-	gchar *basename;
-
 	if (file_path[0] != 0)
 	{
-		basename = g_path_get_basename(file_path);
-		fprintf(makefile, " %s", basename);
-		g_free(basename);
+		fprintf(makefile, " %s", file_path);
 	}
 }
 
@@ -99,14 +95,11 @@ void script_create_makefile(t_prom_script *script)
 			if (!script->overwrite_res)
 			{
 				fprintf(makefile, "%s_upload_promnet:%s mkdir_promnet\n", script->path_file_res, script->path_file_res);
-				fprintf(makefile, "\trsync --ignore-existing $< %s@%s:promnet/%s/$(<F)\n\n", script->login, script->computer, script->logical_name);
+				fprintf(makefile, "\trsync --ignore-existing $< %s@%s:promnet/%s/$<\n\n", script->login, script->computer, script->logical_name);
 			}
 
-			fprintf(makefile, "%s_upload_promnet:%s mkdir_promnet\n", script->path_file_gcd, script->path_file_gcd);
-			fprintf(makefile, "\trsync --ignore-existing $< %s@%s:promnet/%s/$(<F)\n\n", script->login, script->computer, script->logical_name);
-
 			fprintf(makefile, "%%_upload_promnet:%% mkdir_promnet\n");
-			fprintf(makefile, "\trsync -a $< %s@%s:promnet/%s/$(<F)\n\n", script->login, script->computer, script->logical_name);
+			fprintf(makefile, "\trsync -a $< %s@%s:promnet/%s/$<\n\n", script->login, script->computer, script->logical_name);
 			fprintf(makefile, "%%_upload_file:%% mkdir_promnet\n");
 			fprintf(makefile, "\trsync -a $< %s@%s:promnet/%s/$<\n\n", script->login, script->computer, script->logical_name);
 			fprintf(makefile, "%%_upload_directory:%% mkdir_promnet\n");
