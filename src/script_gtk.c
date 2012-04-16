@@ -101,7 +101,7 @@ void script_ui_connect_consoles(type_script_ui *ui)
   pid_t pid;
   
   t_prom_script * script = ui->data;
-  
+
   argv[0] = (char*) "rlwrap";
   argv[1] = (char*) "telnet";
   argv[2] = script->computer;
@@ -244,7 +244,6 @@ void script_ui_update_data(type_script_ui *script_ui, gchar *reference_dirname)
   {
     gtk_entry_set_text(script_ui->path_entry, script->path_prom_deploy);
     if (themis.dirname != reference_dirname) strncpy(themis.dirname, reference_dirname, PATH_MAX); /* On ne fait une copie que si les pointeurs sont différents */
-    on_path_entry_activate(script_ui->path_entry, script_ui);
   }
   else
     PRINT_WARNING("Directory %s not found.", dirname);
@@ -305,7 +304,6 @@ void ui_script_init(type_script_ui *script_ui, t_prom_script *script)
   
   /* Settings */
   script_ui->login_entry = GTK_ENTRY(gtk_builder_get_object(builder, "login_entry"));
-  script_ui->path_chooser = GTK_FILE_CHOOSER(gtk_builder_get_object(builder, "path_chooser"));
   script_ui->path_entry = GTK_ENTRY(gtk_builder_get_object(builder, "path_entry"));
   script_ui->terminal = VTE_TERMINAL(gtk_builder_get_object(builder, "terminal"));
   script_ui->kernel_terminal = VTE_TERMINAL(gtk_builder_get_object(builder, "kernel_terminal"));
@@ -365,7 +363,6 @@ void ui_script_init(type_script_ui *script_ui, t_prom_script *script)
 
 
   snprintf(path_name, PATH_MAX, "%s/%s", themis.dirname, script->path_prom_deploy);
-  gtk_file_chooser_set_current_folder(script_ui->path_chooser, path_name);
 
   gtk_builder_connect_signals(builder, script_ui);
   g_object_unref(G_OBJECT(builder));

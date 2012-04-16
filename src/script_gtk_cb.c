@@ -66,57 +66,89 @@ void on_file_entry_activate(GObject *object, type_script_ui *script_ui)
   gtk_file_chooser_set_filename(file_chooser, fullname);
 }
 
+/** private */
+void update_path_of_files(type_script_ui *script_ui, char *old_path_prom_deploy) {
+  char fullname[PATH_MAX];
+
+  snprintf(fullname, PATH_MAX, "%s/%s/%s", themis.dirname, old_path_prom_deploy,script_ui->data->path_file_config);
+  gtk_file_chooser_set_filename(script_ui->config_chooser, fullname);
+
+  snprintf(fullname, PATH_MAX, "%s/%s/%s", themis.dirname, old_path_prom_deploy,script_ui->data->path_file_res);
+  gtk_file_chooser_set_filename(script_ui->res_chooser, fullname);
+
+  snprintf(fullname, PATH_MAX, "%s/%s/%s", themis.dirname, old_path_prom_deploy,script_ui->data->path_file_gcd);
+  gtk_file_chooser_set_filename(script_ui->gcd_chooser, fullname);
+
+  snprintf(fullname, PATH_MAX, "%s/%s/%s", themis.dirname, old_path_prom_deploy,script_ui->data->path_file_dev);
+  gtk_file_chooser_set_filename(script_ui->dev_chooser, fullname);
+
+  snprintf(fullname, PATH_MAX, "%s/%s/%s", themis.dirname, old_path_prom_deploy,script_ui->data->path_file_prt);
+  gtk_file_chooser_set_filename(script_ui->prt_chooser, fullname);
+}
+
 void on_file_chooser_set(GObject *object, type_script_ui *script_ui)
 {
   GFile *file;
   GtkEntry *entry;
   char *filename;
   char reference_path[PATH_MAX];
+  char old_path_prom_deploy[PATH_MAX];
+  char *dirname;
+  char readme_path_name[PATH_MAX];
+  char *readme_buffer;
+  GError *g_error = NULL;
 
   entry = g_object_get_data(object, "entry");
   filename = g_object_get_data(object, "filename");
 
   file = gtk_file_chooser_get_file(GTK_FILE_CHOOSER(object));
 
+
   if (file != NULL)
   {
-    snprintf(reference_path, PATH_MAX, "%s/%s", themis.dirname, script_ui->data->path_prom_deploy);
+    /** si concerne le chemin du script */
+    if(filename == script_ui->data->path_file_script) { /* cmp pointers */
+
+      /** test file has parent */
+      if(g_file_has_parent(file,NULL)) 
+	dirname = g_file_get_path(g_file_get_parent(file));
+      else {
+	dirname=NULL;
+	EXIT_ON_ERROR("%s does not have parent ! Don't do that !\n",g_file_get_path(file));
+      }
+
+      snprintf(old_path_prom_deploy, PATH_MAX, "%s", script_ui->data->path_prom_deploy);
+
+      if (set_relative_path_from_gfile(script_ui->data->path_prom_deploy, themis.dirname, g_file_new_for_path(dirname)))
+      {
+	gtk_entry_set_text(script_ui->path_entry, script_ui->data->path_prom_deploy);
+	/* on_path_entry_activate(script_ui->path_entry, script_ui); */
+      }
+      
+      snprintf(readme_path_name, PATH_MAX, "%s/%s/README", themis.dirname, script_ui->data->path_prom_deploy);
+      if (g_file_get_contents(readme_path_name, &readme_buffer, NULL, &g_error) != FALSE)
+      {
+	gtk_text_buffer_set_text(script_ui->readme_text_buffer, readme_buffer, -1);
+      }
+      else gtk_text_buffer_set_text(script_ui->readme_text_buffer, "", -1);
+      
+
+      update_path_of_files(script_ui, old_path_prom_deploy);
+
+      g_free(readme_buffer);
+      g_free(dirname);
+    }
+
+    snprintf(reference_path, PATH_MAX, "%s/%s", themis.dirname, script_ui->data->path_prom_deploy);    
     if (set_relative_path_from_gfile(filename, reference_path, file))
     {
-      gtk_entry_set_text(entry, filename);
+      /** check if path is actually empty - if not directory */
+      if(g_file_test(g_file_get_path(file),G_FILE_TEST_IS_DIR))
+	gtk_entry_set_text(entry, "");
+      else
+	gtk_entry_set_text(entry, filename);
     }
   }
-}
-
-void on_path_chooser_current_folder_changed(GtkFileChooser *path_chooser, type_script_ui *script_ui)
-{
-  char readme_path_name[PATH_MAX];
-  char *readme_buffer;
-  GFile *working_dir_file;
-  GError *g_error = NULL;
-
-  working_dir_file = gtk_file_chooser_get_file(path_chooser);
-
-  if (set_relative_path_from_gfile(script_ui->data->path_prom_deploy, themis.dirname, working_dir_file))
-  {
-    gtk_entry_set_text(script_ui->path_entry, script_ui->data->path_prom_deploy);
-  }
-
-  gtk_file_chooser_set_current_folder_file(script_ui->script_chooser, working_dir_file, NULL);
-  gtk_file_chooser_set_current_folder_file(script_ui->config_chooser, working_dir_file, NULL);
-  gtk_file_chooser_set_current_folder_file(script_ui->res_chooser, working_dir_file, NULL);
-  gtk_file_chooser_set_current_folder_file(script_ui->dev_chooser, working_dir_file, NULL);
-  gtk_file_chooser_set_current_folder_file(script_ui->gcd_chooser, working_dir_file, NULL);
-  gtk_file_chooser_set_current_folder_file(script_ui->prt_chooser, working_dir_file, NULL);
-
-  snprintf(readme_path_name, PATH_MAX, "%s/%s/README", themis.dirname, script_ui->data->path_prom_deploy);
-  if (g_file_get_contents(readme_path_name, &readme_buffer, NULL, &g_error) != FALSE)
-  {
-    gtk_text_buffer_set_text(script_ui->readme_text_buffer, readme_buffer, -1);
-  }
-  else gtk_text_buffer_set_text(script_ui->readme_text_buffer, "", -1);
-
-  g_free(readme_buffer);
 }
 
 void on_change_filter(GtkWidget *widget, gpointer user_data)
@@ -233,16 +265,6 @@ void on_upload_button_clicked(GtkWidget *widget, type_script_ui *script_ui)
   vte_terminal_feed_child(script_ui->terminal, command_line, -1);
 
   gtk_notebook_set_current_page(script_ui->notebook, 1);
-}
-
-
-void on_path_entry_activate(GtkEntry *path_entry, type_script_ui *script_ui)
-{
-  char dirname[PATH_MAX];
-
-  strncpy(script_ui->data->path_prom_deploy, gtk_entry_get_text(path_entry), PATH_MAX);
-  snprintf(dirname, PATH_MAX, "%s/%s", themis.dirname, script_ui->data->path_prom_deploy);
-  gtk_file_chooser_set_current_folder(script_ui->path_chooser, dirname);
 }
 
 void on_quit_button_clicked(GtkWidget *widget, type_script_ui *script_ui)

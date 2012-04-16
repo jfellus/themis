@@ -347,7 +347,7 @@
                           <object class="GtkLabel" id="label16">
                             <property name="visible">True</property>
                             <property name="xalign">0</property>
-                            <property name="label" translatable="yes">Working directory: </property>
+                            <property name="label" translatable="yes">Script directory: </property>
                           </object>
                           <packing>
                             <property name="expand">False</property>
@@ -359,25 +359,15 @@
                           <object class="GtkEntry" id="path_entry">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
+                            <property name="editable">False</property>
                             <property name="invisible_char">&#x25CF;</property>
-                            <signal name="activate" handler="on_path_entry_activate"/>
                           </object>
                           <packing>
                             <property name="position">1</property>
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkFileChooserButton" id="path_chooser">
-                            <property name="visible">True</property>
-                            <property name="action">select-folder</property>
-                            <property name="title">path</property>
-                            <signal name="current_folder_changed" handler="on_path_chooser_current_folder_changed"/>
-                          </object>
-                          <packing>
-                            <property name="expand">False</property>
-                            <property name="fill">False</property>
-                            <property name="position">2</property>
-                          </packing>
+                          <placeholder/>
                         </child>
                       </object>
                       <packing>
