@@ -4,6 +4,11 @@ environment/project/cdt.managedbuild.config.gnu.cross.exe.debug.1031446683/PATH/
 environment/project/cdt.managedbuild.config.gnu.cross.exe.debug.1031446683/PATH/value=/bin\:/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/usr/games\:/home/arnablan/bin_leto_prom
 environment/project/cdt.managedbuild.config.gnu.cross.exe.debug.1031446683/append=true
 environment/project/cdt.managedbuild.config.gnu.cross.exe.debug.1031446683/appendContributed=true
+environment/project/cdt.managedbuild.config.gnu.cross.exe.debug.1096627566/PATH/delimiter=\:
+environment/project/cdt.managedbuild.config.gnu.cross.exe.debug.1096627566/PATH/operation=replace
+environment/project/cdt.managedbuild.config.gnu.cross.exe.debug.1096627566/PATH/value=/bin\:/home/arnablan/bin\:/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/usr/games\:/home/arnablan/bin_leto_prom
+environment/project/cdt.managedbuild.config.gnu.cross.exe.debug.1096627566/append=true
+environment/project/cdt.managedbuild.config.gnu.cross.exe.debug.1096627566/appendContributed=true
 environment/project/cdt.managedbuild.config.gnu.cross.exe.debug.1590597420/append=true
 environment/project/cdt.managedbuild.config.gnu.cross.exe.debug.1590597420/appendContributed=true
 environment/project/cdt.managedbuild.config.gnu.cross.exe.release.1652453770/DBUS_SESSION_BUS_ADDRESS/delimiter=\:

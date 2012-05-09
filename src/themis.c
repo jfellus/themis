@@ -248,7 +248,6 @@ int main(int argc, char *argv[])
 
 	display_status_message("broadcast on %s:2010", themis.ip);
 
-
 	gdk_threads_enter(); /*  version threadee de l'IHM */
 	gtk_main(); /* Boucle principale de Gtk */
 	gdk_threads_leave();

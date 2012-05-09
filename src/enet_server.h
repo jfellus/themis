@@ -8,15 +8,8 @@
 #ifndef ENET_SERVER_H
 #define ENET_SERVER_H
 
-#include <gtk/gtk.h>
-#include <enet/enet.h>
-
-typedef struct oscillo_kernel
-{
-  GtkWindow *window;
-  ENetHost *server;
-}type_oscillo_kernel;
-
+#include "gtk/gtk.h"
+#include "enet/enet.h"
 
 void init_oscillo_kernel(int port);
 void create_window_of_profiler(const char *title);
