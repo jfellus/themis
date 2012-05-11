@@ -21,6 +21,8 @@ MAKEFILE="Makefile.shirka"
 echo -e "
 default:all
 
+
+
 OBJS:=\"\"
 
 all:$DIR_BIN_LETO_PROM/shirka $DIR_BIN_LETO_PROM/shirka_debug
@@ -55,9 +57,13 @@ do
 echo -e "
 OBJS+= ${OBJECTS}
 
+.PHONY: $DIR_BIN_LETO_PROM/$TARGET
+
 $OBJECTS_DIR:
 	mkdir -p \$@
 	
+
+
 $OBJECTS_DIR/%.d:$SOURCE_DIR/%.c | $OBJECTS_DIR
 	@echo Create dependence \$*.d
 	@$CC $FINAL_CFLAGS -MM \$< -MF \$@.tmp;

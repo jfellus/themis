@@ -33,6 +33,8 @@ OBJS:=\"\"
 
 default:all
 
+
+
 $DIR_BIN_LETO_PROM: 
 	mkdir -p \$@
 
@@ -82,6 +84,8 @@ do
 
 echo -e "
 OBJS+= ${OBJECTS}
+
+.PHONY: $DIR_BIN_LETO_PROM/$TARGET
 
 $OBJECTS_DIR:
 	mkdir -p \$@
