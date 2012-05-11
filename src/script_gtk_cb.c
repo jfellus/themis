@@ -237,10 +237,16 @@ void on_launch_button_clicked(GtkWidget *widget, type_script_ui *script_ui)
 /** Activated to launch the script in debug mode
  * @todo Mutualiser avec le lancement normale.
  * */
-void on_launch_debug_button_clicked(GtkWidget *widget, type_script_ui *script_ui)
+void on_debug_button_clicked(GtkWidget *widget, type_script_ui *script_ui)
 {
   (void) widget;
-  script_ui_launch(script_ui, 1); /*debug*/
+  script_ui_launch(script_ui, RUN_DEBUG); /*debug*/
+}
+
+void on_valgrind_button_clicked(GtkWidget *widget, type_script_ui *script_ui)
+{
+  (void) widget;
+  script_ui_launch(script_ui, RUN_VALGRIND); /*valgrind*/
 }
 
 void on_upload_button_clicked(GtkWidget *widget, type_script_ui *script_ui)

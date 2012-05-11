@@ -28,6 +28,11 @@
 #define STATUSBAR_BROADCAST 0
 #define STATUSBAR_INFO 1
 
+enum {
+	RUN_DEBUG=1,
+	RUN_VALGRIND
+};
+
 typedef struct script_ui
 {
 	t_prom_script *data;

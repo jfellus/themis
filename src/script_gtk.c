@@ -403,7 +403,8 @@ void script_ui_launch(type_script_ui *script_ui, int is_debug)
     gtk_widget_destroy(dialog);
   }
 
-  if (is_debug) target = "run_debug";
+  if (is_debug == RUN_DEBUG) target = "run_debug";
+  else if (is_debug == RUN_VALGRIND) target = "run_valgrind";
   else target = "run";
 
   gdk_color_parse("grey", &color);

@@ -14,7 +14,7 @@
             <property name="visible">True</property>
             <child>
               <object class="GtkButton" id="launch_button">
-                <property name="label" translatable="yes">Launch</property>
+                <property name="label" translatable="yes">run</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
@@ -28,9 +28,10 @@
             </child>
             <child>
               <object class="GtkButton" id="quit_button">
-                <property name="label" translatable="yes">Quit</property>
+                <property name="label" translatable="yes">quit</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
+                <property name="yalign">0.49000000953674316</property>
                 <signal name="clicked" handler="on_quit_button_clicked"/>
               </object>
               <packing>
@@ -53,17 +54,30 @@
               <placeholder/>
             </child>
             <child>
-              <placeholder/>
-            </child>
-            <child>
-              <object class="GtkButton" id="launch_debug_button">
-                <property name="label" translatable="yes">Launch debug</property>
+              <object class="GtkButton" id="valgrind_button">
+                <property name="label" translatable="yes">run valgrind</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
-                <signal name="clicked" handler="on_launch_debug_button_clicked"/>
+                <signal name="clicked" handler="on_valgrind_button_clicked"/>
               </object>
               <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
+                <property name="position">6</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkButton" id="nemiver_button">
+                <property name="label" translatable="yes">run debug</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <signal name="clicked" handler="on_debug_button_clicked"/>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
                 <property name="position">7</property>
               </packing>
             </child>
@@ -76,12 +90,14 @@
                 <signal name="clicked" handler="on_upload_button_clicked"/>
               </object>
               <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
                 <property name="position">8</property>
               </packing>
             </child>
             <child>
               <object class="GtkToggleButton" id="detail_button">
-                <property name="label" translatable="yes">Details</property>
+                <property name="label" translatable="yes">details</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>

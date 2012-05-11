@@ -71,6 +71,8 @@ void script_create_makefile(t_prom_script *script)
 		fprintf(makefile, "\tnohup %s %s %s %s %s %s %s -n%s -b%s -i%s %s --distant-terminal> /tmp/%s/logs/%s.log&\n", script->path_prom_binary, script->path_file_script, script->path_file_config, script->path_file_res, script->path_file_dev, script->path_file_gcd, script->path_file_prt, script->logical_name, themis.ip, themis.id, script->prom_args_line, getenv("USER"), script->logical_name);
 		fprintf(makefile, "\nrun_debug:\n");
 		fprintf(makefile, "\tnemiver %s_debug %s %s %s %s %s %s -n%s -b%s -i%s %s || echo -e \"\\a\"\n", script->path_prom_binary, script->path_file_script, script->path_file_config, script->path_file_res, script->path_file_dev, script->path_file_gcd, script->path_file_prt, script->logical_name, themis.ip, themis.id, script->prom_args_line);
+		fprintf(makefile, "\nrun_valgrind:\n");
+		fprintf(makefile, "\tvalgrind %s_debug %s %s %s %s %s %s -n%s -b%s -i%s %s || echo -e \"\\a\"\n", script->path_prom_binary, script->path_file_script, script->path_file_config, script->path_file_res, script->path_file_dev, script->path_file_gcd, script->path_file_prt, script->logical_name, themis.ip, themis.id, script->prom_args_line);
 		fprintf(makefile, "\nrun:\n");
 		fprintf(makefile, "\t%s %s %s %s %s %s %s -n%s -b%s -i%s %s || echo -e \"\\a\"\n", script->path_prom_binary, script->path_file_script, script->path_file_config, script->path_file_res, script->path_file_dev, script->path_file_gcd, script->path_file_prt, script->logical_name, themis.ip, themis.id, script->prom_args_line);
 	}
@@ -137,6 +139,16 @@ void script_create_makefile(t_prom_script *script)
 		
 			fprintf(makefile, "\nrun_debug:\n");
 			fprintf(makefile, "\trsh -X %s@%s 'cd promnet/%s;nemiver ~/bin_leto_prom/%s_debug -n%s  -i%s %s", script->login, script->computer, script->logical_name, script->path_prom_binary, script->logical_name, /*themis.ip,*/ themis.id, script->prom_args_line);
+			makefile_add_argument(makefile, script->path_file_script);
+			makefile_add_argument(makefile, script->path_file_config);
+			makefile_add_argument(makefile, script->path_file_res);
+			makefile_add_argument(makefile, script->path_file_dev);
+			makefile_add_argument(makefile, script->path_file_gcd);
+			makefile_add_argument(makefile, script->path_file_prt);
+			fprintf(makefile, " '|| echo -e \"\\a\" \n");
+
+			fprintf(makefile, "\nrun_valgrind:\n");
+			fprintf(makefile, "\trsh -X %s@%s 'cd promnet/%s;valgrind ~/bin_leto_prom/%s_debug -n%s  -i%s %s", script->login, script->computer, script->logical_name, script->path_prom_binary, script->logical_name, /*themis.ip,*/ themis.id, script->prom_args_line);
 			makefile_add_argument(makefile, script->path_file_script);
 			makefile_add_argument(makefile, script->path_file_config);
 			makefile_add_argument(makefile, script->path_file_res);
