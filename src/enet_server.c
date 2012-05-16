@@ -17,7 +17,6 @@
 
 #define ENET_MAX_NUMBER_OF_CLIENTS 32
 
-
 int nbre_groupe;
 ENetHost *enet_server = NULL;
 
@@ -39,15 +38,17 @@ void on_oscillo_kernel_start_button_clicked(GtkWidget *widget, void *data)
 void enet_manager(ENetHost *server)
 {
 	char ip[HOST_NAME_MAX];
+	char *logical_name;
 	int running = 1;
 	int number_of_groups;
 	ENetEvent event;
+	type_com_groupe *com_def_groupe;
 	type_nn_message *network_data;
 
 	while (running)
 	{
-		/* Wait up to 1000 milliseconds for an event. */
-		while (enet_host_service(server, &event, 2000) > 0)
+		/* Wait up to 100 milliseconds for an event. */
+		while (enet_host_service(server, &event, 100) > 0)
 		{
 			switch (event.type)
 			{
@@ -60,17 +61,20 @@ void enet_manager(ENetHost *server)
 			case ENET_EVENT_TYPE_RECEIVE:
 				switch (event.channelID)
 				{
+
 					case ENET_DEF_GROUP_CHANNEL:
-				/*		printf("Connexion promethe %s\n", (char*)event.packet->data);*/
-						number_of_groups = (event.packet->dataLength ) / sizeof(type_com_groupe);
-						event.peer->data = oscillo_kernel_add_promethe((type_com_groupe*) event.packet->data, number_of_groups, (const char*)event.packet->data);
+
+						logical_name = (char*)event.packet->data;
+						com_def_groupe = (type_com_groupe*)&((char*)event.packet->data)[LOGICAL_NAME_MAX];
+						number_of_groups = (event.packet->dataLength - LOGICAL_NAME_MAX) / sizeof(type_com_groupe);
+						event.peer->data = oscillo_kernel_add_promethe(com_def_groupe, number_of_groups, logical_name);
 						break;
 
 					case ENET_GROUP_EVENT_CHANNEL:
 						if (event.peer->data != NULL)
 						{
 							network_data = (type_nn_message*)event.packet->data;
-							group_profiler_update_info(event.peer->data, last_pos_oscillo_kernel, network_data->gpe, network_data->type_message, network_data->time_stamp);
+							group_profiler_update_info(event.peer->data, network_data->gpe, network_data->type_message, network_data->time_stamp);
 						}
 						break;
 				}
