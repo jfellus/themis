@@ -61,9 +61,7 @@ void enet_manager(ENetHost *server)
 			case ENET_EVENT_TYPE_RECEIVE:
 				switch (event.channelID)
 				{
-
 					case ENET_DEF_GROUP_CHANNEL:
-
 						logical_name = (char*)event.packet->data;
 						com_def_groupe = (type_com_groupe*)&((char*)event.packet->data)[LOGICAL_NAME_MAX];
 						number_of_groups = (event.packet->dataLength - LOGICAL_NAME_MAX) / sizeof(type_com_groupe);
@@ -74,7 +72,7 @@ void enet_manager(ENetHost *server)
 						if (event.peer->data != NULL)
 						{
 							network_data = (type_nn_message*)event.packet->data;
-							group_profiler_update_info(event.peer->data, network_data->gpe, network_data->type_message, network_data->time_stamp);
+						  group_profiler_update_info(event.peer->data, network_data->gpe, network_data->type_message, network_data->time_stamp);
 						}
 						break;
 				}
@@ -129,15 +127,4 @@ void init_oscillo_kernel(int port)
 	}
 	else EXIT_ON_ERROR("Fail to create a enet server for oscillo kernel !\n\tCheck that there is no other themis running.");
 
-/*	builder = gtk_builder_new();
-	snprintf(builder_file_name, NAME_MAX, "%s/glades/oscillo_kernel.glade", bin_leto_prom_path);
-	gtk_builder_add_from_file(builder, builder_file_name, &g_error);
-	if (g_error != NULL) EXIT_ON_ERROR("%s", g_error->message);
-
-	oscillo_kernel.window = GTK_WINDOW(gtk_builder_get_object(builder, "oscillo_kernel_window"));
-
-	gtk_builder_connect_signals(builder, NULL);
-*/
-
-	gtk_widget_show_all(GTK_WIDGET(window));
 }

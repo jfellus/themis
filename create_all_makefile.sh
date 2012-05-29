@@ -16,10 +16,6 @@ echo -e "clean: ${ALL_PROJECTS[@]/#/clean_}\n" >> Makefile
 
 echo -e "reset: ${ALL_PROJECTS[@]/#/reset_}\n" >> Makefile
 
-echo "${LOGDIR}:" >> Makefile
-echo -e "\tmake -p \$@" >> Makefile
-
-
 for PROJECT in ${ALL_PROJECTS[@]}
 do
 	./create_${PROJECT}_makefile.sh $@

@@ -27,8 +27,6 @@ void on_oscillo_kernel_start_button_clicked(GtkWidget *widget, void *data)
 	prom_bus_send_message("distant_debug(%d)", DISTANT_DEBUG_START);
 }
 
-
-
 void enet_manager(ENetHost *server)
 {
 	char ip[HOST_NAME_MAX];

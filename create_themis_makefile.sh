@@ -33,11 +33,6 @@ OBJS:=\"\"
 
 default:all
 
-
-
-$DIR_BIN_LETO_PROM: 
-	mkdir -p \$@
-
 $GLADE_LETO_PROM_DIR:
 	mkdir -p $GLADE_LETO_PROM_DIR
 
