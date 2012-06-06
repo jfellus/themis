@@ -65,7 +65,10 @@ void enet_manager(ENetHost *server)
 						logical_name = (char*)event.packet->data;
 						com_def_groupe = (type_com_groupe*)&((char*)event.packet->data)[LOGICAL_NAME_MAX];
 						number_of_groups = (event.packet->dataLength - LOGICAL_NAME_MAX) / sizeof(type_com_groupe);
+						gdk_threads_enter();
 						event.peer->data = oscillo_kernel_add_promethe(com_def_groupe, number_of_groups, logical_name);
+						gdk_threads_leave();
+
 						break;
 
 					case ENET_GROUP_EVENT_CHANNEL:
