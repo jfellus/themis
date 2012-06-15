@@ -10,7 +10,9 @@
 
 #if USE_ENET
 #include "enet_server.h"
-#include "prom_tools/include/oscillo_kernel_display.h"
+#include <prom_tools/include/oscillo_kernel_display.h>
+#include <prom_tools/include/xml_tools.h>
+
 #endif
 
 
@@ -34,6 +36,14 @@ void print_warning(const char *name_of_file, const char* name_of_function, int n
 }
 
 /*********************************/
+
+Node *themis_get_xml_informations(Node *tree)
+{
+	Node *informations = mxmlNewElement(tree, "informations");
+	xml_set_string(informations, "file.net", themis.filename);
+
+	return tree;
+}
 
 int set_relative_path_from_gfile(char *path_name, char *reference_path, GFile *file)
 {
@@ -146,6 +156,7 @@ int save(char *filename)
 
 	return (promnet_save(themis.promnet, filename));
 }
+
 
 /**
  * @param argc Number of arguments

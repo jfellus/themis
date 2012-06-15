@@ -11,6 +11,7 @@
 #include <sys/time.h>
 
 #include <prom_tools/include/prom_bus.h>
+#include <prom_tools/include/xml_tools.h>
 #include <prom_tools/include/basic_tools.h>
 #include <prom_tools/include/libpromnet.h>
 #include <prom_kernel/include/net_message_debug_dist.h>
@@ -54,6 +55,7 @@ typedef struct themis
 {
   struct timeval starting_time;
   char filename[PATH_MAX];
+  char preferences[PATH_MAX];
   char dirname[PATH_MAX];
 	FILE *makefile;
   char ip[INET_ADDRSTRLEN];
@@ -78,6 +80,7 @@ extern type_themis themis;
 void ui_remove_scripts();
 void ui_update_data(char *reference_dirname);
 void display_status_message(const char *message, ...);
+Node *themis_get_xml_informations(Node *tree);
 
 /* Functions not dependant of graphic libraries */
 void prom_bus_send_message(const char *format, ...);

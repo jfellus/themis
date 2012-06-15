@@ -65,8 +65,7 @@ void enet_manager(ENetHost *server)
 						logical_name = (char*)event.packet->data;
 						com_def_groupe = (type_com_groupe*)&((char*)event.packet->data)[LOGICAL_NAME_MAX];
 						number_of_groups = (event.packet->dataLength - LOGICAL_NAME_MAX) / sizeof(type_com_groupe);
-						gdk_threads_enter();
-						event.peer->data = oscillo_kernel_add_promethe(com_def_groupe, number_of_groups, logical_name);
+						event.peer->data = oscillo_kernel_add_promethe(com_def_groupe, number_of_groups, logical_name, themis.preferences);
 						gdk_threads_leave();
 
 						break;
@@ -75,7 +74,7 @@ void enet_manager(ENetHost *server)
 						if (event.peer->data != NULL)
 						{
 							network_data = (type_nn_message*)event.packet->data;
-						  group_profiler_update_info(event.peer->data, network_data->gpe, network_data->type_message, network_data->time_stamp);
+							group_profiler_update_info(event.peer->data, network_data->gpe, network_data->type_message, network_data->time_stamp);
 						}
 						break;
 				}
@@ -84,7 +83,7 @@ void enet_manager(ENetHost *server)
 				break;
 
 			case ENET_EVENT_TYPE_DISCONNECT:
-				printf("%s disconected.\n", (char*) event.peer->data);
+				printf("%s disconnected.\n", (char*) event.peer->data);
 				/* Reset the peer's client information. */
 				event.peer->data = NULL;
 				break;

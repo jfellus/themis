@@ -1,3 +1,4 @@
+#Thu Jun 07 10:46:06 CEST 2012
 eclipse.preferences.version=1
 environment/project/cdt.managedbuild.config.gnu.cross.exe.debug.1031446683/PATH/delimiter=\:
 environment/project/cdt.managedbuild.config.gnu.cross.exe.debug.1031446683/PATH/operation=replace
@@ -114,3 +115,5 @@ environment/project/cdt.managedbuild.config.gnu.cross.exe.release.337117232/PATH
 environment/project/cdt.managedbuild.config.gnu.cross.exe.release.337117232/PATH/value=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin\:/usr/games
 environment/project/cdt.managedbuild.config.gnu.cross.exe.release.337117232/append=true
 environment/project/cdt.managedbuild.config.gnu.cross.exe.release.337117232/appendContributed=true
+environment/project/cdt.managedbuild.config.gnu.exe.debug.1590745900=<?xml version\="1.0" encoding\="UTF-8" standalone\="no"?>\n<environment append\="true" appendContributed\="true">\n<variable delimiter\="\:" name\="PATH" operation\="replace" value\="/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin\:/usr/games\:/home/ludolefr/bin_leto_prom"/>\n</environment>\n
+environment/project/cdt.managedbuild.config.gnu.exe.debug.2000274795=<?xml version\="1.0" encoding\="UTF-8" standalone\="no"?>\n<environment append\="true" appendContributed\="true">\n<variable delimiter\="\:" name\="PATH" operation\="replace" value\="/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin\:/usr/games\:/home/ludolefr/bin_leto_prom"/>\n</environment>\n

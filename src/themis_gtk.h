@@ -14,6 +14,8 @@
 #include <vte/vte.h>
 
 #include "themis.h"
+#include <prom_tools/include/oscillo_kernel_display.h>
+#include <prom_tools/include/xml_tools.h>
 
 #define NO_BORDER 0
 #define THIN_BORDER 3

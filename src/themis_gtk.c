@@ -94,7 +94,6 @@ char *text_view_get_all_text(GtkTextView *text_view)
   GtkTextIter start_iter, end_iter;
   GtkTextBuffer *text_buffer;
 
-
   text_buffer = gtk_text_view_get_buffer(text_view);
   gtk_text_buffer_get_start_iter( text_buffer, &start_iter);
   gtk_text_buffer_get_end_iter( text_buffer ,  &end_iter);
@@ -197,8 +196,8 @@ void on_menu_item_save_as_activate(GObject *object, gpointer user_data)
     if (save(themis.filename) == 0) display_status_message("%s saved.", themis.filename);
     else 	display_status_message("Fail to save %s !!!", themis.filename);
   }
-  gtk_widget_destroy(dialog);
 
+  gtk_widget_destroy(dialog);
 }
 
 void on_menu_item_save_activate(GObject *object, gpointer user_data)
@@ -207,8 +206,166 @@ void on_menu_item_save_activate(GObject *object, gpointer user_data)
 	else
 	{
 		if (save(themis.filename) == 0) display_status_message("%s saved.", themis.filename);
-    else 	display_status_message("Fail to save %s !!!", themis.filename);
+		else 	display_status_message("Fail to save %s !!!", themis.filename);
 	}
+}
+
+void on_menu_item_load_preferences_activate()
+{
+	gchar *filename_the;
+	gint i;
+	GtkWidget *dialog;
+	GtkFileFilter *file_filter, *generic_file_filter;
+
+	dialog = gtk_file_chooser_dialog_new("Load preferences", GTK_WINDOW(themis_ui.window), GTK_FILE_CHOOSER_ACTION_OPEN, GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL, GTK_STOCK_OPEN, GTK_RESPONSE_ACCEPT, NULL);
+	file_filter = gtk_file_filter_new();
+	generic_file_filter = gtk_file_filter_new();
+
+	gtk_file_filter_add_pattern(file_filter, "*.the");
+	gtk_file_filter_add_pattern(generic_file_filter, "*");
+
+	gtk_file_filter_set_name(file_filter, "themis preferences (.the)");
+	gtk_file_filter_set_name(generic_file_filter, "all types");
+
+	gtk_file_chooser_add_filter(GTK_FILE_CHOOSER(dialog), file_filter);
+	gtk_file_chooser_add_filter(GTK_FILE_CHOOSER(dialog), generic_file_filter);
+
+	if (gtk_dialog_run(GTK_DIALOG (dialog)) == GTK_RESPONSE_ACCEPT)
+	{
+		Node *tree, *script;
+		const char *filename_net;
+
+		filename_the = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(dialog));
+		strncpy(themis.preferences, filename_the, PATH_MAX);
+
+		tree = xml_load_file(filename_the);
+
+		filename_net = xml_try_to_get_string(xml_get_first_child(tree), "file.net");
+		strncpy(themis.filename, filename_net, PATH_MAX);
+
+		load(themis.filename);
+
+		script = xml_get_first_child_with_node_name(tree, "script");
+		if(xml_get_int(script, "detail_open") == 1)
+		{
+			gtk_toggle_button_set_active(themis_ui.script_uis[0].detail_button, TRUE);
+			gtk_widget_show_all(GTK_WIDGET(themis_ui.script_uis[0].detail_window));
+		}
+
+		for(i=1; i< themis_ui.number_of_scripts; i++)
+		{
+			script = xml_get_next_homonymous_sibling(script);
+
+			if(xml_get_int(script, "detail_open") == 1)
+			{
+				gtk_toggle_button_set_active(themis_ui.script_uis[i].detail_button, TRUE);
+				gtk_widget_show_all(GTK_WIDGET(themis_ui.script_uis[i].detail_window));
+			}
+		}
+	}
+
+	gtk_widget_destroy(dialog);
+}
+
+/**** Présentation du xml pour les .the ****/
+const char * whitespace_cb_preferences(mxml_node_t *node, int where)
+{
+   const char *name;
+
+   if (node == NULL)
+   {
+      fprintf(stderr, "%s \n", __FUNCTION__);
+      return NULL;
+   }
+
+   name = node->value.element.name;
+
+   if (where == MXML_WS_AFTER_CLOSE || where == MXML_WS_AFTER_OPEN)
+   {
+	   return ("\n");
+   }
+
+   if(!strcmp(name, "oscillo_kernel"))
+   {
+	   if (where == MXML_WS_BEFORE_OPEN || where == MXML_WS_BEFORE_CLOSE) return ("\n\t");
+   }
+   else if (!strcmp(name, "script_oscillo"))
+   {
+	   if (where == MXML_WS_BEFORE_OPEN) return ("\n\t\t");
+	   else if (where == MXML_WS_BEFORE_CLOSE) return ("\t\t");
+   }
+   else if(!strcmp(name, "informations") || !strcmp(name, "script"))
+   {
+	   if (where == MXML_WS_BEFORE_OPEN) return ("\n\t");
+   }
+   else if (!strcmp(name, "group"))
+   {
+	   if (where == MXML_WS_BEFORE_OPEN) return ("\t\t\t");
+   }
+
+   return (NULL);
+}
+
+void on_menu_item_save_preferences_activate()
+{
+	gchar *filename = NULL;
+	GtkWidget *dialog;
+	GtkFileFilter *file_filter, *generic_file_filter;
+	int i, test = 0;
+
+	dialog = gtk_file_chooser_dialog_new("Save preferences", GTK_WINDOW(themis_ui.window), GTK_FILE_CHOOSER_ACTION_SAVE, GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL, GTK_STOCK_SAVE, GTK_RESPONSE_ACCEPT, NULL);
+
+	file_filter = gtk_file_filter_new();
+	generic_file_filter = gtk_file_filter_new();
+
+	gtk_file_filter_add_pattern(file_filter, "*.the");
+	gtk_file_filter_add_pattern(generic_file_filter, "*");
+
+	gtk_file_filter_set_name(file_filter, "themis preferences (.the)");
+	gtk_file_filter_set_name(generic_file_filter, "all types");
+
+	gtk_file_chooser_add_filter(GTK_FILE_CHOOSER(dialog), file_filter);
+	gtk_file_chooser_add_filter(GTK_FILE_CHOOSER(dialog), generic_file_filter);
+
+	if (gtk_dialog_run(GTK_DIALOG(dialog)) == GTK_RESPONSE_ACCEPT)
+		filename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(dialog));
+
+	for(i=0; filename[i]!='\0'; i++)
+	{
+		if(filename[i] == '.')
+		{
+			filename[i+1] = 't';
+			filename[i+2] = 'h';
+			filename[i+3] = 'e';
+			filename[i+4] = '\0';
+			test = 1;
+		}
+	}
+
+	if(test == 0)
+		rename(filename, strcat(filename, ".the"));
+
+	if(filename != NULL)
+	{
+		Node *tree = mxmlNewXML("1.0");
+		tree = themis_get_xml_informations(tree);
+
+		for(i=0; i<themis_ui.number_of_scripts; i++)
+		{
+			Node *script = mxmlNewElement(tree, "script");
+			xml_set_string(script, "name", gtk_frame_get_label(themis_ui.script_uis[i].frame));
+
+			if(gtk_toggle_button_get_active(themis_ui.script_uis[i].detail_button)==TRUE)
+				xml_set_int(script, "detail_open", 1);
+			else
+				xml_set_int(script, "detail_open", 0);
+		}
+
+		tree = oscillo_kernel_get_xml_informations(tree);
+		xml_save_file(filename, tree, whitespace_cb_preferences);
+	}
+
+	gtk_widget_destroy(dialog);
 }
 
 void on_menu_item_add_script_activate(GObject *object, gpointer user_data)
@@ -222,10 +379,10 @@ void on_menu_item_add_script_activate(GObject *object, gpointer user_data)
 int on_quit_requested(GtkObject *object, gpointer user_data)
 {
   (void) object;
-	(void)user_data;
+  (void)user_data;
 
   quit();
-	return TRUE;
+  return TRUE;
 }
 
 
@@ -328,6 +485,7 @@ void ui_init()
   GError *g_error = NULL;
   GtkBuilder *builder;
 
+  themis.preferences[0] = 0;
   themis_ui.number_of_scripts = 0;
 
   builder = gtk_builder_new();

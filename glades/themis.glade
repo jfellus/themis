@@ -55,6 +55,26 @@
                       </object>
                     </child>
                     <child>
+                      <object class="GtkImageMenuItem" id="menu_item_load_preferences">
+                        <property name="label" translatable="yes">Load preferences (.the)</property>
+                        <property name="visible">True</property>
+                        <property name="image">image4</property>
+                        <property name="use_stock">False</property>
+                        <property name="always_show_image">True</property>
+                        <signal name="activate" handler="on_menu_item_load_preferences_activate"/>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkImageMenuItem" id="menu_item_save_preferences">
+                        <property name="label" translatable="yes">Save preferences (.the)</property>
+                        <property name="visible">True</property>
+                        <property name="image">image2</property>
+                        <property name="use_stock">False</property>
+                        <property name="always_show_image">True</property>
+                        <signal name="activate" handler="on_menu_item_save_preferences_activate"/>
+                      </object>
+                    </child>
+                    <child>
                       <object class="GtkImageMenuItem" id="menu_item_add_script">
                         <property name="label">Add script</property>
                         <property name="visible">True</property>
@@ -349,5 +369,15 @@
     <property name="visible">True</property>
     <property name="xpad">2</property>
     <property name="stock">gtk-save</property>
+  </object>
+  <object class="GtkImage" id="image2">
+    <property name="visible">True</property>
+    <property name="xpad">2</property>
+    <property name="stock">gtk-save</property>
+  </object>
+  <object class="GtkImage" id="image4">
+    <property name="visible">True</property>
+    <property name="xpad">2</property>
+    <property name="stock">gtk-open</property>
   </object>
 </interface>
