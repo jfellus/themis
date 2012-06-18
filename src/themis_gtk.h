@@ -116,7 +116,7 @@ char *text_view_get_all_text(GtkTextView *text_view);
 char *text_buffer_get_all_text(GtkTextBuffer *text_buffer);
 int set_relative_path_from_gfile(char *pathname, char *reference_path, GFile *file);
 void widget_set_warning(GtkWidget *widget);
-
+void load_graphics_preferences(Node *tree);
 
 /*script_ui */
 void script_ui_display_prom_bus_message(type_script_ui *script_ui, char *message);

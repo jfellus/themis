@@ -81,6 +81,7 @@ void ui_remove_scripts();
 void ui_update_data(char *reference_dirname);
 void display_status_message(const char *message, ...);
 Node *themis_get_xml_informations(Node *tree);
+void load_preferences(char *filename);
 
 /* Functions not dependant of graphic libraries */
 void prom_bus_send_message(const char *format, ...);

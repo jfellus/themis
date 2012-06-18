@@ -40,7 +40,14 @@ void print_warning(const char *name_of_file, const char* name_of_function, int n
 Node *themis_get_xml_informations(Node *tree)
 {
 	Node *informations = mxmlNewElement(tree, "informations");
+
 	xml_set_string(informations, "file.net", themis.filename);
+
+	if(themis.ip[0] != 0)
+		xml_set_string(informations, "broadcast", themis.ip);
+
+	if(themis.id[0] != 0)
+		xml_set_string(informations, "bus_id", themis.id);
 
 	return tree;
 }
@@ -157,6 +164,29 @@ int save(char *filename)
 	return (promnet_save(themis.promnet, filename));
 }
 
+void load_preferences(char *filename)
+{
+	Node *tree;
+	const char *filename_net, *broadcast, *bus_id;
+	tree = xml_load_file(filename);
+
+	filename_net = xml_try_to_get_string(xml_get_first_child(tree), "file.net");
+	if(filename_net[0] != 0)
+	{
+		strncpy(themis.filename, filename_net, PATH_MAX);
+		load(themis.filename);
+	}
+
+	broadcast = xml_try_to_get_string(xml_get_first_child(tree), "broadcast");
+	if(broadcast != NULL)
+		strncpy(themis.ip, broadcast, INET_ADDRSTRLEN);
+
+	bus_id = xml_try_to_get_string(xml_get_first_child(tree), "bus_id");
+	if(bus_id != NULL)
+		strncpy(themis.id, bus_id, BUS_ID_MAX);
+
+	load_graphics_preferences(tree);
+}
 
 /**
  * @param argc Number of arguments
@@ -167,7 +197,6 @@ int main(int argc, char *argv[])
 {
 	int option;
 	struct sigaction action;
-	struct stat file_stat;
 	char command_line[SIZE_OF_COMMAND_LINE];
 
 	printf("\nSVN revision: %s \n", STRINGIFY_CONTENT(SVN_REVISION));
@@ -191,6 +220,7 @@ int main(int argc, char *argv[])
 
 	setlocale(LC_ALL, "C");
 
+	themis.preferences[0] = 0;
 	themis.filename[0] = 0;
 	themis.ip[0] = 0;
 	themis.id[0] = 0;
@@ -214,9 +244,28 @@ int main(int argc, char *argv[])
 	if (optind < argc)
 	{
 		/* Pour être sur de ne pas ecraser de la memoire, en faire une macro */
-		if (sscanf(argv[optind], "%" STRINGIFY_CONTENT(PATH_MAX) "s.net", themis.filename) == 1)
+		if(strstr(argv[optind], ".net"))
 		{
-			if (stat(themis.filename, &file_stat) != 0) EXIT_ON_ERROR("%s cannot be found.", themis.filename);
+			FILE *file = fopen(argv[optind], "r");
+			if(file != NULL)
+			{
+				fclose(file);
+				strncpy(themis.filename, argv[optind], PATH_MAX);
+			}
+			else
+				EXIT_ON_ERROR("%s : file not found", argv[optind]);
+		}
+
+		if(strstr(argv[optind], ".the"))
+		{
+			FILE *file = fopen(argv[optind], "r");
+			if(file != NULL)
+			{
+				fclose(file);
+				strncpy(themis.preferences, argv[optind], PATH_MAX);
+			}
+			else
+				EXIT_ON_ERROR("%s : file not found", argv[optind]);
 		}
 	}
 
@@ -243,6 +292,10 @@ int main(int argc, char *argv[])
 	if (themis.filename[0] != 0)
 	{
 		load(themis.filename);
+	}
+	else if(themis.preferences[0] != 0)
+	{
+		load_preferences(themis.preferences);
 	}
 	else
 	{

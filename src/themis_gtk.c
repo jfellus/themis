@@ -9,6 +9,7 @@
 
 #include "themis_gtk.h"
 #include "themis_ivy.h"
+#include "themis.h"
 
 #define MESSAGE_MAX 256
 
@@ -126,7 +127,29 @@ void  ui_remove_scripts()
   themis_ui.number_of_scripts = 0;
 }
 
+void load_graphics_preferences(Node *tree)
+{
+	int i;
+	Node *script;
 
+	script = xml_get_first_child_with_node_name(tree, "script");
+	if(xml_get_int(script, "detail_open") == 1)
+	{
+		gtk_toggle_button_set_active(themis_ui.script_uis[0].detail_button, TRUE);
+		gtk_widget_show_all(GTK_WIDGET(themis_ui.script_uis[0].detail_window));
+	}
+
+	for(i=1; i< themis_ui.number_of_scripts; i++)
+	{
+		script = xml_get_next_homonymous_sibling(script);
+
+		if(xml_get_int(script, "detail_open") == 1)
+		{
+			gtk_toggle_button_set_active(themis_ui.script_uis[i].detail_button, TRUE);
+			gtk_widget_show_all(GTK_WIDGET(themis_ui.script_uis[i].detail_window));
+		}
+	}
+}
 
 /**************************************** Menu ***************************************************/
 void on_menu_item_open_activate(GtkWidget *widget, gpointer user_data)
@@ -212,8 +235,7 @@ void on_menu_item_save_activate(GObject *object, gpointer user_data)
 
 void on_menu_item_load_preferences_activate()
 {
-	gchar *filename_the;
-	gint i;
+	char *filename_the;
 	GtkWidget *dialog;
 	GtkFileFilter *file_filter, *generic_file_filter;
 
@@ -232,36 +254,9 @@ void on_menu_item_load_preferences_activate()
 
 	if (gtk_dialog_run(GTK_DIALOG (dialog)) == GTK_RESPONSE_ACCEPT)
 	{
-		Node *tree, *script;
-		const char *filename_net;
-
 		filename_the = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(dialog));
 		strncpy(themis.preferences, filename_the, PATH_MAX);
-
-		tree = xml_load_file(filename_the);
-
-		filename_net = xml_try_to_get_string(xml_get_first_child(tree), "file.net");
-		strncpy(themis.filename, filename_net, PATH_MAX);
-
-		load(themis.filename);
-
-		script = xml_get_first_child_with_node_name(tree, "script");
-		if(xml_get_int(script, "detail_open") == 1)
-		{
-			gtk_toggle_button_set_active(themis_ui.script_uis[0].detail_button, TRUE);
-			gtk_widget_show_all(GTK_WIDGET(themis_ui.script_uis[0].detail_window));
-		}
-
-		for(i=1; i< themis_ui.number_of_scripts; i++)
-		{
-			script = xml_get_next_homonymous_sibling(script);
-
-			if(xml_get_int(script, "detail_open") == 1)
-			{
-				gtk_toggle_button_set_active(themis_ui.script_uis[i].detail_button, TRUE);
-				gtk_widget_show_all(GTK_WIDGET(themis_ui.script_uis[i].detail_window));
-			}
-		}
+		load_preferences(filename_the);
 	}
 
 	gtk_widget_destroy(dialog);
@@ -485,7 +480,6 @@ void ui_init()
   GError *g_error = NULL;
   GtkBuilder *builder;
 
-  themis.preferences[0] = 0;
   themis_ui.number_of_scripts = 0;
 
   builder = gtk_builder_new();
