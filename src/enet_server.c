@@ -44,6 +44,8 @@ void enet_manager(ENetHost *server)
 	ENetEvent event;
 	type_com_groupe *com_def_groupe;
 	type_nn_message *network_data;
+	type_profiler *profiler;
+	GtkWidget *check_button_promethe;
 
 	while (running)
 	{
@@ -65,10 +67,20 @@ void enet_manager(ENetHost *server)
 						logical_name = (char*)event.packet->data;
 						com_def_groupe = (type_com_groupe*)&((char*)event.packet->data)[LOGICAL_NAME_MAX];
 						number_of_groups = (event.packet->dataLength - LOGICAL_NAME_MAX) / sizeof(type_com_groupe);
-						gdk_threads_enter();
-						event.peer->data = oscillo_kernel_add_promethe(com_def_groupe, number_of_groups, logical_name, themis.preferences);
-						gdk_threads_leave();
 
+						gdk_threads_enter();
+
+						profiler = oscillo_kernel_add_promethe(com_def_groupe, number_of_groups, logical_name, themis.preferences);
+					    check_button_promethe = gtk_toggle_button_new_with_label(profiler->logical_name);
+					    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(check_button_promethe), TRUE);
+					    gtk_widget_set_size_request(check_button_promethe, 300, -1);
+					    g_signal_connect(check_button_promethe, "toggled", G_CALLBACK(on_check_button_promethe_activate), profiler);
+						gtk_box_pack_start(GTK_BOX(profiler->button_box), check_button_promethe, FALSE, FALSE, 0);
+						gtk_widget_show_all(profiler->button_box);
+
+						event.peer->data = profiler;
+
+						gdk_threads_leave();
 						break;
 
 					case ENET_GROUP_EVENT_CHANNEL:

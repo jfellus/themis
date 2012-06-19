@@ -117,9 +117,7 @@ void init_oscillo_kernel(int port)
 	gtk_widget_show_all(GTK_WIDGET(oscillo_kernel.window));
 }
 
-/*
 void oscillo_kernel_stop(void *profiler)
 {
 	prom_bus_send_message("distand_debug(%d) %s", DISTANT_DEBUG_STOP, profiler->logical_name);
 }
-*/

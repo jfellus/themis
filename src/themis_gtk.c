@@ -356,7 +356,7 @@ void on_menu_item_save_preferences_activate()
 				xml_set_int(script, "detail_open", 0);
 		}
 
-//		tree = oscillo_kernel_get_xml_informations(tree);
+		tree = oscillo_kernel_get_xml_informations(tree);
 		xml_save_file(filename, tree, whitespace_cb_preferences);
 	}
 
