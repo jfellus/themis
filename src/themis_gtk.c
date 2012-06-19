@@ -301,6 +301,7 @@ const char * whitespace_cb_preferences(mxml_node_t *node, int where)
    return (NULL);
 }
 
+/*
 void on_menu_item_save_preferences_activate()
 {
 	gchar *filename = NULL;
@@ -361,7 +362,7 @@ void on_menu_item_save_preferences_activate()
 	}
 
 	gtk_widget_destroy(dialog);
-}
+}*/
 
 void on_menu_item_add_script_activate(GObject *object, gpointer user_data)
 {
