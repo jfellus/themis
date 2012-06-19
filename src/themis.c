@@ -178,11 +178,11 @@ void load_preferences(char *filename)
 	}
 
 	broadcast = xml_try_to_get_string(xml_get_first_child(tree), "broadcast");
-	if(broadcast != NULL)
+	if(broadcast != NULL && themis.ip[0] == 0)
 		strncpy(themis.ip, broadcast, INET_ADDRSTRLEN);
 
 	bus_id = xml_try_to_get_string(xml_get_first_child(tree), "bus_id");
-	if(bus_id != NULL)
+	if(bus_id != NULL && themis.id[0] == 0)
 		strncpy(themis.id, bus_id, BUS_ID_MAX);
 
 	load_graphics_preferences(tree);
@@ -293,7 +293,7 @@ int main(int argc, char *argv[])
 	{
 		load(themis.filename);
 	}
-	else if(themis.preferences[0] != 0)
+	if(themis.preferences[0] != 0)
 	{
 		load_preferences(themis.preferences);
 	}
