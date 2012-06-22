@@ -691,21 +691,6 @@
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkButton" id="leto_button">
-                                <property name="label" translatable="yes">edit .script in leto</property>
-                                <property name="visible">True</property>
-                                <property name="can_focus">True</property>
-                                <property name="receives_default">True</property>
-                                <signal name="clicked" handler="on_leto_button_clicked"/>
-                              </object>
-                              <packing>
-                                <property name="left_attach">3</property>
-                                <property name="right_attach">4</property>
-                                <property name="top_attach">1</property>
-                                <property name="bottom_attach">2</property>
-                              </packing>
-                            </child>
-                            <child>
                               <object class="GtkEntry" id="name_entry">
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
@@ -840,6 +825,9 @@ distant</property>
                                 <property name="top_attach">3</property>
                                 <property name="bottom_attach">4</property>
                               </packing>
+                            </child>
+                            <child>
+                              <placeholder/>
                             </child>
                             <child>
                               <placeholder/>

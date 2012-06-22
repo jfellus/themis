@@ -297,33 +297,7 @@ void on_default_names_button_clicked(GtkButton *button, type_script_ui *script_u
   script_ui_update_data(script_ui, themis.dirname);
 }
 
-void on_leto_button_clicked(GtkButton *button, type_script_ui *script_ui)
-{
-  const char *argv[MAX_NUMBER_OF_ARGS];
-  char command_line[SIZE_OF_COMMAND_LINE];
-  char working_directory[PATH_MAX];
-  t_prom_script *script;
 
-  int error;
-
-  (void) button;
-
-  script = script_ui->data;
-
-  argv[0] = "leto";
-  argv[1] = script->path_file_script;
-  argv[2] = script->path_file_res;
-  argv[3] = NULL;
-
-  snprintf(working_directory, PATH_MAX, "%s/%s", themis.dirname, script->path_prom_deploy);
-
-  snprintf(command_line, SIZE_OF_COMMAND_LINE, "cd %s; %s/bin_leto_prom/%s %s %s&", working_directory, getenv("HOME"), argv[0], argv[1], argv[2]);
-  error = system(command_line);
-  if (error != 0)
-  {
-    PRINT_WARNING("Error launching leto.\n\t Check that %s is correct.", command_line);
-  }
-}
 
 void on_edit_config_button_clicked(GtkButton *button, type_script_ui *script_ui)
 {
