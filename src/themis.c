@@ -293,15 +293,17 @@ int main(int argc, char *argv[])
 	{
 		load(themis.filename);
 	}
-	if(themis.preferences[0] != 0)
-	{
-		load_preferences(themis.preferences);
-	}
-	else
+	else /* S'il n'y a pas de fichier on ajoute un script vide par defaut */
 	{
 		strncpy(themis.dirname, ".", PATH_MAX);
 		add_new_script("name");
 	}
+
+	if(themis.preferences[0] != 0)
+	{
+		load_preferences(themis.preferences);
+	}
+
 
 	prom_bus_init(themis.ip); /* lancement du bus ivy */
 	IvyBindMsg(ivy_receive_any_message_callback, NULL, "^%s:(.*)", themis.id);

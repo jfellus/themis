@@ -265,7 +265,7 @@ void on_menu_coeos_activate()
 
 	int error;
 
-	snprintf(command_line, SIZE_OF_COMMAND_LINE, "coeos %s\n", themis.filename);
+	snprintf(command_line, SIZE_OF_COMMAND_LINE, "cd %s && coeos %s&\n", themis.dirname, basename(themis.filename));
 	error = system(command_line);
 	if (error != 0)
 	{
