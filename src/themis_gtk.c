@@ -276,125 +276,122 @@ void on_menu_coeos_activate()
 /**** Présentation du xml pour les .the ****/
 const char * whitespace_cb_preferences(mxml_node_t *node, int where)
 {
-const char *name;
+	const char *name;
 
-if (node == NULL)
-{
-	fprintf(stderr, "%s \n", __FUNCTION__);
-	return NULL;
+	if (node == NULL)
+	{
+		fprintf(stderr, "%s \n", __FUNCTION__);
+		return NULL;
+	}
+
+	name = node->value.element.name;
+
+	if (where == MXML_WS_AFTER_CLOSE || where == MXML_WS_AFTER_OPEN)
+	{
+		return ("\n");
+	}
+
+	if (!strcmp(name, "oscillo_kernel"))
+	{
+		if (where == MXML_WS_BEFORE_OPEN || where == MXML_WS_BEFORE_CLOSE) return ("\n\t");
+	}
+	else if (!strcmp(name, "script_oscillo"))
+	{
+		if (where == MXML_WS_BEFORE_OPEN) return ("\n\t\t");
+		else if (where == MXML_WS_BEFORE_CLOSE) return ("\t\t");
+	}
+	else if (!strcmp(name, "informations") || !strcmp(name, "script"))
+	{
+		if (where == MXML_WS_BEFORE_OPEN) return ("\n\t");
+	}
+	else if (!strcmp(name, "group"))
+	{
+		if (where == MXML_WS_BEFORE_OPEN) return ("\t\t\t");
+	}
+
+	return (NULL);
 }
 
-name = node->value.element.name;
-
-if (where == MXML_WS_AFTER_CLOSE || where == MXML_WS_AFTER_OPEN)
-{
-	return ("\n");
-}
-
-if (!strcmp(name, "oscillo_kernel"))
-{
-	if (where == MXML_WS_BEFORE_OPEN || where == MXML_WS_BEFORE_CLOSE) return ("\n\t");
-}
-else if (!strcmp(name, "script_oscillo"))
-{
-	if (where == MXML_WS_BEFORE_OPEN) return ("\n\t\t");
-	else if (where == MXML_WS_BEFORE_CLOSE) return ("\t\t");
-}
-else if (!strcmp(name, "informations") || !strcmp(name, "script"))
-{
-	if (where == MXML_WS_BEFORE_OPEN) return ("\n\t");
-}
-else if (!strcmp(name, "group"))
-{
-	if (where == MXML_WS_BEFORE_OPEN) return ("\t\t\t");
-}
-
-return (NULL);
-}
-
-/*
 void on_menu_item_save_preferences_activate()
 {
-gchar *filename = NULL;
-GtkWidget *dialog;
-GtkFileFilter *file_filter, *generic_file_filter;
-int i, test = 0;
+	gchar *filename = NULL;
+	GtkWidget *dialog;
+	GtkFileFilter *file_filter, *generic_file_filter;
+	int i, test = 0;
 
-dialog = gtk_file_chooser_dialog_new("Save preferences", GTK_WINDOW(themis_ui.window), GTK_FILE_CHOOSER_ACTION_SAVE, GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL, GTK_STOCK_SAVE, GTK_RESPONSE_ACCEPT, NULL);
+	dialog = gtk_file_chooser_dialog_new("Save preferences", GTK_WINDOW(themis_ui.window), GTK_FILE_CHOOSER_ACTION_SAVE, GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL, GTK_STOCK_SAVE, GTK_RESPONSE_ACCEPT, NULL);
 
-file_filter = gtk_file_filter_new();
-generic_file_filter = gtk_file_filter_new();
+	file_filter = gtk_file_filter_new();
+	generic_file_filter = gtk_file_filter_new();
 
-gtk_file_filter_add_pattern(file_filter, "*.the");
-gtk_file_filter_add_pattern(generic_file_filter, "*");
+	gtk_file_filter_add_pattern(file_filter, "*.the");
+	gtk_file_filter_add_pattern(generic_file_filter, "*");
 
-gtk_file_filter_set_name(file_filter, "themis preferences (.the)");
-gtk_file_filter_set_name(generic_file_filter, "all types");
+	gtk_file_filter_set_name(file_filter, "themis preferences (.the)");
+	gtk_file_filter_set_name(generic_file_filter, "all types");
 
-gtk_file_chooser_add_filter(GTK_FILE_CHOOSER(dialog), file_filter);
-gtk_file_chooser_add_filter(GTK_FILE_CHOOSER(dialog), generic_file_filter);
+	gtk_file_chooser_add_filter(GTK_FILE_CHOOSER(dialog), file_filter);
+	gtk_file_chooser_add_filter(GTK_FILE_CHOOSER(dialog), generic_file_filter);
 
-if (gtk_dialog_run(GTK_DIALOG(dialog)) == GTK_RESPONSE_ACCEPT) filename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(dialog));
+	if (gtk_dialog_run(GTK_DIALOG(dialog)) == GTK_RESPONSE_ACCEPT) filename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(dialog));
 
-for (i = 0; filename[i] != '\0'; i++)
-{
-	if (filename[i] == '.')
+	for (i = 0; filename[i] != '\0'; i++)
 	{
-		filename[i + 1] = 't';
-		filename[i + 2] = 'h';
-		filename[i + 3] = 'e';
-		filename[i + 4] = '\0';
-		test = 1;
+		if (filename[i] == '.')
+		{
+			filename[i + 1] = 't';
+			filename[i + 2] = 'h';
+			filename[i + 3] = 'e';
+			filename[i + 4] = '\0';
+			test = 1;
+		}
 	}
-}
 
-if (test == 0) rename(filename, strcat(filename, ".the"));
+	if (test == 0) rename(filename, strcat(filename, ".the"));
 
-if (filename != NULL)
-{
-	Node *tree = mxmlNewXML("1.0");
-	tree = themis_get_xml_informations(tree);
-
-	for (i = 0; i < themis_ui.number_of_scripts; i++)
+	if (filename != NULL)
 	{
-		Node *script = mxmlNewElement(tree, "script");
-		xml_set_string(script, "name", gtk_frame_get_label(themis_ui.script_uis[i].frame));
+		Node *tree = mxmlNewXML("1.0");
+		tree = themis_get_xml_informations(tree);
 
-		for(i=0; i<themis_ui.number_of_scripts; i++)
+		for (i = 0; i < themis_ui.number_of_scripts; i++)
 		{
 			Node *script = mxmlNewElement(tree, "script");
 			xml_set_string(script, "name", gtk_frame_get_label(themis_ui.script_uis[i].frame));
 
-			if(gtk_toggle_button_get_active(themis_ui.script_uis[i].detail_button)==TRUE)
-				xml_set_int(script, "detail_open", 1);
-			else
-				xml_set_int(script, "detail_open", 0);
+			for (i = 0; i < themis_ui.number_of_scripts; i++)
+			{
+				Node *script = mxmlNewElement(tree, "script");
+				xml_set_string(script, "name", gtk_frame_get_label(themis_ui.script_uis[i].frame));
+
+				if (gtk_toggle_button_get_active(themis_ui.script_uis[i].detail_button) == TRUE) xml_set_int(script, "detail_open", 1);
+				else xml_set_int(script, "detail_open", 0);
+			}
+
+			tree = oscillo_kernel_get_xml_informations(tree);
+			xml_save_file(filename, tree, whitespace_cb_preferences);
 		}
 
 		tree = oscillo_kernel_get_xml_informations(tree);
 		xml_save_file(filename, tree, whitespace_cb_preferences);
 	}
-
-		tree = oscillo_kernel_get_xml_informations(tree);
-	xml_save_file(filename, tree, whitespace_cb_preferences);
-}*/
-
+}
 
 void on_menu_item_add_script_activate(GObject *object, gpointer user_data)
 {
-(void) object;
-(void) user_data;
+	(void) object;
+	(void) user_data;
 
-add_new_script("untitled");
+	add_new_script("untitled");
 }
 
 int on_quit_requested(GtkObject *object, gpointer user_data)
 {
-(void) object;
-(void) user_data;
+	(void) object;
+	(void) user_data;
 
-quit();
-return TRUE;
+	quit();
+	return TRUE;
 }
 
 /**
@@ -402,115 +399,115 @@ return TRUE;
  */
 void on_prom_bus_entry_activate(GtkEntry *entry, gpointer data)
 {
-const gchar *command;
-(void) data;
+	const gchar *command;
+	(void) data;
 
-command = gtk_entry_get_text(entry);
-prom_bus_send_message("%s\n", command);
-gtk_entry_set_text(entry, "");
+	command = gtk_entry_get_text(entry);
+	prom_bus_send_message("%s\n", command);
+	gtk_entry_set_text(entry, "");
 
 }
 
 /*** Ivy commands ****/
 void on_standby_all_button_clicked(GtkWidget *widget, gpointer user_data)
 {
-(void) widget;
-(void) user_data;
+	(void) widget;
+	(void) user_data;
 
-gtk_entry_set_text(themis_ui.prom_bus_entry, "cancel");
-on_prom_bus_entry_activate(themis_ui.prom_bus_entry, NULL);
+	gtk_entry_set_text(themis_ui.prom_bus_entry, "cancel");
+	on_prom_bus_entry_activate(themis_ui.prom_bus_entry, NULL);
 }
 
 void on_quit_all_promethe_button_clicked(GtkWidget *widget, gpointer user_data)
 {
-(void) widget;
-(void) user_data;
+	(void) widget;
+	(void) user_data;
 
-gtk_entry_set_text(themis_ui.prom_bus_entry, "quit");
-on_prom_bus_entry_activate(themis_ui.prom_bus_entry, NULL);
+	gtk_entry_set_text(themis_ui.prom_bus_entry, "quit");
+	on_prom_bus_entry_activate(themis_ui.prom_bus_entry, NULL);
 }
 
 void on_refresh_button_clicked(GtkWidget *widget, gpointer user_data)
 {
 
-(void) widget;
-(void) user_data;
+	(void) widget;
+	(void) user_data;
 
-remove_scripts();
+	remove_scripts();
 
-gtk_entry_set_text(themis_ui.prom_bus_entry, "Hello");
-on_prom_bus_entry_activate(themis_ui.prom_bus_entry, NULL);
+	gtk_entry_set_text(themis_ui.prom_bus_entry, "Hello");
+	on_prom_bus_entry_activate(themis_ui.prom_bus_entry, NULL);
 
-if (themis.filename[0] != 0) load(themis.filename);
+	if (themis.filename[0] != 0) load(themis.filename);
 }
 
 /**************************************************** END CALL_BACKS  **************************************************************************/
 type_script_ui *ui_get_script_ui_with_id(char *prom_id)
 {
-int i;
+	int i;
 
-for (i = 0; i < themis_ui.number_of_scripts; i++)
-{
-	if (strcmp(themis_ui.script_uis[i].data->logical_name, prom_id) == 0)
+	for (i = 0; i < themis_ui.number_of_scripts; i++)
 	{
-		return &themis_ui.script_uis[i];
+		if (strcmp(themis_ui.script_uis[i].data->logical_name, prom_id) == 0)
+		{
+			return &themis_ui.script_uis[i];
+		}
 	}
-}
-return NULL;
+	return NULL;
 }
 
 void themis_set_broadcast(type_themis_ui *themis, char *broadcast)
 {
-gchar *msg;
+	gchar *msg;
 
-msg = g_strdup_printf("%s", broadcast);
-gtk_statusbar_push(GTK_STATUSBAR(themis->statusbar), STATUSBAR_BROADCAST, msg);
-g_free(msg);
+	msg = g_strdup_printf("%s", broadcast);
+	gtk_statusbar_push(GTK_STATUSBAR(themis->statusbar), STATUSBAR_BROADCAST, msg);
+	g_free(msg);
 }
 
 /*** Main Window ***/
 
 void ui_set_filename(char *filename)
 {
-gtk_window_set_title(GTK_WINDOW(themis_ui.window), filename);
+	gtk_window_set_title(GTK_WINDOW(themis_ui.window), filename);
 }
 
 void ui_display_prom_bus_message(char *prom_id, char *message)
 {
-char time_string[SIZE_OF_TIME];
-time_t now;
+	char time_string[SIZE_OF_TIME];
+	time_t now;
 
-now = time(NULL);
-strftime(time_string, 16, "%Hh%M:", localtime(&now));
+	now = time(NULL);
+	strftime(time_string, 16, "%Hh%M:", localtime(&now));
 
-gtk_text_buffer_insert_at_cursor(GTK_TEXT_BUFFER(themis_ui.prom_bus_text_buffer), time_string, -1);
-gtk_text_buffer_insert_at_cursor(GTK_TEXT_BUFFER(themis_ui.prom_bus_text_buffer), prom_id, -1);
-gtk_text_buffer_insert_at_cursor(GTK_TEXT_BUFFER(themis_ui.prom_bus_text_buffer), ": ", -1);
-gtk_text_buffer_insert_at_cursor(GTK_TEXT_BUFFER(themis_ui.prom_bus_text_buffer), message, -1);
-gtk_text_buffer_insert_at_cursor(GTK_TEXT_BUFFER(themis_ui.prom_bus_text_buffer), "\n", -1);
+	gtk_text_buffer_insert_at_cursor(GTK_TEXT_BUFFER(themis_ui.prom_bus_text_buffer), time_string, -1);
+	gtk_text_buffer_insert_at_cursor(GTK_TEXT_BUFFER(themis_ui.prom_bus_text_buffer), prom_id, -1);
+	gtk_text_buffer_insert_at_cursor(GTK_TEXT_BUFFER(themis_ui.prom_bus_text_buffer), ": ", -1);
+	gtk_text_buffer_insert_at_cursor(GTK_TEXT_BUFFER(themis_ui.prom_bus_text_buffer), message, -1);
+	gtk_text_buffer_insert_at_cursor(GTK_TEXT_BUFFER(themis_ui.prom_bus_text_buffer), "\n", -1);
 }
 
 void ui_init()
 {
-char builder_file_name[PATH_MAX];
-GError *g_error = NULL;
-GtkBuilder *builder;
+	char builder_file_name[PATH_MAX];
+	GError *g_error = NULL;
+	GtkBuilder *builder;
 
-themis_ui.number_of_scripts = 0;
+	themis_ui.number_of_scripts = 0;
 
-builder = gtk_builder_new();
-snprintf(builder_file_name, PATH_MAX, "%s/glades/themis.glade", bin_leto_prom_path);
-gtk_builder_add_from_file(builder, builder_file_name, &g_error);
-if (g_error != NULL) EXIT_ON_ERROR("%s", g_error->message);
+	builder = gtk_builder_new();
+	snprintf(builder_file_name, PATH_MAX, "%s/glades/themis.glade", bin_leto_prom_path);
+	gtk_builder_add_from_file(builder, builder_file_name, &g_error);
+	if (g_error != NULL) EXIT_ON_ERROR("%s", g_error->message);
 
-themis_ui.window = (GtkWidget *) gtk_builder_get_object(builder, "window");
-themis_ui.display_of_scripts = GTK_BOX(gtk_builder_get_object(builder, "display_of_scripts"));
-themis_ui.prom_bus_entry = GTK_ENTRY(gtk_builder_get_object(builder, "prom_bus_entry"));
-themis_ui.statusbar = GTK_STATUSBAR((gtk_builder_get_object(builder, "status_bar")));
-themis_ui.prom_bus_text_buffer = GTK_TEXT_BUFFER(gtk_builder_get_object(builder, "prom_bus_text_buffer"));
+	themis_ui.window = (GtkWidget *) gtk_builder_get_object(builder, "window");
+	themis_ui.display_of_scripts = GTK_BOX(gtk_builder_get_object(builder, "display_of_scripts"));
+	themis_ui.prom_bus_entry = GTK_ENTRY(gtk_builder_get_object(builder, "prom_bus_entry"));
+	themis_ui.statusbar = GTK_STATUSBAR((gtk_builder_get_object(builder, "status_bar")));
+	themis_ui.prom_bus_text_buffer = GTK_TEXT_BUFFER(gtk_builder_get_object(builder, "prom_bus_text_buffer"));
 
-gtk_builder_connect_signals(builder, NULL);
+	gtk_builder_connect_signals(builder, NULL);
 
-gtk_widget_show_all(themis_ui.window);
-g_object_unref(G_OBJECT(builder));
+	gtk_widget_show_all(themis_ui.window);
+	g_object_unref(G_OBJECT(builder));
 }

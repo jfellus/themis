@@ -279,8 +279,7 @@ int main(int argc, char *argv[])
 	}
 	if (themis.preferences[0] != 0)
 	{
-		strncpy(themis.dirname, ".", PATH_MAX);
-		add_new_script("name");
+		load_preferences(themis.preferences);
 	}
 
 	if (themis.id[0] == 0)
