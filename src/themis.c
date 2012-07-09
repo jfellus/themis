@@ -15,7 +15,6 @@
 
 #endif
 
-
 #include "themis_ivy_cb.h"
 #include "themis_ivy.h"
 #include "themis_gtk.h"
@@ -43,11 +42,9 @@ Node *themis_get_xml_informations(Node *tree)
 
 	xml_set_string(informations, "file.net", themis.filename);
 
-	if(themis.ip[0] != 0)
-		xml_set_string(informations, "broadcast", themis.ip);
+	if (themis.ip[0] != 0) xml_set_string(informations, "broadcast", themis.ip);
 
-	if(themis.id[0] != 0)
-		xml_set_string(informations, "bus_id", themis.id);
+	if (themis.id[0] != 0) xml_set_string(informations, "bus_id", themis.id);
 
 	return tree;
 }
@@ -171,19 +168,17 @@ void load_preferences(char *filename)
 	tree = xml_load_file(filename);
 
 	filename_net = xml_try_to_get_string(xml_get_first_child(tree), "file.net");
-	if(filename_net[0] != 0)
+	if (filename_net[0] != 0)
 	{
 		strncpy(themis.filename, filename_net, PATH_MAX);
 		load(themis.filename);
 	}
 
 	broadcast = xml_try_to_get_string(xml_get_first_child(tree), "broadcast");
-	if(broadcast != NULL && themis.ip[0] == 0)
-		strncpy(themis.ip, broadcast, INET_ADDRSTRLEN);
+	if (broadcast != NULL && themis.ip[0] == 0) strncpy(themis.ip, broadcast, INET_ADDRSTRLEN);
 
 	bus_id = xml_try_to_get_string(xml_get_first_child(tree), "bus_id");
-	if(bus_id != NULL && themis.id[0] == 0)
-		strncpy(themis.id, bus_id, BUS_ID_MAX);
+	if (bus_id != NULL && themis.id[0] == 0) strncpy(themis.id, bus_id, BUS_ID_MAX);
 
 	load_graphics_preferences(tree);
 }
@@ -244,40 +239,28 @@ int main(int argc, char *argv[])
 	if (optind < argc)
 	{
 		/* Pour être sur de ne pas ecraser de la memoire, en faire une macro */
-		if(strstr(argv[optind], ".net"))
+		if (strstr(argv[optind], ".net"))
 		{
 			FILE *file = fopen(argv[optind], "r");
-			if(file != NULL)
+			if (file != NULL)
 			{
 				fclose(file);
 				strncpy(themis.filename, argv[optind], PATH_MAX);
 			}
-			else
-				EXIT_ON_ERROR("%s : file not found", argv[optind]);
+			else EXIT_ON_ERROR("%s : file not found", argv[optind]);
 		}
 
-		if(strstr(argv[optind], ".the"))
+		if (strstr(argv[optind], ".the"))
 		{
 			FILE *file = fopen(argv[optind], "r");
-			if(file != NULL)
+			if (file != NULL)
 			{
 				fclose(file);
 				strncpy(themis.preferences, argv[optind], PATH_MAX);
 			}
-			else
-				EXIT_ON_ERROR("%s : file not found", argv[optind]);
+			else EXIT_ON_ERROR("%s : file not found", argv[optind]);
 		}
 	}
-
-	if (themis.id[0] == 0)
-	{
-		gethostname(themis.host, HOST_NAME_MAX);
-		themis.pid = getpid();
-		snprintf(themis.id, BUS_ID_MAX, "%s:%li", themis.host, (long int) themis.pid);
-		printf("bus_id: -i%s\n\n", themis.id);
-	}
-
-	if (themis.ip[0] == 0) strcpy(themis.ip, "127.255.255.255");
 
 	snprintf(bin_leto_prom_path, PATH_MAX, "%s/bin_leto_prom", getenv("HOME"));
 	gettimeofday(&themis.starting_time, NULL);
@@ -289,21 +272,26 @@ int main(int argc, char *argv[])
 	themis.promnet = promnet_init();
 
 	ui_init();
+
 	if (themis.filename[0] != 0)
 	{
 		load(themis.filename);
 	}
-	else /* S'il n'y a pas de fichier on ajoute un script vide par defaut */
+	if (themis.preferences[0] != 0)
 	{
 		strncpy(themis.dirname, ".", PATH_MAX);
 		add_new_script("name");
 	}
 
-	if(themis.preferences[0] != 0)
+	if (themis.id[0] == 0)
 	{
-		load_preferences(themis.preferences);
+		gethostname(themis.host, HOST_NAME_MAX);
+		themis.pid = getpid();
+		snprintf(themis.id, BUS_ID_MAX, "%s:%li", themis.host, (long int) themis.pid);
+		printf("bus_id: -i%s\n\n", themis.id);
 	}
 
+	if (themis.ip[0] == 0) strcpy(themis.ip, "127.255.255.255");
 
 	prom_bus_init(themis.ip); /* lancement du bus ivy */
 	IvyBindMsg(ivy_receive_any_message_callback, NULL, "^%s:(.*)", themis.id);
