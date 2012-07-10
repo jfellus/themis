@@ -232,7 +232,7 @@ void on_menu_item_save_activate(GObject *object, gpointer user_data)
 
 void on_menu_item_load_preferences_activate()
 {
-	char *filename_the;
+/*	char *filename_the;
 	GtkWidget *dialog;
 	GtkFileFilter *file_filter, *generic_file_filter;
 
@@ -256,7 +256,7 @@ void on_menu_item_load_preferences_activate()
 		load_preferences(filename_the);
 	}
 
-	gtk_widget_destroy(dialog);
+	gtk_widget_destroy(dialog);*/
 }
 
 void on_menu_coeos_activate()
@@ -314,6 +314,7 @@ const char * whitespace_cb_preferences(mxml_node_t *node, int where)
 
 void on_menu_item_save_preferences_activate()
 {
+/*
 	gchar *filename = NULL;
 	GtkWidget *dialog;
 	GtkFileFilter *file_filter, *generic_file_filter;
@@ -374,7 +375,7 @@ void on_menu_item_save_preferences_activate()
 
 		tree = oscillo_kernel_get_xml_informations(tree);
 		xml_save_file(filename, tree, whitespace_cb_preferences);
-	}
+	}*/
 }
 
 void on_menu_item_add_script_activate(GObject *object, gpointer user_data)
