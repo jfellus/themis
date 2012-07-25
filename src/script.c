@@ -40,7 +40,11 @@ void script_create_makefile(t_prom_script *script)
 	const char *rsh_graphic_option;
 
 	snprintf(script->path_makefile, PATH_MAX, "%s/%s/Makefile", themis.dirname, script->path_prom_deploy);
-	if ((makefile = fopen(script->path_makefile, "w")) == NULL) EXIT_ON_ERROR("Impossible to create %s", script->path_makefile);
+	if ((makefile = fopen(script->path_makefile, "w")) == NULL)
+	{
+		EXIT_ON_ERROR("Impossible to create %s", script->path_makefile);
+		return;
+	}
 
 	fprintf(makefile, "-include perso.mk\n\n");
 
