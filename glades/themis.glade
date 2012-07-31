@@ -118,6 +118,27 @@
                         <accelerator key="o" signal="activate" modifiers="GDK_CONTROL_MASK"/>
                       </object>
                     </child>
+                    <child>
+                      <object class="GtkImageMenuItem" id="menu_oscillo_kernel">
+                        <property name="label">Oscillo kernel</property>
+                        <property name="visible">True</property>
+                        <property name="image">image5</property>
+                        <property name="use_stock">False</property>
+                        <property name="always_show_image">True</property>
+                        <accelerator key="o" signal="activate" modifiers="GDK_CONTROL_MASK"/>
+                        <signal name="activate" handler="on_menu_oscillo_kernel_activate"/>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkImageMenuItem" id="menu_japet">
+                        <property name="label">Monitor in japet</property>
+                        <property name="visible">True</property>
+                        <property name="image">image6</property>
+                        <property name="use_stock">False</property>
+                        <property name="always_show_image">True</property>
+                        <accelerator key="o" signal="activate" modifiers="GDK_CONTROL_MASK"/>
+                      </object>
+                    </child>
                   </object>
                 </child>
               </object>
@@ -190,7 +211,19 @@
               <object class="GtkToolButton" id="oscillo_kernel_start_button">
                 <property name="visible">True</property>
                 <property name="label" translatable="yes">toolbutton</property>
-                <signal name="clicked" handler="on_oscillo_kernel_start_button_clicked"/>
+                <property name="icon_widget">image_oscillo_kernel</property>
+                <signal name="clicked" handler="on_menu_oscillo_kernel_activate"/>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="homogeneous">True</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkToolButton" id="japet_start_button">
+                <property name="visible">True</property>
+                <property name="icon_name">applications-utilities</property>
+                <signal name="clicked" handler="on_menu_japet_activate"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -394,7 +427,7 @@
   <object class="GtkTextBuffer" id="prom_bus_text_buffer"/>
   <object class="GtkImage" id="image_oscillo_kernel">
     <property name="width_request">16</property>
-    <property name="height_request">16</property>
+    <property name="height_request">14</property>
     <property name="visible">True</property>
     <property name="tooltip_text" translatable="yes">Oscillo kernel not yet available</property>
     <property name="pixbuf">oscillo_kernel_icon_small.png</property>
@@ -427,5 +460,17 @@
   <object class="GtkImage" id="image_oscillo_kernel1">
     <property name="visible">True</property>
     <property name="pixbuf">oscillo_kernel_icon_small.png</property>
+  </object>
+  <object class="GtkImage" id="image5">
+    <property name="visible">True</property>
+    <property name="stock">gtk-page-setup</property>
+  </object>
+  <object class="GtkImage" id="image6">
+    <property name="visible">True</property>
+    <property name="stock">gtk-page-setup</property>
+  </object>
+  <object class="GtkImage" id="image7">
+    <property name="visible">True</property>
+    <property name="stock">gtk-missing-image</property>
   </object>
 </interface>

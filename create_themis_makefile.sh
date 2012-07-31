@@ -15,15 +15,23 @@ SOURCE_DIR="src"
 SOURCES=(themis.c themis_gtk.c script_gtk.c script_gtk_cb.c themis_ivy.c themis_ivy_cb.c script.c)
 ALL_GLADE_FILES=(distant_promethe.glade themis.glade themis_icon.png oscillo_kernel_icon_small.png)
 
-ENET=0;
+ENET=1;
 OSCILLO_KERNEL_LIB="";
 
 for i in $@
 do
 	case $i in
-(--enable-enet) ENET=1; CFLAGS="$CFLAGS -DUSE_ENET=1"; SOURCES=(${SOURCES[@]} enet_server.c); ALL_GLADE_FILES=(${ALL_GLADE_FILES[@]} oscillo_kernel.glade);OSCILLO_KERNEL_LIB="$OSCILLOKERNELLIBPATH/liboscillo_kernel_debug.a"; LIBS="-L$OSCILLOKERNELLIBPATH -loscillo_kernel_debug -L$SIMULATOR_PATH/lib/$SYSTEM/enet/lib -lenet  -L$GRAPHICLIBPATH -l${GRAPHICLIB} $LIBS"; echo "enet:enabled";;
+		(--disable-enet) ENET = 0;;
 	esac
 done
+
+if ((ENET))
+then 
+ 	CFLAGS="$CFLAGS -DUSE_ENET=1"; SOURCES=(${SOURCES[@]} enet_server.c);
+	OSCILLO_KERNEL_LIB="$OSCILLOKERNELLIBPATH/liboscillo_kernel_debug.a"; 
+	LIBS="-L$OSCILLOKERNELLIBPATH -loscillo_kernel_debug -L$SIMULATOR_PATH/lib/$SYSTEM/enet/lib -lenet  -L$GRAPHICLIBPATH -l${GRAPHICLIB} $LIBS"; 
+	echo "enet:enabled";
+fi
 
 ALL_CONFIGURATIONS=(debug release)
 MAKEFILE="Makefile.themis"

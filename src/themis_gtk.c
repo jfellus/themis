@@ -75,7 +75,7 @@ void display_status_message(const char *message, ...)
 	char temporary_message[SIZE_OF_STATUS_MESSAGE];
 
 	time_t now;
-	va_start (args, message);
+	va_start(args, message);
 
 	now = time(NULL);
 	strftime(full_message, 16, "%Hh%M:", localtime(&now));
@@ -216,7 +216,6 @@ void on_menu_item_save_as_activate(GObject *object, gpointer user_data)
 		if (save(themis.filename) == 0) display_status_message("%s saved.", themis.filename);
 		else display_status_message("Fail to save %s !!!", themis.filename);
 	}
-
 	gtk_widget_destroy(dialog);
 }
 
@@ -266,10 +265,26 @@ void on_menu_coeos_activate()
 	int error;
 
 	snprintf(command_line, SIZE_OF_COMMAND_LINE, "cd %s && coeos %s&\n", themis.dirname, basename(themis.filename));
+	printf("Execute: %s", command_line);
 	error = system(command_line);
 	if (error != 0)
 	{
 		PRINT_WARNING("Error launching coeos.\n\t Check that %s is correct.", command_line);
+	}
+}
+
+void on_menu_japet_activate()
+{
+	char command_line[SIZE_OF_COMMAND_LINE];
+
+	int error;
+
+	snprintf(command_line, SIZE_OF_COMMAND_LINE, "japet -i%s&\n", themis.id);
+	printf("Execute: %s", command_line);
+	error = system(command_line);
+	if (error != 0)
+	{
+		PRINT_WARNING("Error launching japet.\n\t Check that %s is correct.", command_line);
 	}
 }
 

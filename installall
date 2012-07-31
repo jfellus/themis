@@ -2,7 +2,7 @@
 
 # parsing examples see in: /usr/share/doc/util-linux/examples
 
-ARGS=(`getopt --options h --long help,enable-enet -- "$@"`)
+ARGS=(`getopt --options h --long help,disable-enet -- "$@"`)
 
 if [ $? -ne 0 ];
 then
