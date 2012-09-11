@@ -130,13 +130,14 @@
                       </object>
                     </child>
                     <child>
-                      <object class="GtkImageMenuItem" id="menu_japet">
-                        <property name="label">Monitor in japet</property>
+                      <object class="GtkImageMenuItem" id="menu_pandora">
+                        <property name="label">Monitor in Pandora</property>
                         <property name="visible">True</property>
                         <property name="image">image6</property>
                         <property name="use_stock">False</property>
                         <property name="always_show_image">True</property>
                         <accelerator key="o" signal="activate" modifiers="GDK_CONTROL_MASK"/>
+                        <signal name="activate" handler="on_menu_pandora_activate"/>
                       </object>
                     </child>
                   </object>
@@ -220,10 +221,10 @@
               </packing>
             </child>
             <child>
-              <object class="GtkToolButton" id="japet_start_button">
+              <object class="GtkToolButton" id="pandora_start_button">
                 <property name="visible">True</property>
-                <property name="icon_name">applications-utilities</property>
-                <signal name="clicked" handler="on_menu_japet_activate"/>
+                <property name="icon_widget">pandora</property>
+                <signal name="clicked" handler="on_menu_pandora_activate"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -405,6 +406,9 @@
         <child>
           <object class="GtkStatusbar" id="status_bar">
             <property name="visible">True</property>
+            <child>
+              <placeholder/>
+            </child>
           </object>
           <packing>
             <property name="expand">False</property>
@@ -425,25 +429,15 @@
     <property name="focus_on_click">False</property>
   </object>
   <object class="GtkTextBuffer" id="prom_bus_text_buffer"/>
-  <object class="GtkImage" id="image_oscillo_kernel">
-    <property name="width_request">16</property>
-    <property name="height_request">14</property>
+  <object class="GtkImage" id="image_oscillo_kernel1">
     <property name="visible">True</property>
-    <property name="tooltip_text" translatable="yes">Oscillo kernel not yet available</property>
     <property name="pixbuf">oscillo_kernel_icon_small.png</property>
   </object>
-  <object class="GtkImage" id="image1">
+  <object class="GtkImage" id="image7">
     <property name="visible">True</property>
-    <property name="yalign">0.43000000715255737</property>
-    <property name="ypad">5</property>
-    <property name="stock">gtk-add</property>
+    <property name="stock">gtk-missing-image</property>
   </object>
   <object class="GtkImage" id="image3">
-    <property name="visible">True</property>
-    <property name="xpad">2</property>
-    <property name="stock">gtk-save</property>
-  </object>
-  <object class="GtkImage" id="image2">
     <property name="visible">True</property>
     <property name="xpad">2</property>
     <property name="stock">gtk-save</property>
@@ -453,13 +447,20 @@
     <property name="xpad">2</property>
     <property name="stock">gtk-open</property>
   </object>
+  <object class="GtkImage" id="image2">
+    <property name="visible">True</property>
+    <property name="xpad">2</property>
+    <property name="stock">gtk-save</property>
+  </object>
+  <object class="GtkImage" id="image1">
+    <property name="visible">True</property>
+    <property name="yalign">0.43000000715255737</property>
+    <property name="ypad">5</property>
+    <property name="stock">gtk-add</property>
+  </object>
   <object class="GtkImage" id="image9">
     <property name="visible">True</property>
     <property name="stock">gtk-page-setup</property>
-  </object>
-  <object class="GtkImage" id="image_oscillo_kernel1">
-    <property name="visible">True</property>
-    <property name="pixbuf">oscillo_kernel_icon_small.png</property>
   </object>
   <object class="GtkImage" id="image5">
     <property name="visible">True</property>
@@ -469,8 +470,13 @@
     <property name="visible">True</property>
     <property name="stock">gtk-page-setup</property>
   </object>
-  <object class="GtkImage" id="image7">
+  <object class="GtkImage" id="image_oscillo_kernel">
     <property name="visible">True</property>
-    <property name="stock">gtk-missing-image</property>
+    <property name="tooltip_text" translatable="yes">Oscillo kernel not yet available</property>
+    <property name="pixbuf">oscillo_kernel_icon_small.png</property>
+  </object>
+  <object class="GtkImage" id="pandora">
+    <property name="visible">True</property>
+    <property name="pixbuf">../resources/pandora_icon.png</property>
   </object>
 </interface>

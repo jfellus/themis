@@ -131,6 +131,10 @@ void script_ui_connect_consoles(type_script_ui *script_ui);
 void script_ui_launch(type_script_ui *script_ui, int is_debug);
 
 
+void window_get_size(int *width, int *height);
+void window_set_size(int width, int height);
+
+
 type_script_ui *get_script_ui_with_id(char *id)  ;
 void ui_set_filename(char *filename);
 void ui_init();

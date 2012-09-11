@@ -62,6 +62,7 @@ typedef struct themis
   char tmp_dir[PATH_MAX];
   char host[HOST_NAME_MAX];
   char id[BUS_ID_MAX];
+  char pandora[PATH_MAX];
   pid_t pid;
 
 
@@ -80,8 +81,10 @@ extern type_themis themis;
 void ui_remove_scripts();
 void ui_update_data(char *reference_dirname);
 void display_status_message(const char *message, ...);
-Node *themis_get_xml_informations(Node *tree);
-void load_preferences(char *filename);
+Node *themis_get_xml_preferences(Node *tree);
+void preferences_load();
+void preferences_save();
+
 
 /* Functions not dependant of graphic libraries */
 void prom_bus_send_message(const char *format, ...);
