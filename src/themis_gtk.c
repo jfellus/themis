@@ -290,7 +290,7 @@ void on_menu_pandora_activate()
 
   int error;
 
-  if (themis.pandora[0] == 0) select_pandora_file();
+ /* if (themis.pandora[0] == 0) select_pandora_file(); On ne demande pas le fichier par defaut */
 
   set_relative_path_from_gfile(themis.pandora, themis.dirname, g_file_new_for_path(themis.pandora));
 
@@ -345,7 +345,7 @@ void on_menu_item_save_preferences_activate()
   gchar *filename = NULL;
   GtkWidget *dialog;
   GtkFileFilter *file_filter, *generic_file_filter;
-  Node *script_node;
+ /* Node *script_node; */
 
   dialog = gtk_file_chooser_dialog_new("Save preferences", GTK_WINDOW(themis_ui.window), GTK_FILE_CHOOSER_ACTION_SAVE, GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL, GTK_STOCK_SAVE, GTK_RESPONSE_ACCEPT, NULL);
   gtk_file_chooser_set_do_overwrite_confirmation(GTK_FILE_CHOOSER(dialog), TRUE);
