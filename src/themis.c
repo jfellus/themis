@@ -92,7 +92,7 @@ void add_new_script(const char *prom_id)
   prom_script = promnet_add_new_prom_script(themis.promnet);
   promnet_prom_script_set_logical_name(prom_script, (char*) prom_id);
   strncpy(prom_script->path_prom_binary, "promethe", PATH_MAX);
-  strncpy(prom_script->computer, "localhost", MAX_COMPUTER);
+  strncpy(prom_script->computer, "localhost", COMPUTER_MAX);
 
   ui_add_script(prom_script);
 }

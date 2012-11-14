@@ -118,9 +118,10 @@ void stop_oscillo_kernel()
 void init_oscillo_kernel(int port)
 {
 	char host_name[HOST_NAME_MAX];
-	ENetAddress address;
 	int error;
 	pthread_t enet_thread;
+
+    ENetAddress address;
 
 	if (enet_initialize() != 0)
 	{
@@ -139,6 +140,7 @@ void init_oscillo_kernel(int port)
 		gethostname(host_name, HOST_NAME_MAX);
 		/* prom_bus_send_message("connect_profiler(%s:%d)", host_name, port);*/
 		error = pthread_create(&enet_thread, NULL, (void*(*)(void*)) enet_manager, enet_server);
+		if (error !=0 ) EXIT_ON_ERROR("Fail creating thread, error: %i", error);
 	}
 	else EXIT_ON_ERROR("Fail to create a enet server for oscillo kernel !\n\tCheck that there is no other themis running.");
 

@@ -129,8 +129,8 @@ void ui_remove_scripts()
   for (i = 0; i < themis_ui.number_of_scripts; i++)
   {
     script_ui = &themis_ui.script_uis[i];
-    gtk_widget_destroy(GTK_WIDGET(themis_ui.script_uis[i].detail_window));
-    gtk_widget_destroy(GTK_WIDGET(themis_ui.script_uis[i].frame));
+    gtk_widget_destroy(GTK_WIDGET(script_ui->detail_window));
+    gtk_widget_destroy(GTK_WIDGET(script_ui->frame));
   }
   themis_ui.number_of_scripts = 0;
 }

@@ -179,7 +179,7 @@ void hide_widget_callback(GtkWidget *button, gpointer *user_data)
 
 void on_name_entry_activate(GtkEntry *name_entry, type_script_ui* script_ui)
 {
-  strncpy(script_ui->data->logical_name, gtk_entry_get_text(name_entry), MAX_LOGICAL_NAME);
+  strncpy(script_ui->data->logical_name, gtk_entry_get_text(name_entry), LOGICAL_NAME_MAX);
   gtk_frame_set_label(script_ui->frame, script_ui->data->logical_name);
   gtk_window_set_title(script_ui->detail_window, script_ui->data->logical_name);
 }

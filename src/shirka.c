@@ -96,9 +96,11 @@ void ivy_speak_callback(IvyClientPtr app, void *user_data, int argc, char **argv
   snprintf(speak_string, SIZE_OF_SPEAK, "espeak %s",argv[0]); /* construction de la commande system appelant le speech vocodeur 'espeak' */
 
   result=system("amixer set Master 100%"); /* prereglage du volume general Master&PCM */
+  if (result != 0) EXIT_ON_ERROR("Fail changing general volume");
   result=system("amixer set PCM 100%");
-
+  if (result != 0) EXIT_ON_ERROR("Fail changing PCM volume");
   result=system(speak_string);
+  if (result != 0) EXIT_ON_ERROR("Fail saying: %s", speak_string);
 }
 
 void ivyApplicationCallback (IvyClientPtr app, void *user_data, IvyApplicationEvent event)
