@@ -80,7 +80,7 @@ void script_ui_set_prom_id(type_script_ui *script_ui, char *prom_id, char *hostn
 {
   GdkColor color;
 
-  strncpy(script_ui->data->logical_name, prom_id, LOGICAL_NAME_MAX);
+  strncpy(script_ui->data->logical_name, prom_id, PROM_ID_MAX);
 
   gdk_color_parse("green", &color);
   gtk_widget_modify_bg(script_ui->state_displays[No_Quit], GTK_STATE_INSENSITIVE, &color);
@@ -102,7 +102,6 @@ void script_ui_connect_consoles(type_script_ui *ui)
   
   t_prom_script * script = ui->data;
 
-
   argv[0] = (char*) "rlwrap";
   argv[1] = (char*) "telnet";
   argv[2] = script->computer;
@@ -110,27 +109,26 @@ void script_ui_connect_consoles(type_script_ui *ui)
   argv[4] = NULL;
   
   snprintf(argv[3], PORTNAME_MAX, "%d", script->kernel_port);
-  if( !vte_terminal_fork_command_full(ui->kernel_terminal, VTE_PTY_DEFAULT, NULL, argv, NULL, 0, NULL, NULL, &pid, NULL))
-  {
+  pid = vte_terminal_fork_command(ui->kernel_terminal, "rlwrap", argv, NULL, NULL, FALSE, FALSE, FALSE);
+  if (pid == -1)
     EXIT_ON_ERROR( "Impossible to connect to kernel port. Check that you have rlwrap and telnet.");
-  }
   else {
     vte_terminal_reset(ui->kernel_terminal, TRUE, TRUE);
   }
   
   snprintf(argv[3], PORTNAME_MAX, "%d", script->debug_port);
-  if( !vte_terminal_fork_command_full(ui->debug_terminal, VTE_PTY_DEFAULT, NULL, argv, NULL, 0, NULL, NULL, &pid, NULL))
-  {
+  pid = vte_terminal_fork_command(ui->debug_terminal, "rlwrap", argv, NULL, NULL, FALSE, FALSE, FALSE);
+  if (pid == -1)
     EXIT_ON_ERROR( "Impossible to connect to debug port. Check that you have rlwrap and telnet.");
-  }
   else vte_terminal_reset(ui->debug_terminal, TRUE, TRUE);
   
   snprintf(argv[3], PORTNAME_MAX, "%d", script->console_port);
-  if( !vte_terminal_fork_command_full(ui->console_terminal, VTE_PTY_DEFAULT, NULL, argv, NULL, 0, NULL, NULL, &pid, NULL))
-  {
+  pid = vte_terminal_fork_command(ui->console_terminal, "rlwrap", argv, NULL, NULL, FALSE, FALSE, FALSE);
+  if (pid == -1)
     EXIT_ON_ERROR( "Impossible to connect to console port. Check that you have rlwrap and telnet.");
-  }
   else vte_terminal_reset(ui->console_terminal, TRUE, TRUE);
+  
+  /*	on_show_log_button_clicked(NULL, ui);*/
 }
 
 void script_ui_display_status(type_script_ui *script_ui, const char *message, ...)
@@ -209,9 +207,9 @@ void script_ui_update_data(type_script_ui *script_ui, gchar *reference_dirname)
   
   script = script_ui->data;
   
-  strncpy(script->login, gtk_entry_get_text(script_ui->login_entry), LOGIN_MAX);
+  strncpy(script->login, gtk_entry_get_text(script_ui->login_entry), LOGIN_NAME_MAX);
   strncpy(script->path_prom_deploy, gtk_entry_get_text(script_ui->path_entry), PATH_MAX);
-  strncpy(script->logical_name, gtk_entry_get_text(script_ui->name_entry), LOGICAL_NAME_MAX);
+  strncpy(script->logical_name, gtk_entry_get_text(script_ui->name_entry), SIZE_OF_NAME);
   strncpy(script->path_prom_binary, gtk_entry_get_text(script_ui->binary_entry), PATH_MAX);
   strncpy(script->keyboard_input, text_buffer_get_all_text(script_ui->keyboard_input_text_buffer), KEYBOARD_INPUT_MAX);
   strncpy(script->path_file_script, gtk_entry_get_text(script_ui->script_entry), PATH_MAX);
@@ -276,12 +274,7 @@ void ui_script_init(type_script_ui *script_ui, t_prom_script *script)
   GtkBuilder *builder;
   char builder_filename[PATH_MAX];
   char path_name[PATH_MAX];
-  char **terminal_command_line;
-
-  terminal_command_line = MANY_ALLOCATIONS(2, char*);
-  terminal_command_line[0] = (char*) "/bin/bash";
-  terminal_command_line[1] = NULL;
-
+  
   builder = gtk_builder_new();
   snprintf(builder_filename, PATH_MAX, "%s/glades/distant_promethe.glade", bin_leto_prom_path);
   gtk_builder_add_from_file(builder, builder_filename, &g_error);
@@ -374,11 +367,7 @@ void ui_script_init(type_script_ui *script_ui, t_prom_script *script)
   gtk_builder_connect_signals(builder, script_ui);
   g_object_unref(G_OBJECT(builder));
 
-
-  vte_terminal_fork_command_full(script_ui->terminal, VTE_PTY_DEFAULT, NULL, terminal_command_line, NULL, 0, NULL, NULL, NULL, &g_error);
-
-  if (g_error != NULL)
-    EXIT_ON_ERROR("%s", g_error->message);
+  vte_terminal_fork_command(script_ui->terminal, NULL, NULL, NULL, NULL, FALSE, FALSE, FALSE);
 
   gtk_widget_show_all(GTK_WIDGET(script_ui->frame));
   gtk_widget_hide_all(script_ui->launched_widget);
