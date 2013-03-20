@@ -254,6 +254,7 @@ int main(int argc, char *argv[])
   if (!g_thread_supported()) g_thread_init(NULL);
   else printf("g_thread deja initialisees\n");
 
+  XInitThreads();
   gdk_threads_init(); /* Called to initialize internal mutex "gdk_threads_mutex".*/
   gtk_init(&argc, &argv);
 
