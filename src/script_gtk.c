@@ -109,7 +109,9 @@ void script_ui_connect_consoles(type_script_ui *ui)
   argv[4] = NULL;
   
   sprintf(argv[3], "%d", script->kernel_port);
-  if( !vte_terminal_fork_command_full(ui->kernel_terminal, VTE_PTY_DEFAULT, NULL, argv, NULL,  G_SPAWN_DO_NOT_REAP_CHILD, NULL, NULL, &pid, NULL))
+  pid = vte_terminal_fork_command(ui->kernel_terminal, argv[0], argv, NULL, NULL, TRUE, TRUE, TRUE);
+  if (pid == -1)
+/*  if( !vte_terminal_fork_command_full(ui->kernel_terminal, VTE_PTY_DEFAULT, NULL, argv, NULL,  G_SPAWN_DO_NOT_REAP_CHILD, NULL, NULL, &pid, NULL))*/
   {
     EXIT_ON_ERROR( "Impossible to connect to kernel port. Check that you have rlwrap and telnet.");
   }
@@ -119,14 +121,18 @@ void script_ui_connect_consoles(type_script_ui *ui)
   }
   
   sprintf(argv[3], "%d", script->debug_port);
-  if( !vte_terminal_fork_command_full(ui->debug_terminal, VTE_PTY_DEFAULT, NULL, argv, NULL,  G_SPAWN_DO_NOT_REAP_CHILD, NULL, NULL, &pid, NULL))
+  pid = vte_terminal_fork_command(ui->debug_terminal, argv[0], argv, NULL, NULL, TRUE, TRUE, TRUE);
+  if (pid == -1)
+  /*if( !vte_terminal_fork_command_full(ui->debug_terminal, VTE_PTY_DEFAULT, NULL, argv, NULL,  G_SPAWN_DO_NOT_REAP_CHILD, NULL, NULL, &pid, NULL))*/
   {
     EXIT_ON_ERROR( "Impossible to connect to debug port. Check that you have rlwrap and telnet.");
   }
   else vte_terminal_reset(ui->debug_terminal, TRUE, TRUE);
   
   sprintf(argv[3], "%d", script->console_port);
-  if( !vte_terminal_fork_command_full(ui->console_terminal, VTE_PTY_DEFAULT, NULL, argv, NULL,  G_SPAWN_DO_NOT_REAP_CHILD, NULL, NULL, &pid, NULL))
+  pid = vte_terminal_fork_command(ui->kernel_terminal, argv[0], argv, NULL, NULL, TRUE, TRUE, TRUE);
+  if (pid == -1)
+  /*if( !vte_terminal_fork_command_full(ui->console_terminal, VTE_PTY_DEFAULT, NULL, argv, NULL,  G_SPAWN_DO_NOT_REAP_CHILD, NULL, NULL, &pid, NULL))*/
   {
     EXIT_ON_ERROR( "Impossible to connect to console port. Check that you have rlwrap and telnet.");
   }
@@ -377,9 +383,14 @@ void ui_script_init(type_script_ui *script_ui, t_prom_script *script)
 
 
   terminal_command_line = MANY_ALLOCATIONS(2, char*);
-  terminal_command_line[0] = vte_get_user_shell();
-  terminal_command_line[1] = NULL;
-  vte_terminal_fork_command_full(script_ui->terminal, VTE_PTY_DEFAULT, NULL, terminal_command_line, NULL,  G_SPAWN_DO_NOT_REAP_CHILD, NULL, NULL, NULL, &g_error);
+  /*terminal_command_line[0] = vte_get_user_shell();
+  terminal_command_line[1] = NULL;*/
+
+  terminal_command_line[0] = NULL;
+
+  vte_terminal_fork_command(script_ui->terminal, terminal_command_line[0], terminal_command_line, NULL, NULL, TRUE, TRUE, TRUE);
+
+/*  vte_terminal_fork_command_full(script_ui->terminal, VTE_PTY_DEFAULT, NULL, terminal_command_line, NULL,  G_SPAWN_DO_NOT_REAP_CHILD, NULL, NULL, NULL, &g_error);*/
 
 
   gtk_widget_show_all(GTK_WIDGET(script_ui->frame));
