@@ -8,12 +8,9 @@
 #include <locale.h>
 #include <sys/socket.h>
 
-#if USE_ENET
 #include "enet_server.h"
 #include <prom_tools/include/oscillo_kernel_display.h>
 #include <prom_tools/include/xml_tools.h>
-
-#endif
 
 #include "themis_ivy_cb.h"
 #include "themis_ivy.h"

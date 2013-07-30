@@ -125,7 +125,8 @@ void init_oscillo_kernel(int port)
 
 	if (enet_initialize() != 0)
 	{
-		EXIT_ON_ERROR("An error occurred while initializing ENet.\n");
+		PRINT_WARNING("An error occurred while initializing ENet.\n");
+		return;
 	}
 
 	enet_time_set(0);
@@ -140,8 +141,16 @@ void init_oscillo_kernel(int port)
 		gethostname(host_name, HOST_NAME_MAX);
 		/* prom_bus_send_message("connect_profiler(%s:%d)", host_name, port);*/
 		error = pthread_create(&enet_thread, NULL, (void*(*)(void*)) enet_manager, enet_server);
-		if (error !=0 ) EXIT_ON_ERROR("Fail creating thread, error: %i", error);
+		if (error !=0 )
+		  {
+		  PRINT_WARNING("Fail creating thread, error: %i", error);
+		  return;
+		  }
 	}
-	else EXIT_ON_ERROR("Fail to create a enet server for oscillo kernel !\n\tCheck that there is no other themis running.");
+	else
+	{
+	 PRINT_WARNING("Fail to create a enet server for oscillo kernel !\n\tCheck that there is no other themis running.");
+	 return;
+	}
 
 }
