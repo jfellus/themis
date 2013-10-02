@@ -94,6 +94,7 @@ void script_ui_set_name(type_script_ui *ui, const char *name)
   gtk_entry_set_text(ui->name_entry, name);
 }
 
+/*
 void script_ui_connect_consoles(type_script_ui *ui)
 {
   char *argv[5];
@@ -111,7 +112,6 @@ void script_ui_connect_consoles(type_script_ui *ui)
   sprintf(argv[3], "%d", script->kernel_port);
   pid = vte_terminal_fork_command(ui->kernel_terminal, argv[0], argv, NULL, NULL, TRUE, TRUE, TRUE);
   if (pid == -1)
-/*  if( !vte_terminal_fork_command_full(ui->kernel_terminal, VTE_PTY_DEFAULT, NULL, argv, NULL,  G_SPAWN_DO_NOT_REAP_CHILD, NULL, NULL, &pid, NULL))*/
   {
     EXIT_ON_ERROR( "Impossible to connect to kernel port. Check that you have rlwrap and telnet.");
   }
@@ -123,7 +123,6 @@ void script_ui_connect_consoles(type_script_ui *ui)
   sprintf(argv[3], "%d", script->debug_port);
   pid = vte_terminal_fork_command(ui->debug_terminal, argv[0], argv, NULL, NULL, TRUE, TRUE, TRUE);
   if (pid == -1)
-  /*if( !vte_terminal_fork_command_full(ui->debug_terminal, VTE_PTY_DEFAULT, NULL, argv, NULL,  G_SPAWN_DO_NOT_REAP_CHILD, NULL, NULL, &pid, NULL))*/
   {
     EXIT_ON_ERROR( "Impossible to connect to debug port. Check that you have rlwrap and telnet.");
   }
@@ -132,14 +131,11 @@ void script_ui_connect_consoles(type_script_ui *ui)
   sprintf(argv[3], "%d", script->console_port);
   pid = vte_terminal_fork_command(ui->kernel_terminal, argv[0], argv, NULL, NULL, TRUE, TRUE, TRUE);
   if (pid == -1)
-  /*if( !vte_terminal_fork_command_full(ui->console_terminal, VTE_PTY_DEFAULT, NULL, argv, NULL,  G_SPAWN_DO_NOT_REAP_CHILD, NULL, NULL, &pid, NULL))*/
   {
     EXIT_ON_ERROR( "Impossible to connect to console port. Check that you have rlwrap and telnet.");
   }
   else vte_terminal_reset(ui->console_terminal, TRUE, TRUE);
-  
-  /*	on_show_log_button_clicked(NULL, ui);*/
-}
+}*/
 
 void script_ui_display_status(type_script_ui *script_ui, const char *message, ...)
 {
@@ -318,9 +314,9 @@ void ui_script_init(type_script_ui *script_ui, t_prom_script *script)
   script_ui->login_entry = GTK_ENTRY(gtk_builder_get_object(builder, "login_entry"));
   script_ui->path_entry = GTK_ENTRY(gtk_builder_get_object(builder, "path_entry"));
   script_ui->terminal = VTE_TERMINAL(gtk_builder_get_object(builder, "terminal"));
-  script_ui->kernel_terminal = VTE_TERMINAL(gtk_builder_get_object(builder, "kernel_terminal"));
+ /* script_ui->kernel_terminal = VTE_TERMINAL(gtk_builder_get_object(builder, "kernel_terminal"));
   script_ui->debug_terminal = VTE_TERMINAL(gtk_builder_get_object(builder, "debug_terminal"));
-  script_ui->console_terminal = VTE_TERMINAL(gtk_builder_get_object(builder, "console_terminal"));
+  script_ui->console_terminal = VTE_TERMINAL(gtk_builder_get_object(builder, "console_terminal"));*/
   
   script_ui->keyboard_input_text_buffer = GTK_TEXT_BUFFER(gtk_builder_get_object(builder, "keyboard_input_text_buffer"));
   script_ui->name_entry = GTK_ENTRY(gtk_builder_get_object(builder, "name_entry"));

@@ -70,7 +70,7 @@ typedef struct script_ui
   GtkEntry *name_entry, *binary_entry;
 
   GtkEntry *computer_entry, *login_entry, *distant_directory_entry;
-  VteTerminal *terminal, *debug_terminal, *kernel_terminal, *console_terminal;
+  VteTerminal *terminal/*, *debug_terminal, *kernel_terminal, *console_terminal*/;
   GtkTextBuffer *keyboard_input_text_buffer;
 
 
