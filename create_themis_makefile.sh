@@ -3,7 +3,7 @@
 SIMULATOR_PATH="$(pwd)/.."
 source $SIMULATOR_PATH/scripts/COMPILE_FLAG
 
-PACKAGES="gtk+-2.0 gmodule-2.0 vte-2.90 gthread-2.0"
+PACKAGES="gtk+-2.0 gmodule-2.0 vte gthread-2.0"
 PROMLIB_DIR="$SIMULATOR_PATH/lib/$SYSTEM"
 IVYLIB_DIR="$PROMLIB_DIR/ivy"
 SCRIPTLIB_DIR="$PROMLIB_DIR/script"
