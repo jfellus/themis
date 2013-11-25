@@ -249,7 +249,7 @@ void script_ui_update_data(type_script_ui *script_ui, gchar *reference_dirname)
   if (set_relative_path_from_gfile(script->path_prom_deploy, reference_dirname, dir))
   {
     gtk_entry_set_text(script_ui->path_entry, script->path_prom_deploy);
-    if (themis.dirname != reference_dirname) strncpy(themis.dirname, reference_dirname, PATH_MAX); /* On ne fait une copie que si les pointeurs sont différents */
+    if (themis.dirname != reference_dirname) strncpy(themis.dirname, reference_dirname, PATH_MAX); /* On ne fait une copie que si les pointeurs sont diff��rents */
   }
   else
     PRINT_WARNING("Directory %s not found.", dirname);
@@ -314,6 +314,7 @@ void ui_script_init(type_script_ui *script_ui, t_prom_script *script)
   script_ui->login_entry = GTK_ENTRY(gtk_builder_get_object(builder, "login_entry"));
   script_ui->path_entry = GTK_ENTRY(gtk_builder_get_object(builder, "path_entry"));
   script_ui->terminal = VTE_TERMINAL(gtk_builder_get_object(builder, "terminal"));
+  vte_terminal_set_scrollback_lines(script_ui->terminal,-1);
  /* script_ui->kernel_terminal = VTE_TERMINAL(gtk_builder_get_object(builder, "kernel_terminal"));
   script_ui->debug_terminal = VTE_TERMINAL(gtk_builder_get_object(builder, "debug_terminal"));
   script_ui->console_terminal = VTE_TERMINAL(gtk_builder_get_object(builder, "console_terminal"));*/
