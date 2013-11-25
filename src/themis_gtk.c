@@ -442,6 +442,7 @@ void on_standby_all_button_clicked(GtkWidget *widget, gpointer user_data)
   on_prom_bus_entry_activate(themis_ui.prom_bus_entry, NULL);
 }
 
+
 void on_quit_all_promethe_button_clicked(GtkWidget *widget, gpointer user_data)
 {
   (void) widget;
@@ -463,6 +464,23 @@ void on_refresh_button_clicked(GtkWidget *widget, gpointer user_data)
   on_prom_bus_entry_activate(themis_ui.prom_bus_entry, NULL);
 
   if (themis.filename[0] != 0) load(themis.filename);
+}
+
+
+/**************************** Run all scripts *************************************************************************************************/
+void on_run_all_button_clicked(GtkWidget *widget, gpointer user_data)
+{
+	int i;
+
+  (void) widget;
+  (void) user_data;
+  for ( i = 0; i < themis_ui.number_of_scripts; i++)
+  {
+	  script_ui_launch(&themis_ui.script_uis[i], 0);
+
+	  sleep((float) atoll(gtk_entry_get_text(themis_ui.waiting_time)));/* a suppimer si on veux enlever le temps d'attente entre lancements des promethes*/
+  }
+
 }
 
 /**************************************************** END CALL_BACKS  **************************************************************************/
@@ -527,6 +545,7 @@ void ui_init()
   themis_ui.window = (GtkWidget *) gtk_builder_get_object(builder, "window");
   themis_ui.display_of_scripts = GTK_BOX(gtk_builder_get_object(builder, "display_of_scripts"));
   themis_ui.prom_bus_entry = GTK_ENTRY(gtk_builder_get_object(builder, "prom_bus_entry"));
+  themis_ui.waiting_time = GTK_ENTRY(gtk_builder_get_object(builder, "waiting_time"));
   themis_ui.statusbar = GTK_STATUSBAR((gtk_builder_get_object(builder, "status_bar")));
   themis_ui.prom_bus_text_buffer = GTK_TEXT_BUFFER(gtk_builder_get_object(builder, "prom_bus_text_buffer"));
 

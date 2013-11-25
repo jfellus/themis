@@ -253,6 +253,64 @@
                 <property name="position">0</property>
               </packing>
             </child>
+            
+            <!-- %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% A supprimer si on ne veux plus avoir l'option de selection du temps d'attente entre promethes%%%%% -->
+            <child> 
+              <object class="GtkHBox" id="run_and_wait_all_promethe">
+              <property name="visible">True</property>
+		            <child>
+		              <object class="GtkButton" id="run_all_promethe">
+		                <property name="label" translatable="yes">run all</property>
+		                <property name="visible">True</property>
+		                <property name="can_focus">True</property>
+		                <property name="receives_default">True</property>
+		                <property name="tooltip_markup">Send run to all promethes</property>
+		                <signal name="clicked" handler="on_run_all_button_clicked"/>
+		              </object>
+		              <packing>
+		                <property name="expand">True</property>
+		                <property name="fill">True</property>
+		                <property name="position">0</property>
+		              </packing>
+		              </child>
+		              <child>
+							<object class="GtkEntry" id="waiting_time">
+							  <property name="width-chars">3</property>
+							  <property name="text">0.5</property>
+							  <property name="visible">True</property>
+							  <property name="can_focus">True</property>
+			 				</object>
+							<packing>
+							  <property name="position">1</property>
+							</packing>
+			            </child>
+			            </object>
+			            <packing>
+			            <property name="expand">False</property>
+			            <property name="position">1</property>
+			          </packing>
+            </child>
+            <!-- %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Et remplacer  par ça %%%%% -->
+            
+            <!--
+            <child>
+		              <object class="GtkButton" id="run_all_promethe">
+		                <property name="label" translatable="yes">run all</property>
+		                <property name="visible">True</property>
+		                <property name="can_focus">True</property>
+		                <property name="receives_default">True</property>
+		                <property name="tooltip_markup">Send run to all promethes</property>
+		                <signal name="clicked" handler="on_run_all_button_clicked"/>
+		              </object>
+		              <packing>
+		                <property name="expand">True</property>
+		                <property name="fill">True</property>
+		                <property name="position">1</property>
+		              </packing>
+		              </child>
+            
+            -->
+            <!-- %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% -->
             <child>
               <object class="GtkButton" id="standby_all_button">
                 <property name="label" translatable="yes">Cancel</property>
@@ -265,7 +323,7 @@
               <packing>
                 <property name="expand">False</property>
                 <property name="fill">False</property>
-                <property name="position">1</property>
+                <property name="position">2</property>
               </packing>
             </child>
             <child>
@@ -280,7 +338,7 @@
               <packing>
                 <property name="expand">False</property>
                 <property name="fill">False</property>
-                <property name="position">2</property>
+                <property name="position">3</property>
               </packing>
             </child>
             <child>
@@ -295,7 +353,7 @@
               <packing>
                 <property name="expand">False</property>
                 <property name="fill">False</property>
-                <property name="position">3</property>
+                <property name="position">4</property>
               </packing>
             </child>
           </object>

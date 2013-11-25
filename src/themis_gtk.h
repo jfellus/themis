@@ -102,6 +102,7 @@ typedef struct themis_ui {
   /*** Themis ***/
   GtkWidget *window;
   GtkEntry *prom_bus_entry;
+  GtkEntry *waiting_time;/* a suppimer si on veux enlever le temps d'attente entre lancements des promethes*/
   GtkStatusbar *statusbar;
   GtkBuilder *builder;
 
@@ -149,6 +150,7 @@ void on_file_entry_activate(GObject *object, type_script_ui  *script_ui);
 void on_file_chooser_set(GObject *object, type_script_ui  *script_ui);
 void on_launch_button_clicked(GtkWidget *widget, type_script_ui *script_ui);
 void on_show_log_button_clicked(GtkWidget *widget, type_script_ui *script_ui);
+void on_run_all_button_clicked(GtkWidget *widget, gpointer user_data);
 
 
 #endif /* THEMIS_GTK_H */
