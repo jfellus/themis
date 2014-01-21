@@ -86,7 +86,7 @@ void script_create_makefile(t_prom_script *script)
 		PRINT_WARNING( "You need to specify a login to connect to a distant computer.");
 		else
 		{
-			if (strncmp(script->path_prom_binary, "promethe", PATH_MAX) == 0) rsh_graphic_option = "-X";
+			if (strncmp(script->path_prom_binary, "promethe", PATH_MAX) == 0) rsh_graphic_option = "-XC";
 			else rsh_graphic_option = NULL;
 
 			fprintf(makefile, ".PHONY:mkdir_promnet\n\n");
