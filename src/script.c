@@ -129,11 +129,11 @@ void script_create_makefile(t_prom_script *script)
 
 			if (rsh_graphic_option == NULL)
 			{
-				fprintf(makefile, "\trsh -C %s@%s 'mkdir -p /tmp/%s/logs; cd promnet/%s;nohup ~/bin_leto_prom/%s -n%s -i%s %s --distant-terminal ", script->login, script->computer, script->login, script->logical_name, script->path_prom_binary, script->logical_name, /*themis.ip,*/ themis.id, script->prom_args_line);
+				fprintf(makefile, "\trsh -Ct %s@%s 'mkdir -p /tmp/%s/logs; cd promnet/%s;nohup ~/bin_leto_prom/%s -n%s -i%s %s --distant-terminal ", script->login, script->computer, script->login, script->logical_name, script->path_prom_binary, script->logical_name, /*themis.ip,*/ themis.id, script->prom_args_line);
 			}
 			else 
 			{
-				fprintf(makefile, "\trsh -XC %s@%s 'mkdir -p /tmp/%s/logs; cd promnet/%s;nohup ~/bin_leto_prom/%s -n%s -i%s %s  ", script->login, script->computer, script->login, script->logical_name, script->path_prom_binary, script->logical_name, /*themis.ip,*/ themis.id, script->prom_args_line);
+				fprintf(makefile, "\trsh -XCt %s@%s 'mkdir -p /tmp/%s/logs; cd promnet/%s;nohup ~/bin_leto_prom/%s -n%s -i%s %s  ", script->login, script->computer, script->login, script->logical_name, script->path_prom_binary, script->logical_name, /*themis.ip,*/ themis.id, script->prom_args_line);
 			}
 			
 			makefile_add_argument(makefile, script->path_file_script);
@@ -145,7 +145,7 @@ void script_create_makefile(t_prom_script *script)
 			fprintf(makefile, " > /tmp/%s/logs/%s.log'&\n", script->login, script->logical_name);
 		
 			fprintf(makefile, "\nrun_debug:\n");
-			fprintf(makefile, "\trsh -XC %s@%s 'cd promnet/%s;nemiver ~/bin_leto_prom/%s_debug -n%s  -i%s %s", script->login, script->computer, script->logical_name, script->path_prom_binary, script->logical_name, /*themis.ip,*/ themis.id, script->prom_args_line);
+			fprintf(makefile, "\trsh -XCt %s@%s 'cd promnet/%s;nemiver ~/bin_leto_prom/%s_debug -n%s  -i%s %s", script->login, script->computer, script->logical_name, script->path_prom_binary, script->logical_name, /*themis.ip,*/ themis.id, script->prom_args_line);
 			makefile_add_argument(makefile, script->path_file_script);
 			makefile_add_argument(makefile, script->path_file_config);
 			makefile_add_argument(makefile, script->path_file_res);
@@ -155,7 +155,7 @@ void script_create_makefile(t_prom_script *script)
 			fprintf(makefile, " '|| echo -e \"\\a\" \n");
 
 			fprintf(makefile, "\nrun_valgrind:\n");
-			fprintf(makefile, "\trsh -XC %s@%s 'cd promnet/%s;valgrind ~/bin_leto_prom/%s_debug -n%s  -i%s %s", script->login, script->computer, script->logical_name, script->path_prom_binary, script->logical_name, /*themis.ip,*/ themis.id, script->prom_args_line);
+			fprintf(makefile, "\trsh -XCt %s@%s 'cd promnet/%s;valgrind ~/bin_leto_prom/%s_debug -n%s  -i%s %s", script->login, script->computer, script->logical_name, script->path_prom_binary, script->logical_name, /*themis.ip,*/ themis.id, script->prom_args_line);
 			makefile_add_argument(makefile, script->path_file_script);
 			makefile_add_argument(makefile, script->path_file_config);
 			makefile_add_argument(makefile, script->path_file_res);
@@ -168,11 +168,11 @@ void script_create_makefile(t_prom_script *script)
 
 			if (rsh_graphic_option == NULL)
 			{
-				fprintf(makefile, "\trsh -C %s@%s 'cd promnet/%s;~/bin_leto_prom/%s -n%s  -i%s %s ", script->login, script->computer, script->logical_name, script->path_prom_binary, script->logical_name, /*themis.ip,*/ themis.id, script->prom_args_line);
+				fprintf(makefile, "\trsh -Ct %s@%s 'cd promnet/%s;~/bin_leto_prom/%s -n%s  -i%s %s ", script->login, script->computer, script->logical_name, script->path_prom_binary, script->logical_name, /*themis.ip,*/ themis.id, script->prom_args_line);
 			}
 			else 
 			{
-				fprintf(makefile, "\trsh -XC %s@%s 'cd promnet/%s;~/bin_leto_prom/%s -n%s  -i%s %s  ", script->login, script->computer, script->logical_name, script->path_prom_binary, script->logical_name, /*themis.ip,*/ themis.id, script->prom_args_line);
+				fprintf(makefile, "\trsh -XCt %s@%s 'cd promnet/%s;~/bin_leto_prom/%s -n%s  -i%s %s  ", script->login, script->computer, script->logical_name, script->path_prom_binary, script->logical_name, /*themis.ip,*/ themis.id, script->prom_args_line);
 			}
 			
 			makefile_add_argument(makefile, script->path_file_script);
