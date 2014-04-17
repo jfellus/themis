@@ -62,8 +62,12 @@ void script_create_makefile(t_prom_script *script)
 	else
 	{
 		strcpy(script->computer, script->prt->hosts[script->prt->my_host].name);
-		if ((strcmp(script->computer, "localhost") == 0) || (strcmp(script->computer, "127.0.0.1") == 0) || (script->login[0] == 0)) script->is_local = 1;
-		else script->is_local = 0;
+		if ((strcmp(script->computer, "localhost") == 0) || (strcmp(script->computer, "127.0.0.1") == 0)) script->is_local = 1;
+		else
+		{
+			if (script->login[0] == 0) EXIT_ON_ERROR("You execute the script on a distant computer, and you do not have set a login.", script->computer);
+			script->is_local = 0;
+		}
 	}
 
 	if (script->is_local)
