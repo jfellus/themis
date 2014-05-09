@@ -325,7 +325,7 @@ int main(int argc, char *argv[])
     printf("bus_id: -i%s\n\n", themis.id);
   }
 
-  if (themis.ip[0] == 0) strcpy(themis.ip, "127.255.255.255");
+  if (themis.ip[0] == 0) strcpy(themis.ip, "127.0.0.255");
 
   prom_bus_init(themis.ip); /* lancement du bus ivy */
   IvyBindMsg(ivy_receive_any_message_callback, NULL, "^%s:(.*)", themis.id);
