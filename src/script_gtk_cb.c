@@ -310,7 +310,7 @@ void on_upload_button_clicked(GtkWidget *widget, type_script_ui *script_ui)
 	gdk_color_parse("grey", &color);
 	gtk_widget_modify_bg(GTK_WIDGET(script_ui->state_displays[No_Quit]), GTK_STATE_INSENSITIVE, &color);
 
-	snprintf(command_line, SIZE_OF_COMMAND_LINE, "cd %s \n make --jobs all_upload||echo -e \"\\a\"\n", working_directory);
+	snprintf(command_line, SIZE_OF_COMMAND_LINE, "cd %s \n make --jobs=4 all_upload||echo -e \"\\a\"\n", working_directory);
 	vte_terminal_feed_child(script_ui->terminal, command_line, -1);
 
 	gtk_notebook_set_current_page(script_ui->notebook, 1);
