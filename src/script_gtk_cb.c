@@ -113,6 +113,7 @@ void on_script_prom_bus_entry_activate(GtkEntry *entry, type_script_ui* script_u
 
 
 	gtk_entry_set_text(entry, "");
+	(void) ret;
 }
 
 void on_file_entry_activate(GObject *object, type_script_ui *script_ui)
