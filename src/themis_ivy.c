@@ -90,15 +90,15 @@ void ivyApplicationCallback (IvyClientPtr app, void *user_data, IvyApplicationEv
 
   switch  (event)  {
   case IvyApplicationConnected:
-    printf("Connexion de %s\n", appname);
+     if (strncmp(appname, themis.id, strlen(themis.id)) == 0)  printf("Connection of : %s\n", appname);
     break;
 
   case IvyApplicationDisconnected:
-    printf("%s disconnected\n", appname);
+     if (strncmp(appname, themis.id, strlen(themis.id)) == 0)  printf("%s disconnected\n", appname);
     break;
 
   default:
-    printf("%s: unkown event %d\n", appname, event);
+     if (strncmp(appname, themis.id, strlen(themis.id)) == 0)  printf("%s: unkown event %d\n", appname, event);
     break;
   }
 }
