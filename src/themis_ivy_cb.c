@@ -29,6 +29,16 @@ The fact that you are presently reading this means that you have had knowledge o
 #include "themis_gtk.h"
 #include "basic_tools.h"
 
+char* get_prom_id_from_ivy_client(IvyClientPtr app)
+{
+   char *prom_id;
+   int id_length; // themis.id + ":"
+
+   id_length = strlen(themis.id)+1;
+   prom_id = &(IvyGetApplicationName(app)[id_length]); //prom_id is application name less themis.id which should be all the time the same for a same themis.
+   return prom_id;
+}
+
 void ivy_status_callback(IvyClientPtr app, void *user_data, int argc, char **argv)
 {
   char *prom_id;
@@ -37,7 +47,7 @@ void ivy_status_callback(IvyClientPtr app, void *user_data, int argc, char **arg
   (void) argc;
   (void) user_data;
   
-  prom_id = IvyGetApplicationName(app);
+  prom_id = get_prom_id_from_ivy_client(app);
   if (sscanf(argv[0], "%d", &state) != 1) PRINT_WARNING("Wrong message: %s", argv[0]); /* %[^,] signifie que l'on prend tous les caracteres sauf la virgule. */
   
   script_ui = ui_get_script_ui_with_id(prom_id);
@@ -54,7 +64,7 @@ void ivy_msg_rt_callback(IvyClientPtr app, void *remote_control, int argc, char 
   (void) argc;
   (void) argv;
   
-  prom_id = IvyGetApplicationName(app);
+  prom_id = get_prom_id_from_ivy_client(app);
   if (sscanf(argv[0], "%d", &state) != 1) PRINT_WARNING("Wrong message format: %s", argv[0]); /* %[^,] signifie que l'on prend tous les caracteres suaf la virgule. */
   script_ui = ui_get_script_ui_with_id(prom_id);
   widget_set_warning(script_ui->rt_state_button);
@@ -70,7 +80,7 @@ void ivy_net_callback(IvyClientPtr app, void *user_data, int argc, char **argv)
   (void) argc;
   (void) argv;
   
-  prom_id = IvyGetApplicationName(app);
+  prom_id = get_prom_id_from_ivy_client(app);
   
   if (sscanf(argv[0], "%[^,],%lu", group_name, &error_flag) != 2) PRINT_WARNING("Wrong format of message: %s\n", argv[0]);
   script_ui = ui_get_script_ui_with_id(prom_id);
@@ -84,7 +94,7 @@ void ivy_receive_any_message_callback(IvyClientPtr app, void *user_data, int arg
   (void) argc;
   (void) user_data;
   
-  prom_id = IvyGetApplicationName(app);
+  prom_id = get_prom_id_from_ivy_client(app);
   script_ui = ui_get_script_ui_with_id(prom_id);
   
   if (script_ui != NULL) script_ui_display_prom_bus_message(script_ui, argv[0]);
@@ -102,7 +112,7 @@ void ivy_here_callback(IvyClientPtr app, void *user_data, int argc, char **argv)
   (void) argc;
   (void) user_data;
   
-  prom_id = IvyGetApplicationName(app);
+  prom_id = get_prom_id_from_ivy_client(app);
   hostname = IvyGetApplicationIp(app);
   
   
