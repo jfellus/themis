@@ -128,6 +128,7 @@ typedef struct themis_ui {
   GtkBuilder *builder;
 
   GtkTextBuffer *prom_bus_text_buffer;
+  GtkWidget *toolbar;
 
 } type_themis_ui;
 

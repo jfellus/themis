@@ -30,11 +30,11 @@ IVYLIB_DIR="$PROMLIB_DIR/ivy"
 SCRIPTLIB_DIR="$PROMLIB_DIR/script"
 GLADE_LETO_PROM_DIR="$DIR_BIN_LETO_PROM/glades"
 
-CFLAGS="$CFLAGS -I.. -I../shared/include -I/src `pkg-config --cflags $PACKAGES` -I$SIMULATOR_PATH/enet/include" 
-LIBS="-L$SCRIPTLIB_DIR -lscript -L$IVYLIB_DIR -lglibivy -lpcre -lmxml `pkg-config --libs $PACKAGES` -L$SIMULATOR_PATH/lib/$SYSTEM/comm  -lm"
+CFLAGS="$CFLAGS -I.. -I../shared/include -I/src `pkg-config --cflags $PACKAGES` -I$SIMULATOR_PATH/enet/include -I$HOME/.local/include"  
+LIBS="-L$SCRIPTLIB_DIR -lscript -L$IVYLIB_DIR -lglibivy -lpcre -lmxml `pkg-config --libs $PACKAGES` -L$SIMULATOR_PATH/lib/$SYSTEM/comm  -lm -L$HOME/.local/lib -lblc"
 SOURCE_DIR="src"
 SOURCES=(themis.c themis_gtk.c script_gtk.c script_gtk_cb.c themis_ivy.c themis_ivy_cb.c script.c)
-ALL_GLADE_FILES=(distant_promethe.glade themis.glade themis_icon.png oscillo_kernel_icon_small.png)
+ALL_GLADE_FILES=(distant_promethe.glade themis.glade themis_icon.png oscillo_kernel_icon_small.png epimethe.jpeg)
 
 ENET=1;
 OSCILLO_KERNEL_LIB="";

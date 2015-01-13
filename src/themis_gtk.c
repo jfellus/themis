@@ -324,6 +324,18 @@ void on_menu_pandora_activate()
   }
 }
 
+
+void on_epimethe_button_clicked()
+{
+  char command_line[SIZE_OF_COMMAND_LINE];
+  int error;
+
+  snprintf(command_line, SIZE_OF_COMMAND_LINE, "epimethe %s&\n", themis.id);
+  printf("Execute: %s", command_line);
+  error = system(command_line);
+  if (error != 0)  PRINT_WARNING("Error launching epimethe.\n\t Check that '%s' is correct.", command_line);
+}
+
 /************** Preferences *****************/
 const char * whitespace_cb_preferences(mxml_node_t *node, int where)
 {
@@ -475,7 +487,6 @@ void on_quit_all_promethe_button_clicked(GtkWidget *widget, gpointer user_data)
 
 void on_refresh_button_clicked(GtkWidget *widget, gpointer user_data)
 {
-
   (void) widget;
   (void) user_data;
 
@@ -555,6 +566,7 @@ void ui_init()
   char builder_file_name[PATH_MAX];
   GError *g_error = NULL;
   GtkBuilder *builder;
+  GtkToolItem *epimethe_button;
 
   themis_ui.number_of_scripts = 0;
 
@@ -569,9 +581,15 @@ void ui_init()
   themis_ui.waiting_time = GTK_ENTRY(gtk_builder_get_object(builder, "waiting_time"));
   themis_ui.statusbar = GTK_STATUSBAR((gtk_builder_get_object(builder, "status_bar")));
   themis_ui.prom_bus_text_buffer = GTK_TEXT_BUFFER(gtk_builder_get_object(builder, "prom_bus_text_buffer"));
+  themis_ui.toolbar = GTK_WIDGET(gtk_builder_get_object(builder, "toolbar"));
+  epimethe_button = gtk_tool_button_new (NULL, "Epimethe");
+  gtk_container_add(GTK_CONTAINER(themis_ui.toolbar), GTK_WIDGET(epimethe_button));
 
   gtk_builder_connect_signals(builder, NULL);
 
+
   gtk_widget_show_all(themis_ui.window);
+  g_signal_connect(epimethe_button, "clicked", on_epimethe_button_clicked, NULL);
+
   g_object_unref(G_OBJECT(builder));
 }

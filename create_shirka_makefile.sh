@@ -34,8 +34,8 @@ IVYLIB_DIR="$PROMLIB_DIR/ivy"
 SCRIPTLIB_DIR="$PROMLIB_DIR/script"
 
 
-CFLAGS="$CFLAGS -I../shared/include -I/src" 
-LIBS="-L$SCRIPTLIB_DIR -lscript -L$IVYLIB_DIR -livy -lpcre"
+CFLAGS="$CFLAGS -I../shared/include -I/src -I$HOME/.local/include"
+LIBS="-L$SCRIPTLIB_DIR -lscript -L$IVYLIB_DIR -livy -lpcre -L$HOME/.local/lib -lblc"
 
 MAKEFILE="Makefile.shirka"
 
