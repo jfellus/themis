@@ -582,7 +582,9 @@ void ui_init()
   themis_ui.statusbar = GTK_STATUSBAR((gtk_builder_get_object(builder, "status_bar")));
   themis_ui.prom_bus_text_buffer = GTK_TEXT_BUFFER(gtk_builder_get_object(builder, "prom_bus_text_buffer"));
   themis_ui.toolbar = GTK_WIDGET(gtk_builder_get_object(builder, "toolbar"));
-  epimethe_button = gtk_tool_button_new (NULL, "Epimethe");
+
+  gtk_toolbar_set_style(GTK_TOOLBAR(themis_ui.toolbar), GTK_TOOLBAR_BOTH);
+  epimethe_button = gtk_tool_button_new (NULL, "epimethe");
   gtk_container_add(GTK_CONTAINER(themis_ui.toolbar), GTK_WIDGET(epimethe_button));
 
   gtk_builder_connect_signals(builder, NULL);

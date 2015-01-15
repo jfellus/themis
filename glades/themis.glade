@@ -198,7 +198,7 @@
               <object class="GtkToolButton" id="coeos_button">
                 <property name="visible">True</property>
                 <property name="tooltip_markup">Edit in coeos</property>
-                <property name="label" translatable="yes">toolbutton1</property>
+                <property name="label" translatable="yes">coeos</property>
                 <property name="use_underline">True</property>
                 <property name="stock_id">gtk-page-setup</property>
                 <signal name="clicked" handler="on_menu_coeos_activate"/>
@@ -211,7 +211,7 @@
             <child>
               <object class="GtkToolButton" id="oscillo_kernel_start_button">
                 <property name="visible">True</property>
-                <property name="label" translatable="yes">toolbutton</property>
+                <property name="label" translatable="yes">oscillos</property>
                 <property name="icon_widget">image_oscillo_kernel</property>
                 <signal name="clicked" handler="on_menu_oscillo_kernel_activate"/>
               </object>
@@ -223,6 +223,7 @@
             <child>
               <object class="GtkToolButton" id="pandora_start_button">
                 <property name="visible">True</property>
+                <property name="label" translatable="yes">pandora</property>
                 <property name="icon_widget">pandora</property>
                 <signal name="clicked" handler="on_menu_pandora_activate"/>
               </object>
