@@ -330,7 +330,7 @@ void on_epimethe_button_clicked()
   char command_line[SIZE_OF_COMMAND_LINE];
   int error;
 
-  snprintf(command_line, SIZE_OF_COMMAND_LINE, "epimethe %s&\n", themis.id);
+  snprintf(command_line, SIZE_OF_COMMAND_LINE, "epimethe prom.%s&\n", themis.id);
   printf("Execute: %s", command_line);
   error = system(command_line);
   if (error != 0)  PRINT_WARNING("Error launching epimethe.\n\t Check that '%s' is correct.", command_line);
