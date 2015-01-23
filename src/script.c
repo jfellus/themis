@@ -122,6 +122,8 @@ void script_create_makefile(t_prom_script *script)
 			fprintf(makefile, "\trsh -C %s@%s mkdir -p promnet/%s\n\n", script->login, script->computer, script->logical_name);
 			fprintf(makefile, "mkdir_bin_leto_prom:\n");
 			fprintf(makefile, "\trsh -C %s@%s mkdir -p bin_leto_prom\n\n", script->login, script->computer);
+		   fprintf(makefile, "mkdir_local_lib:\n");
+		   fprintf(makefile, "\trsh -C %s@%s mkdir -p .local/lib\n\n", script->login, script->computer);
 
 			if (!script->overwrite_res)
 			{
@@ -129,8 +131,8 @@ void script_create_makefile(t_prom_script *script)
 				fprintf(makefile, "\trsync --ignore-existing $< %s@%s:promnet/%s/$<\n\n", script->login, script->computer, script->logical_name);
 			}
 
-      fprintf(makefile, "%s_upload_promnet:%s mkdir_promnet\n", script->path_file_gcd, script->path_file_gcd);
-      fprintf(makefile, "\trsync --ignore-existing $< %s@%s:promnet/%s/$<\n\n", script->login, script->computer, script->logical_name);
+			fprintf(makefile, "%s_upload_promnet:%s mkdir_promnet\n", script->path_file_gcd, script->path_file_gcd);
+         fprintf(makefile, "\trsync --ignore-existing $< %s@%s:promnet/%s/$<\n\n", script->login, script->computer, script->logical_name);
 
 			fprintf(makefile, "%%_upload_promnet:%% mkdir_promnet\n");
 			fprintf(makefile, "\trsync -a $< %s@%s:promnet/%s/$<\n\n", script->login, script->computer, script->logical_name);
@@ -138,9 +140,10 @@ void script_create_makefile(t_prom_script *script)
 			fprintf(makefile, "\trsync -a $< %s@%s:promnet/%s/$<\n\n", script->login, script->computer, script->logical_name);
 			fprintf(makefile, "%%_upload_directory:%% mkdir_promnet\n");
 			fprintf(makefile, "\trsync -a $< %s@%s:promnet/%s/$(<D)\n\n", script->login, script->computer, script->logical_name);
-			fprintf(makefile, "all_upload_bin_leto_prom:~/bin_leto_prom/ mkdir_bin_leto_prom\n");
-			fprintf(makefile, "\trsync -a  $< %s@%s:bin_leto_prom/\n\n", script->login, script->computer);
-			fprintf(makefile, "all_upload: all_upload_bin_leto_prom $(foreach file, $(synchronize_files), $(file)_upload_file) $(foreach directory, $(synchronize_directories), $(directory)_upload_directory)");
+			fprintf(makefile, "all_upload_bin:~/bin_leto_prom/ mkdir_bin_leto_prom ~/.local/lib mkdir_local_lib\n");
+			fprintf(makefile, "\trsync -a  $< %s@%s:bin_leto_prom/\n", script->login, script->computer);
+         fprintf(makefile, "\trsync -a  $< %s@%s:.local/lib/libblc.so\n\n", script->login, script->computer);
+			fprintf(makefile, "all_upload: all_upload_bin $(foreach file, $(synchronize_files), $(file)_upload_file) $(foreach directory, $(synchronize_directories), $(directory)_upload_directory)");
 
 			makefile_add_upload(makefile, script->path_file_script);
 			makefile_add_upload(makefile, script->path_file_config);
