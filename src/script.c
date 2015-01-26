@@ -140,9 +140,9 @@ void script_create_makefile(t_prom_script *script)
 			fprintf(makefile, "\trsync -a $< %s@%s:promnet/%s/$<\n\n", script->login, script->computer, script->logical_name);
 			fprintf(makefile, "%%_upload_directory:%% mkdir_promnet\n");
 			fprintf(makefile, "\trsync -a $< %s@%s:promnet/%s/$(<D)\n\n", script->login, script->computer, script->logical_name);
-			fprintf(makefile, "all_upload_bin:~/bin_leto_prom/ mkdir_bin_leto_prom ~/.local/lib mkdir_local_lib\n");
+			fprintf(makefile, "all_upload_bin:~/bin_leto_prom/ mkdir_bin_leto_prom ~/.local/lib/libblc.so mkdir_local_lib\n");
 			fprintf(makefile, "\trsync -a  $< %s@%s:bin_leto_prom/\n", script->login, script->computer);
-         fprintf(makefile, "\trsync -a  $< %s@%s:.local/lib/libblc.so\n\n", script->login, script->computer);
+         fprintf(makefile, "\trsync -a  ~/.local/lib/libblc.so  %s@%s:.local/lib/libblc.so\n\n", script->login, script->computer);
 			fprintf(makefile, "all_upload: all_upload_bin $(foreach file, $(synchronize_files), $(file)_upload_file) $(foreach directory, $(synchronize_directories), $(directory)_upload_directory)");
 
 			makefile_add_upload(makefile, script->path_file_script);
@@ -155,14 +155,8 @@ void script_create_makefile(t_prom_script *script)
 
 			fprintf(makefile, "\ndaemon_run:\n");
 
-			if (rsh_graphic_option == NULL)
-			{
-				fprintf(makefile, "\trsh -Ct %s@%s 'mkdir -p /tmp/%s/logs; cd promnet/%s;nohup ~/bin_leto_prom/%s -n%s -i%s %s --distant-terminal ", script->login, script->computer, script->login, script->logical_name, script->path_prom_binary, script->logical_name, /*themis.ip,*/ themis.id, script->prom_args_line);
-			}
-			else 
-			{
-				fprintf(makefile, "\trsh -XCt %s@%s 'mkdir -p /tmp/%s/logs; cd promnet/%s;nohup ~/bin_leto_prom/%s -n%s -i%s %s  ", script->login, script->computer, script->login, script->logical_name, script->path_prom_binary, script->logical_name, /*themis.ip,*/ themis.id, script->prom_args_line);
-			}
+			if (rsh_graphic_option == NULL)	fprintf(makefile, "\trsh -Ct %s@%s 'export LD_LIBRARY_PATH=~/.local/lib; mkdir -p /tmp/%s/logs; cd promnet/%s;nohup ~/bin_leto_prom/%s -n%s -i%s %s --distant-terminal ", script->login, script->computer, script->login, script->logical_name, script->path_prom_binary, script->logical_name, /*themis.ip,*/ themis.id, script->prom_args_line);
+			else 	fprintf(makefile, "\trsh -XCt %s@%s 'export LD_LIBRARY_PATH=~/.local/lib; mkdir -p /tmp/%s/logs; cd promnet/%s;nohup ~/bin_leto_prom/%s -n%s -i%s %s  ", script->login, script->computer, script->login, script->logical_name, script->path_prom_binary, script->logical_name, /*themis.ip,*/ themis.id, script->prom_args_line);
 			
 			makefile_add_argument(makefile, script->path_file_script);
 			makefile_add_argument(makefile, script->path_file_config);
