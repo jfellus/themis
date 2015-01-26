@@ -39,19 +39,6 @@ The fact that you are presently reading this means that you have had knowledge o
 
 type_themis themis;
 
-/**
- * Envoie un message de warning avec name_of_file, name_of_function, number_of_line et affiche le message formate avec les parametres variables.
- */
-void print_warning(const char *name_of_file, const char* name_of_function, int numero_of_line, const char *message, ...)
-{
-  va_list arguments;
-  va_start(arguments, message);
-  printf("\033[1;33m %s \t %s \t %i :\n \t Warning: ", name_of_file, name_of_function, numero_of_line);
-  vprintf(message, arguments);
-  printf("\033[0m\n");
-  va_end(arguments);
-}
-
 /*********************************/
 int set_relative_path_from_gfile(char *path_name, char *reference_path, GFile *file)
 {
