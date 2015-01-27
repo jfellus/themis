@@ -564,14 +564,17 @@ void ui_display_prom_bus_message(char *prom_id, char *message)
 void ui_init()
 {
   char builder_file_name[PATH_MAX];
+  char icon_file_name[PATH_MAX];
   GError *g_error = NULL;
   GtkBuilder *builder;
   GtkToolItem *epimethe_button;
+  GtkWidget* icone;
 
   themis_ui.number_of_scripts = 0;
 
   builder = gtk_builder_new();
   snprintf(builder_file_name, PATH_MAX, "%s/glades/themis.glade", bin_leto_prom_path);
+  snprintf(icon_file_name, PATH_MAX, "%s/simulator/themis/glades/epimethe.png", bin_leto_prom_path);
   gtk_builder_add_from_file(builder, builder_file_name, &g_error);
   if (g_error != NULL) EXIT_ON_ERROR("%s", g_error->message);
 
@@ -584,7 +587,9 @@ void ui_init()
   themis_ui.toolbar = GTK_WIDGET(gtk_builder_get_object(builder, "toolbar"));
 
   gtk_toolbar_set_style(GTK_TOOLBAR(themis_ui.toolbar), GTK_TOOLBAR_BOTH);
-  epimethe_button = gtk_tool_button_new (NULL, "epimethe");
+  icone=gtk_image_new_from_file((gchar*)icon_file_name);
+  epimethe_button = gtk_tool_button_new (icone, "epimethe");
+//  gtk_container_add(GTK_CONTAINER(epimethe_button), icone);
   gtk_container_add(GTK_CONTAINER(themis_ui.toolbar), GTK_WIDGET(epimethe_button));
 
   gtk_builder_connect_signals(builder, NULL);
