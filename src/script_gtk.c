@@ -290,7 +290,7 @@ void script_ui_update_data(type_script_ui *script_ui, gchar *reference_dirname)
   }
   
   g_object_unref(dir);
-  
+
   script_create_makefile(script);
   
 }
