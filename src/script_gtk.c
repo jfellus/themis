@@ -26,7 +26,7 @@ The fact that you are presently reading this means that you have had knowledge o
  *      Author: Arnaud Blanchard
  */
 #include "themis_gtk.h"
-#include "libcomm/include/tools/read_prt.h"
+#include "read_prt.h"
 
 #define PORTNAME_MAX 256
 
