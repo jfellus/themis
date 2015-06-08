@@ -31,7 +31,7 @@ SCRIPTLIB_DIR="$PROMLIB_DIR/script"
 GLADE_LETO_PROM_DIR="$DIR_BIN_LETO_PROM/glades"
 
 CFLAGS="$CFLAGS -I.. -I../shared/include -I/src `pkg-config --cflags $PACKAGES` -I$SIMULATOR_PATH/enet/include -I$HOME/.local/include  -I$SIMULATOR_PATH/prom_kernel/include/network"  
-LIBS="-L$SCRIPTLIB_DIR -lscript -L$IVYLIB_DIR -lglibivy -lpcre -lmxml `pkg-config --libs $PACKAGES`  -lm -L$HOME/.local/lib -lblc -L$SIMULATOR_PATH/lib/$SYSTEM/kernel"
+LIBS="-L$SCRIPTLIB_DIR -lscript -L$IVYLIB_DIR -lglibivy -lpcre -lmxml `pkg-config --libs $PACKAGES`  -lm  -Wl,-rpath,$PROMLIB_DIR/blc $PROMLIB_DIR/blc/libblc.so -L$SIMULATOR_PATH/lib/$SYSTEM/kernel"
 SOURCE_DIR="src"
 SOURCES=(themis.c themis_gtk.c script_gtk.c script_gtk_cb.c themis_ivy.c themis_ivy_cb.c script.c)
 ALL_GLADE_FILES=(distant_promethe.glade themis.glade themis_icon.png oscillo_kernel_icon_small.png)

@@ -35,7 +35,7 @@ SCRIPTLIB_DIR="$PROMLIB_DIR/script"
 
 
 CFLAGS="$CFLAGS -I../shared/include -I/src -I$HOME/.local/include"
-LIBS="-L$SCRIPTLIB_DIR -lscript -L$IVYLIB_DIR -livy -lpcre -L$HOME/.local/lib -lblc -lrt"
+LIBS="-L$SCRIPTLIB_DIR -lscript -L$IVYLIB_DIR -livy -lpcre $PROMLIB_DIR/blc/libblc.so -lrt"
 
 MAKEFILE="Makefile.shirka"
 
